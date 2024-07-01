@@ -1,23 +1,23 @@
 {
   "development": {
-    "username": "${MYSQL_USER}",
-    "password": "${MYSQL_PASSWORD}",
-    "database": "${MYSQL_DATABASE}",
-    "host": "${DB_HOST}",
+    "username": "root",
+    "password": "Jawalter2020-",
+    "database": "Pa_DB_2024",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
-    "username": "${MYSQL_USER}",
-    "password": "${MYSQL_PASSWORD}",
-    "database": "${MYSQL_DATABASE}",
-    "host": "${DB_HOST}",
+    "username": "root",
+    "password": "Jawalter2020-",
+    "database": "Pa_DB_2024",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
-    "username": "${MYSQL_USER}",
-    "password": "${MYSQL_PASSWORD}",
-    "database": "${MYSQL_DATABASE}",
-    "host": "${DB_HOST}",
+    "username": "root",
+    "password": "Jawalter2020-",
+    "database": "Pa_DB_2024",
+    "host": "localhost",
     "dialect": "mysql"
   }
 }
