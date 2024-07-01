@@ -7,9 +7,5 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
-  },
-  "exclude": [
-    "database/migrations",
-    "database/seeders"
-  ]
+  }
 }
