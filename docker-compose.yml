@@ -4,26 +4,22 @@ services:
     build: .
     ports:
       - '3000:3000'
-    environment:
-      - DB_HOST=db
-      - JWT_SECRET=your_jwt_secret
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+    env_file:
+      - .env
     depends_on:
       - db
       - redis
 
   db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: Jawalter2020- 
-      MYSQL_DATABASE: Pa_DB_2024
-      MYSQL_USER: root
-      MYSQL_PASSWORD: Jawalter2020-
+    image: mysql:5.7 
+    env_file:
+      - .env
     ports:
       - '3306:3306'
 
   redis:
     image: redis:alpine
+    env_file:
+      - .env
     ports:
       - '6379:6379'
