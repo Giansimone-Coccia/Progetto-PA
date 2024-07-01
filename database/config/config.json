@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "Jawalter2020-",
-    "database": "Pa_DB_2024",
+    "database": "pa_db_2024",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "Jawalter2020-",
-    "database": "Pa_DB_2024",
+    "database": "pa_db_2024",
     "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "Jawalter2020-",
-    "database": "Pa_DB_2024",
+    "database": "pa_db_2024",
     "host": "localhost",
     "dialect": "mysql"
   }
