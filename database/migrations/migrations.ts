@@ -1,6 +1,6 @@
 // models/user.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../db'); // Assumi che 'db' sia il tuo oggetto Sequelize configurato
+const sequelize = require('../../src');
 
 const User = sequelize.define('User', {
     id: {
