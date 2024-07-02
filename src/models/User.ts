@@ -1,7 +1,9 @@
 // User.ts
 
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../config/database'; // Importa Sequelize come default
+import SequelizeSingleton from '../utils/SequelizeSingleton';
+
+const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
 interface UserAttributes {
   id: number;
@@ -60,7 +62,7 @@ User.init(
     },
   },
   {
-    sequelize, // Utilizza l'istanza di Sequelize importata
+    sequelize: sequelizeInstance, // Utilizza l'istanza di Sequelize importata
     tableName: 'Users',
     modelName: 'User',
     timestamps: true,

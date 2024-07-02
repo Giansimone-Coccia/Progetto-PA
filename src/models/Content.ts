@@ -1,7 +1,9 @@
 // Content.ts
 
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../config/database'; // Importa Sequelize come default
+import SequelizeSingleton from '../utils/SequelizeSingleton';
+
+const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
 interface ContentAttributes {
   id: number;
@@ -57,7 +59,7 @@ Content.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelizeInstance,
     tableName: 'Contents',
     modelName: 'Content',
     timestamps: true,

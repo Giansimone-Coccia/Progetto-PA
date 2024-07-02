@@ -1,7 +1,9 @@
 // Inference.ts
 
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../config/database'; // Importa Sequelize come default
+import SequelizeSingleton from '../utils/SequelizeSingleton';
+
+const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
 interface InferenceAttributes {
   id: number;
@@ -63,7 +65,7 @@ Inference.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelizeInstance,
     tableName: 'Inferences',
     modelName: 'Inference',
     timestamps: true,

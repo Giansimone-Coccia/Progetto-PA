@@ -1,7 +1,9 @@
 // Dataset.ts
 
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../config/database'; // Importa Sequelize come default
+import SequelizeSingleton from '../utils/SequelizeSingleton';
+
+const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
 interface DatasetAttributes {
   id: number;
@@ -59,7 +61,7 @@ Dataset.init(
     },
   },
   {
-    sequelize,
+    sequelize: sequelizeInstance,
     tableName: 'Datasets',
     modelName: 'Dataset',
     timestamps: true,
