@@ -1,23 +1,23 @@
 {
   "development": {
-    "username": "root",
-    "password": "Jawalter2020-",
-    "database": "pa_db_2024",
-    "host": "localhost",
+    "username": "gians_walt_24",
+    "password": "Project#PA-24",
+    "database": "db_pa_2024",
+    "host": "db4free.net",
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": "Jawalter2020-",
-    "database": "pa_db_2024",
-    "host": "localhost",
+    "username": "gians_walt_24",
+    "password": "Project#PA-24",
+    "database": "db_pa_2024",
+    "host": "db4free.net",
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": "Jawalter2020-",
-    "database": "pa_db_2024",
-    "host": "localhost",
+    "username": "gians_walt_24",
+    "password": "Project#PA-24",
+    "database": "db_pa_2024",
+    "host": "db4free.net",
     "dialect": "mysql"
   }
 }
