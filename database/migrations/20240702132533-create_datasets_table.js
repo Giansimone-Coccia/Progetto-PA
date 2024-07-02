@@ -5,9 +5,10 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Datasets', {
       id: {
-        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        autoIncrement: true
+        type: Sequelize.INTEGER
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -24,19 +25,22 @@ module.exports = {
         allowNull: false
       },
       tags: {
-        type: Sequelize.JSONB,
+        type: Sequelize.JSON,
         allowNull: false,
         defaultValue: []
       },
-      createdAt: {
-        type: Sequelize.DATE,
+      isDeleted: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: false
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
       updatedAt: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        type: Sequelize.DATE
       }
     });
   },

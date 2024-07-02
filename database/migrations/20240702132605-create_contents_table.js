@@ -3,11 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Contents', {
+    await queryInterface.createTable('Inferences', {
       id: {
-        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        autoIncrement: true
+        type: Sequelize.INTEGER
       },
       datasetId: {
         type: Sequelize.INTEGER,
@@ -19,40 +20,34 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      type: {
-        type: Sequelize.ENUM('image', 'zip', 'video'),
-        allowNull: false
-      },
-      path: {
+      model: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      result: {
+        type: Sequelize.JSON,
+        allowNull: true
       },
       cost: {
         type: Sequelize.FLOAT,
         allowNull: false
       },
-      status: {
-        type: Sequelize.ENUM('pending', 'processing', 'completed', 'failed', 'aborted'),
-        allowNull: false,
-        defaultValue: 'pending'
-      },
-      result: {
-        type: Sequelize.JSONB
-      },
       createdAt: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        type: Sequelize.DATE
       },
       updatedAt: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        type: Sequelize.DATE
       }
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Contents');
+    await queryInterface.dropTable('Inferences');
   }
 };
