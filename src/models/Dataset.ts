@@ -1,29 +1,29 @@
-// User.ts
+// Dataset.ts
 
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database'; // Importa Sequelize come default
 
-interface UserAttributes {
+interface DatasetAttributes {
   id: number;
-  email: string;
-  password: string;
-  tokens: number;
-  role: string;
+  userId: number;
+  name: string;
+  tags: string[];
+  isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
-class User extends Model<UserAttributes> implements UserAttributes {
+class Dataset extends Model<DatasetAttributes> implements DatasetAttributes {
   public id!: number;
-  public email!: string;
-  public password!: string;
-  public tokens!: number;
-  public role!: string;
+  public userId!: number;
+  public name!: string;
+  public tags!: string[];
+  public isDeleted!: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-User.init(
+Dataset.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -31,24 +31,23 @@ User.init(
       autoIncrement: true,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    tokens: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0,
     },
-    role: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'user',
+    },
+    tags: {
+      type: DataTypes.JSON,
+      allowNull: false,
+      defaultValue: [],
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -60,12 +59,12 @@ User.init(
     },
   },
   {
-    sequelize, // Utilizza l'istanza di Sequelize importata
-    tableName: 'Users',
-    modelName: 'User',
+    sequelize,
+    tableName: 'Datasets',
+    modelName: 'Dataset',
     timestamps: true,
     underscored: true,
   }
 );
 
-export default User;
+export default Dataset;

@@ -1,29 +1,29 @@
-// User.ts
+// Content.ts
 
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database'; // Importa Sequelize come default
 
-interface UserAttributes {
+interface ContentAttributes {
   id: number;
-  email: string;
-  password: string;
-  tokens: number;
-  role: string;
+  datasetId: number;
+  type: string;
+  path: string;
+  cost: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
-class User extends Model<UserAttributes> implements UserAttributes {
+class Content extends Model<ContentAttributes> implements ContentAttributes {
   public id!: number;
-  public email!: string;
-  public password!: string;
-  public tokens!: number;
-  public role!: string;
+  public datasetId!: number;
+  public type!: string;
+  public path!: string;
+  public cost!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-User.init(
+Content.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -31,24 +31,21 @@ User.init(
       autoIncrement: true,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    tokens: {
+    datasetId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0,
     },
-    role: {
+    type: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'user',
+    },
+    path: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    cost: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -60,12 +57,12 @@ User.init(
     },
   },
   {
-    sequelize, // Utilizza l'istanza di Sequelize importata
-    tableName: 'Users',
-    modelName: 'User',
+    sequelize,
+    tableName: 'Contents',
+    modelName: 'Content',
     timestamps: true,
     underscored: true,
   }
 );
 
-export default User;
+export default Content;
