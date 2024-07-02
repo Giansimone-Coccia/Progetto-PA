@@ -1,6 +1,4 @@
-// Dataset.ts
-
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import SequelizeSingleton from '../utils/SequelizeSingleton';
 
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
@@ -15,7 +13,9 @@ interface DatasetAttributes {
   updatedAt: Date;
 }
 
-class Dataset extends Model<DatasetAttributes> implements DatasetAttributes {
+interface DatasetCreationAttributes extends Optional<DatasetAttributes, 'id'> {}
+
+class Dataset extends Model<DatasetAttributes, DatasetCreationAttributes> implements DatasetAttributes {
   public id!: number;
   public userId!: number;
   public name!: string;
@@ -70,3 +70,4 @@ Dataset.init(
 );
 
 export default Dataset;
+export { DatasetAttributes, DatasetCreationAttributes };

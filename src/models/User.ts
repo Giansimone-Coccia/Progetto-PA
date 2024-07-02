@@ -1,6 +1,4 @@
-// User.ts
-
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import SequelizeSingleton from '../utils/SequelizeSingleton';
 
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
@@ -15,7 +13,9 @@ interface UserAttributes {
   updatedAt: Date;
 }
 
-class User extends Model<UserAttributes> implements UserAttributes {
+interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
   public email!: string;
   public password!: string;
@@ -71,3 +71,4 @@ User.init(
 );
 
 export default User;
+export { UserAttributes, UserCreationAttributes };

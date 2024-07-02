@@ -1,6 +1,4 @@
-// Inference.ts
-
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import SequelizeSingleton from '../utils/SequelizeSingleton';
 
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
@@ -16,12 +14,14 @@ interface InferenceAttributes {
   updatedAt: Date;
 }
 
-class Inference extends Model<InferenceAttributes> implements InferenceAttributes {
+interface InferenceCreationAttributes extends Optional<InferenceAttributes, 'id'> {}
+
+class Inference extends Model<InferenceAttributes, InferenceCreationAttributes> implements InferenceAttributes {
   public id!: number;
   public datasetId!: number;
   public model!: string;
   public status!: string;
-  public result!: any; // Può essere qualsiasi tipo di dato JSON
+  public result!: any;
   public cost!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -49,7 +49,7 @@ Inference.init(
     },
     result: {
       type: DataTypes.JSON,
-      allowNull: true, // Può essere nullo
+      allowNull: true,
     },
     cost: {
       type: DataTypes.FLOAT,
@@ -74,3 +74,4 @@ Inference.init(
 );
 
 export default Inference;
+export { InferenceAttributes, InferenceCreationAttributes };

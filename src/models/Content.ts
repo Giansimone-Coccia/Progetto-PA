@@ -1,6 +1,4 @@
-// Content.ts
-
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Optional } from 'sequelize';
 import SequelizeSingleton from '../utils/SequelizeSingleton';
 
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
@@ -15,7 +13,9 @@ interface ContentAttributes {
   updatedAt: Date;
 }
 
-class Content extends Model<ContentAttributes> implements ContentAttributes {
+interface ContentCreationAttributes extends Optional<ContentAttributes, 'id'> {}
+
+class Content extends Model<ContentAttributes, ContentCreationAttributes> implements ContentAttributes {
   public id!: number;
   public datasetId!: number;
   public type!: string;
@@ -68,3 +68,4 @@ Content.init(
 );
 
 export default Content;
+export { ContentAttributes, ContentCreationAttributes };
