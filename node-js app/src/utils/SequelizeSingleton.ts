@@ -1,5 +1,3 @@
-// sequelizeSingleton.ts
-
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
@@ -11,7 +9,7 @@ class SequelizeSingleton {
 
   private constructor() {
     // Configura Sequelize qui utilizzando il file di configurazione o le variabili di ambiente
-    this.sequelize = new Sequelize(process.env.DB_NAME!, process.env.DB_USER!, process.env.DB_PASSWORD!, {
+    this.sequelize = new Sequelize(process.env.DB_DATABASE!, process.env.DB_USERNAME!, process.env.DB_PASSWORD!, {
       host: process.env.DB_HOST,
       dialect: 'mysql',
       logging: false,
