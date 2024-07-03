@@ -1,21 +1,20 @@
 import { IRepository } from '../IRepository';
 import Dataset from '../../models/Dataset';
-import { DatasetAttributes } from '../../models/Dataset';
 
-export class DatasetRepositoryImpl implements IRepository<DatasetAttributes> {
-  async findAll(): Promise<DatasetAttributes[]> {
+export class DatasetRepositoryImpl implements IRepository<Dataset> {
+  async findAll(): Promise<Dataset[]> {
     return Dataset.findAll();
   }
 
-  async findById(id: number): Promise<DatasetAttributes | null> {
+  async findById(id: number): Promise<Dataset | null> {
     return Dataset.findByPk(id);
   }
 
-  async create(dataset: Partial<DatasetAttributes>): Promise<DatasetAttributes> {
-    return Dataset.create(dataset as DatasetAttributes);
+  async create(dataset: Partial<Dataset>): Promise<Dataset> {
+    return Dataset.create(dataset as Dataset);
   }
 
-  async update(id: number, dataset: Partial<DatasetAttributes>): Promise<DatasetAttributes | null> {
+  async update(id: number, dataset: Partial<Dataset>): Promise<Dataset | null> {
     const existingDataset = await Dataset.findByPk(id);
     if (!existingDataset) {
       return null;

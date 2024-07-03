@@ -1,21 +1,20 @@
 import { IRepository } from '../IRepository';
 import User from '../../models/User';
-import { UserAttributes } from '../../models/User';
 
-export class UserRepositoryImpl implements IRepository<UserAttributes> {
-  async findAll(): Promise<UserAttributes[]> {
+export class UserRepositoryImpl implements IRepository<User> {
+  async findAll(): Promise<User[]> {
     return User.findAll();
   }
 
-  async findById(id: number): Promise<UserAttributes | null> {
+  async findById(id: number): Promise<User | null> {
     return User.findByPk(id);
   }
 
-  async create(user: Partial<UserAttributes>): Promise<UserAttributes> {
-    return User.create(user as UserAttributes);
+  async create(user: Partial<User>): Promise<User> {
+    return User.create(user as User);
   }
 
-  async update(id: number, user: Partial<UserAttributes>): Promise<UserAttributes | null> {
+  async update(id: number, user: Partial<User>): Promise<User | null> {
     const existingUser = await User.findByPk(id);
     if (!existingUser) {
       return null;

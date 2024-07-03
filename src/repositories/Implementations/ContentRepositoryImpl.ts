@@ -1,21 +1,20 @@
 import { IRepository } from '../IRepository';
 import Content from '../../models/Content';
-import { ContentAttributes } from '../../models/Content';
 
-export class ContentRepositoryImpl implements IRepository<ContentAttributes> {
-  async findAll(): Promise<ContentAttributes[]> {
+export class ContentRepositoryImpl implements IRepository<Content> {
+  async findAll(): Promise<Content[]> {
     return Content.findAll();
   }
 
-  async findById(id: number): Promise<ContentAttributes | null> {
+  async findById(id: number): Promise<Content | null> {
     return Content.findByPk(id);
   }
 
-  async create(content: Partial<ContentAttributes>): Promise<ContentAttributes> {
-    return Content.create(content as ContentAttributes);
+  async create(content: Partial<Content>): Promise<Content> {
+    return Content.create(content as Content);
   }
 
-  async update(id: number, content: Partial<ContentAttributes>): Promise<ContentAttributes | null> {
+  async update(id: number, content: Partial<Content>): Promise<Content | null> {
     const existingContent = await Content.findByPk(id);
     if (!existingContent) {
       return null;
