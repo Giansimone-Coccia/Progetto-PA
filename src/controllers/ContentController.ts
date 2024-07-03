@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ContentService } from '../services/ContentService';
 import { ContentRepositoryImpl } from '../repositories/Implementations/ContentRepositoryImpl';
 
-const contentRepository = new ContentRepositoryImpl();
+const contentRepository = new ContentRepositoryImpl(); 
 const contentService = new ContentService(contentRepository);
 
 export const getAllContents = async (req: Request, res: Response) => {
