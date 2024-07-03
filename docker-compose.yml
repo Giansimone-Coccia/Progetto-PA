@@ -2,22 +2,24 @@ version: '3.8'
 services:
   app:
     build: ./node-js app
-    ports:
-      - '3000:3000'
     env_file:
       - .env
+    ports:
+      - "${APP_INTERNAL_PORT}:${APP_EXTERNAL_PORT}"
     depends_on:
       - redis
       - inference
 
   redis:
     image: redis:alpine
+    env_file:
+      - .env
     ports:
-      - "6379:6379"
+      - "${REDIS_INTERNAL_PORT}:${REDIS_EXTERNAL_PORT}"
 
   inference:
     build: ./python-inference
-    ports:
-      - "5000:5000"
     env_file:
       - .env
+    ports:
+      - "${PYTHON_INTERNAL_PORT}:${PYTHON_EXTERNAL_PORT}"

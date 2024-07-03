@@ -1,4 +1,4 @@
-import redis
+import redis # type: ignore
 import os
 
 redis_host = os.getenv('REDIS_HOST', 'localhost')
