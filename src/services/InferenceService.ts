@@ -1,10 +1,10 @@
-import { IInferenceRepository } from '../repositories/InferenceRepository';
+import { IRepository } from '../repositories/IRepository';
 import Inference from '../models/Inference';
 
 export class InferenceService {
-  private inferenceRepository: IInferenceRepository;
+  private inferenceRepository: IRepository<Inference>;
 
-  constructor(inferenceRepository: IInferenceRepository) {
+  constructor(inferenceRepository: IRepository<Inference>) {
     this.inferenceRepository = inferenceRepository;
   }
 

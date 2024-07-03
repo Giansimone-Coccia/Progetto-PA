@@ -1,21 +1,21 @@
-import { IInferenceRepository } from '../InferenceRepository';
+import { IRepository } from '../IRepository';
 import Inference from '../../models/Inference';
 import { InferenceAttributes } from '../../models/Inference';
 
-export class InferenceRepositoryImpl implements IInferenceRepository {
-  async findAll(): Promise<Inference[]> {
+export class InferenceRepositoryImpl implements IRepository<InferenceAttributes> {
+  async findAll(): Promise<InferenceAttributes[]> {
     return Inference.findAll();
   }
 
-  async findById(id: number): Promise<Inference | null> {
+  async findById(id: number): Promise<InferenceAttributes | null> {
     return Inference.findByPk(id);
   }
 
-  async create(inference: Partial<InferenceAttributes>): Promise<Inference> {
+  async create(inference: Partial<InferenceAttributes>): Promise<InferenceAttributes> {
     return Inference.create(inference as InferenceAttributes);
   }
 
-  async update(id: number, inference: Partial<InferenceAttributes>): Promise<Inference | null> {
+  async update(id: number, inference: Partial<InferenceAttributes>): Promise<InferenceAttributes | null> {
     const existingInference = await Inference.findByPk(id);
     if (!existingInference) {
       return null;
