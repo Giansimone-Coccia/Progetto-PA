@@ -4,7 +4,7 @@ import { exec } from 'child_process';
 const seedFile = '20240702133741-seed-contents.js';
 
 // Definisci il comando sequelize-cli da eseguire
-const command = `npx sequelize-cli db:seed --seed ${seedFile}`;
+const command = `npx sequelize-cli db:migrate`;
 
 // Esegui il comando utilizzando exec di Node.js
 exec(command, (error, stdout, stderr) => {

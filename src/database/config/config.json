@@ -4,26 +4,20 @@
     "password": "Project#PA-24",
     "database": "db_pa_2024",
     "host": "db4free.net",
-    "dialect": "mysql",
-    "migrationStorage": "json",
-    "migrationStoragePath": "database/migrations"
+    "dialect": "mysql"
   },
   "test": {
     "username": "gians_walt_24",
     "password": "Project#PA-24",
     "database": "db_pa_2024",
     "host": "db4free.net",
-    "dialect": "mysql",
-    "migrationStorage": "json",
-    "migrationStoragePath": "database/migrations"
+    "dialect": "mysql"
   },
   "production": {
     "username": "gians_walt_24",
     "password": "Project#PA-24",
     "database": "db_pa_2024",
     "host": "db4free.net",
-    "dialect": "mysql",
-    "migrationStorage": "json",
-    "migrationStoragePath": "database/migrations"
+    "dialect": "mysql"
   }
 }
