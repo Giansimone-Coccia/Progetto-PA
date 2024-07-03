@@ -20,7 +20,7 @@ exec(command, (error, stdout, stderr) => {
 });**/
 
 
-/*import express from 'express';
+import express from 'express';
 
 const app = express();
 
@@ -31,9 +31,9 @@ app.get('/', (req, res) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`App listening on http://localhost:${port}`));*/
+app.listen(port, () => console.log(`App listening on http://localhost:${port}`));
 
-import express from 'express';
+/*import express from 'express';
 import routes from '../src/routes/routes';
 
 const app = express();
@@ -46,5 +46,5 @@ app.use('/', routes);
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`App listening on http://localhost:${port}`));
+app.listen(port, () => console.log(`App listening on http://localhost:${port}`));*/
 
