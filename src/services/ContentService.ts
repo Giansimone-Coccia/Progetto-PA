@@ -1,10 +1,10 @@
-import { IContentRepository } from '../repositories/ContentRepository';
+import { IRepository } from '../repositories/IRepository';
 import Content from '../models/Content';
 
 export class ContentService {
-  private contentRepository: IContentRepository;
+  private contentRepository: IRepository<Content>;
 
-  constructor(contentRepository: IContentRepository) {
+  constructor(contentRepository: IRepository<Content>) {
     this.contentRepository = contentRepository;
   }
 

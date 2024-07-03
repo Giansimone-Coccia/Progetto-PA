@@ -1,10 +1,10 @@
-import { IUserRepository } from '../repositories/UserRepository';
+import { IRepository } from '../repositories/IRepository';
 import User from '../models/User';
 
 export class UserService {
-  private userRepository: IUserRepository;
+  private userRepository: IRepository<User>;
 
-  constructor(userRepository: IUserRepository) {
+  constructor(userRepository: IRepository<User>) {
     this.userRepository = userRepository;
   }
 

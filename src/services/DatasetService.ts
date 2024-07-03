@@ -1,10 +1,10 @@
-import { IDatasetRepository } from '../repositories/DatasetRepository';
+import { IRepository } from '../repositories/IRepository';
 import Dataset from '../models/Dataset';
 
 export class DatasetService {
-  private datasetRepository: IDatasetRepository;
+  private datasetRepository: IRepository<Dataset>;
 
-  constructor(datasetRepository: IDatasetRepository) {
+  constructor(datasetRepository: IRepository<Dataset>) {
     this.datasetRepository = datasetRepository;
   }
 
