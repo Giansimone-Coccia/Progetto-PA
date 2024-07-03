@@ -29,11 +29,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 'user'
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

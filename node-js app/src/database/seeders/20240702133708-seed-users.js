@@ -8,16 +8,16 @@ module.exports = {
         password: 'password1', // Ricordati di criptare le password in un'applicazione reale
         tokens: 100,
         role: 'user',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       },
       {
         email: 'admin@example.com',
         password: 'adminpassword', // Ricordati di criptare le password in un'applicazione reale
         tokens: 1000,
         role: 'admin',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ], {});
   },

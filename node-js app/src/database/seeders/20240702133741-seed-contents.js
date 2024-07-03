@@ -8,24 +8,24 @@ module.exports = {
         type: 'image',
         path: '/path/to/image1.jpg',
         cost: 0.65,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       },
       {
         datasetId: 1,
         type: 'zip',
         path: '/path/to/file.zip',
         cost: 0.70,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       },
       {
         datasetId: 2,
         type: 'image',
         path: '/path/to/image2.jpg',
         cost: 0.65,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ], {});
   },

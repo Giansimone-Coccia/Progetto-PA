@@ -9,8 +9,8 @@ module.exports = {
         status: 'COMPLETED',
         result: JSON.stringify({ data: 'some results' }),
         cost: 2.75,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       },
       {
         datasetId: 2,
@@ -18,8 +18,8 @@ module.exports = {
         status: 'PENDING',
         result: null,
         cost: 2.75,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ], {});
   },
