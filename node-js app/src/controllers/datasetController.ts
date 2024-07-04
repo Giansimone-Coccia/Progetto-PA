@@ -134,4 +134,4 @@ class DatasetController {
   };
 }
 
-export default new DatasetController();
+export default DatasetController;

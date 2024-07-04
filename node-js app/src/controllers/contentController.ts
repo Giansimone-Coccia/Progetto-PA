@@ -115,4 +115,4 @@ class ContentController {
   };
 }
 
-export default new ContentController();
+export default ContentController;
