@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { DatasetService } from '../services/datasetService';
 import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
-import DatasetDAO from '../dao/implementations/datasetDAOImpl';
+import DatasetDAO from '../dao/implementations/DatasetDAOImpl';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { ContentService } from '../services/contentService';
 import ContentDAO from '../dao/implementations/contentDAOImpl';

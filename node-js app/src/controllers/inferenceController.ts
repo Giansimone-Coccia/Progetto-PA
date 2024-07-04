@@ -2,9 +2,17 @@ import { Request, Response } from 'express';
 import { InferenceService } from '../services/inferenceService';
 import InferenceRepositoryImpl from '../repositories/implementations/inferenceRepositoryImpl';
 import InferenceDAO from '../dao/implementations/inferenceDAOImpl';
+import { exec } from 'child_process';
+import path from 'path';
+
+interface ProcessInfo {
+  status: string;
+  result: string | null;
+}
 
 class InferenceController {
   private inferenceService: InferenceService;
+  private processes: { [key: string]: ProcessInfo } = {};
 
   constructor() {
     const inferenceDAO = new InferenceDAO();
@@ -50,6 +58,48 @@ class InferenceController {
     } else {
       res.status(404).json({ message: 'Inference not found' });
     }
+  };
+
+  startInference = async (req: Request, res: Response) => {
+    const { datasetId, modelId } = req.body;
+
+    if (!datasetId || !modelId) {
+      return res.status(400).send('datasetId e modelId sono richiesti');
+    }
+
+    // Genera un ID unico per il processo
+    const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+    this.processes[processId] = { status: 'running', result: null };
+
+    // Percorso del file Python da eseguire
+    const scriptPath = path.join(__dirname, '../../../python-inference/src/inference.py');
+
+    // Esegui il file Python passando gli ID del dataset e del modello come argomenti
+    exec(`python ${scriptPath} ${datasetId} ${modelId}`, (error, stdout, stderr) => {
+      if (error) {
+        this.processes[processId].status = 'error';
+        this.processes[processId].result = stderr;
+      } else {
+        this.processes[processId].status = 'completed';
+        this.processes[processId].result = stdout;
+      }
+    });
+
+    res.json({ processId: processId });
+  };
+
+  getStatus = (req: Request, res: Response) => {
+    const processId = req.params.processId;
+    const processInfo = this.processes[processId];
+
+    if (!processInfo) {
+      return res.status(404).json({ message: 'Process not found' });
+    }
+
+    res.json({
+      status: processInfo.status,
+      result: processInfo.result,
+    });
   };
 }
 

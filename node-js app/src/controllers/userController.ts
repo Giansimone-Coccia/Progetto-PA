@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomRequest } from '../middleware/authMiddleware'; // Import the CustomRequest type
+import { CustomRequest } from '../middleware/authMiddleware';
 import { UserService } from '../services/userService';
 import UserDAO from '../dao/implementations/userDAOImpl';
 import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';

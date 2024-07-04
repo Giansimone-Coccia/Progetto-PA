@@ -33,6 +33,8 @@ router.get('/inferences/:id', authenticateJWT, inferenceController.getInferenceB
 router.post('/inferences', authenticateJWT, inferenceController.createInference);
 router.put('/inferences/:id', authenticateJWT, inferenceController.updateInference);
 router.delete('/inferences/:id', authenticateJWT, inferenceController.deleteInference);
+router.post('/start-inference', authenticateJWT, inferenceController.startInference); //sicura
+router.get('/status/:processId', authenticateJWT, inferenceController.getStatus); //sicura
 
 // Rotte dataset (protette)
 router.get('/datasets', authenticateJWT, datasetController.getAllDatasets);
