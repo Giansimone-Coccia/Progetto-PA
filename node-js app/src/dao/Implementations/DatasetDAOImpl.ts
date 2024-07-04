@@ -23,9 +23,12 @@ class DatasetDAO implements IDatasetDAO {
   }
 
   async delete(id: number): Promise<boolean> {
-    const deletedRows = await Dataset.destroy({ where: { id } });
-    return deletedRows > 0;
-  }
+    const [updatedRows] = await Dataset.update(
+      { isDeleted: true },
+      { where: { id } }
+    );
+    return updatedRows > 0;
+  }  
 }
 
 export default DatasetDAO;
