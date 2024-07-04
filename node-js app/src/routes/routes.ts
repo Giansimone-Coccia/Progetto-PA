@@ -14,11 +14,11 @@ router.post('/register', register);
 router.post('/login', login);
 
 // Rotte utente (protette)
-router.get('/users', authenticateJWT, authorizeAdmin, UserController.getAllUsers);
-router.get('/users/:id', authenticateJWT, authorizeAdmin, UserController.getUserById);
-router.post('/users', authenticateJWT, UserController.createUser);
-router.put('/users/:id', authenticateJWT, UserController.updateUser);
-router.delete('/users/:id', authenticateJWT, UserController.deleteUser);
+router.get('/users', authenticateJWT, authorizeAdmin, UserController.getAllUsers); //opzionale
+router.get('/users/:id', authenticateJWT, authorizeAdmin, UserController.getUserById); //opzionale
+router.post('/users', authenticateJWT, UserController.createUser); //opzionale
+router.put('/users/:id', authenticateJWT, UserController.updateUser); //opzionale
+router.delete('/users/:id', authenticateJWT, UserController.deleteUser); //opzionale
 
 // Rotte di inferenze (protette)
 router.get('/inferences', authenticateJWT, InferenceController.getAllInferences);
@@ -29,16 +29,17 @@ router.delete('/inferences/:id', authenticateJWT, InferenceController.deleteInfe
 
 // Rotte dataset (protette)
 router.get('/datasets', authenticateJWT, DatasetController.getAllDatasets);
-router.get('/datasets/:id', authenticateJWT, DatasetController.getDatasetById);
+//router.get('/datasets', authenticateJWT, DatasetController.getAllDatasetsByUserId); //opzionale
+router.get('/datasets/:id', authenticateJWT, DatasetController.getDatasetById); //opzionale
 router.post('/datasets', authenticateJWT, DatasetController.createDataset);
 router.put('/datasets/:id', authenticateJWT, DatasetController.updateDataset);
 router.delete('/datasets/:id', authenticateJWT, DatasetController.deleteDataset);
 
 // Rotte contenuti (protette)
-router.get('/contents', authenticateJWT, ContentController.getAllContents);
-router.get('/contents/:id', authenticateJWT, ContentController.getContentById);
+router.get('/contents', authenticateJWT, ContentController.getAllContents); //opzionale
+router.get('/contents/:id', authenticateJWT, ContentController.getContentById); //opzionale
 router.post('/contents', authenticateJWT, ContentController.createContent);
-router.put('/contents/:id', authenticateJWT, ContentController.updateContent);
-router.delete('/contents/:id', authenticateJWT, ContentController.deleteContent);
+router.put('/contents/:id', authenticateJWT, ContentController.updateContent); //opzionale
+router.delete('/contents/:id', authenticateJWT, ContentController.deleteContent); //opzionale
 
 export default router;

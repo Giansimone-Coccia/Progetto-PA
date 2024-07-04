@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserService } from '../services/UserService';
 import UserRepositoryImpl from '../repositories/Implementations/UserRepositoryImpl';
-import UserDAO from '../dao/Implementations/UserDAO';
+import UserDAO from '../dao/Implementations/UserDAOImpl';
 
 const userDAO = new UserDAO()
 const userRepository = new UserRepositoryImpl(userDAO);

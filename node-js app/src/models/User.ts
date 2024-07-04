@@ -13,9 +13,7 @@ interface UserAttributes {
   updatedAt: Date;
 }
 
-//interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'tokens' | 'createdAt' | 'updatedAt'> {}
-
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;

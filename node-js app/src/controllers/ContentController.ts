@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ContentService } from '../services/ContentService';
 import ContentRepositoryImpl from '../repositories/Implementations/ContentRepositoryImpl';
-import ContentDAO from '../dao/Implementations/ContentDAO';
+import ContentDAO from '../dao/Implementations/ContentDAOImpl';
 
 const contentDAO = new ContentDAO()
 const contentRepository = new ContentRepositoryImpl(contentDAO); 
