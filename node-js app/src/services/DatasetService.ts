@@ -1,3 +1,4 @@
+import { ContentAttributes } from '../models/content';
 import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models/dataset';
 import IDatasetRepository from '../repositories/interfaces/iDatasetRepository';
 
@@ -27,4 +28,12 @@ export class DatasetService {
   async deleteDataset(id: number): Promise<boolean> {
     return this.datasetRepository.delete(id);
   }
+
+  async getDatasetWithSameName(name: string, userId: number ): Promise<DatasetAttributes[]> {
+    return this.datasetRepository.datasetWithSameName(name, userId);
+  }
+
+  static createContentHash(content: ContentAttributes) {
+    return `${content.type}-${content.path}-${content.cost}`;
+  };
 }

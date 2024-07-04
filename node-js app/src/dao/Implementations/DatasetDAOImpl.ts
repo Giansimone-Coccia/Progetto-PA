@@ -21,6 +21,11 @@ class DatasetDAO implements IDatasetDAO {
     const [updatedRows] = await Dataset.update(updates, { where: { id } });
     return updatedRows > 0;
   }
+  
+  async datasetWithSameName(name: string, userId: number ): Promise<DatasetAttributes[]> {
+    const datasetsWithSameName = await Dataset.findAll({ where: { name: name, userId: userId } });
+    return datasetsWithSameName.map(dataset => dataset.toJSON() as DatasetAttributes);
+  }
 
   async delete(id: number): Promise<boolean> {
     const [updatedRows] = await Dataset.update(
