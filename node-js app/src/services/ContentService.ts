@@ -27,4 +27,18 @@ export class ContentService {
   async deleteContent(id: number): Promise<boolean> {
     return this.contentRepository.delete(id);
   }
+
+  static calculateCost(type: string): number | null {
+    switch (type) {
+      case 'jpg':
+      case 'png':
+        return 0.65;
+      case 'mp4':
+      case 'zip':
+        // Add specific logic if needed
+        return 1.2;
+      default:
+        return null; // Invalid type
+    }
+  }
 }

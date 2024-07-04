@@ -3,9 +3,6 @@ import { DatasetService } from '../services/datasetService';
 import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
 import DatasetDAO from '../dao/implementations/datasetDAOImpl';
 import { CustomRequest } from '../middleware/authMiddleware';
-import { UserService } from '../services/userService';
-import UserDAO from '../dao/implementations/userDAOImpl';
-import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
 
 const datasetDAO = new DatasetDAO()
 const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
