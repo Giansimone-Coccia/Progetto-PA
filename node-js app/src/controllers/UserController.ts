@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { CustomRequest } from '../middleware/authMiddleware'; // Importa il tipo CustomRequest
 import { UserService } from '../services/UserService';
-import UserRepositoryImpl from '../repositories/Implementations/UserRepositoryImpl';
 import UserDAO from '../dao/Implementations/UserDAO';
+import UserRepositoryImpl from '../repositories/Implementations/UserRepositoryImpl';
 
 const userDAO = new UserDAO()
 const userRepository = new UserRepositoryImpl(userDAO);

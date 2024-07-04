@@ -2,9 +2,11 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserService } from '../services/UserService';
-import { UserRepositoryImpl } from '../repositories/Implementations/UserRepositoryImpl';
+import UserRepositoryImpl from '../repositories/Implementations/UserRepositoryImpl';
+import UserDAO from '../dao/Implementations/UserDAO';
 
-const userRepository = new UserRepositoryImpl();
+const userDAO = new UserDAO()
+const userRepository = new UserRepositoryImpl(userDAO);
 const userService = new UserService(userRepository);
 
 const secret = process.env.JWT_SECRET || 'your_jwt_secret';
