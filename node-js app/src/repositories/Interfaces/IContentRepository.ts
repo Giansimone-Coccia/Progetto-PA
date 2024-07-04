@@ -1,4 +1,4 @@
-import { ContentAttributes, ContentCreationAttributes } from '../../models/Content';
+import { ContentAttributes, ContentCreationAttributes } from '../../models/content';
 
 interface IContentRepository {
   create(content: ContentCreationAttributes): Promise<ContentAttributes>;

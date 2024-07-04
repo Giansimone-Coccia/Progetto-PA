@@ -1,4 +1,4 @@
-import { DatasetAttributes, DatasetCreationAttributes } from '../../models/Dataset';
+import { DatasetAttributes, DatasetCreationAttributes } from '../../models/dataset';
 
 interface IDatasetRepository {
   create(dataset: DatasetCreationAttributes): Promise<DatasetAttributes>;

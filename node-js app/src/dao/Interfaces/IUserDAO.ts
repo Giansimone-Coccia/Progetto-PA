@@ -1,4 +1,4 @@
-import { UserAttributes, UserCreationAttributes } from '../../models/User';
+import { UserAttributes, UserCreationAttributes } from '../../models/user';
 
 interface IUserDAO {
   create(user: UserCreationAttributes): Promise<UserAttributes>;

@@ -1,5 +1,5 @@
-import Inference, { InferenceAttributes, InferenceCreationAttributes } from '../models/Inference';
-import IInferenceRepository from '../repositories/Interfaces/IInferenceRepository';
+import Inference, { InferenceAttributes, InferenceCreationAttributes } from '../models/inference';
+import IInferenceRepository from '../repositories/interfaces/iInferenceRepository';
 
 export class InferenceService {
   private inferenceRepository: IInferenceRepository;

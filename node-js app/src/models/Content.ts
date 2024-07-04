@@ -1,5 +1,5 @@
 import { Model, DataTypes, Optional } from 'sequelize';
-import SequelizeSingleton from '../utils/SequelizeSingleton';
+import SequelizeSingleton from '../utils/sequelizeSingleton';
 
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
@@ -13,7 +13,7 @@ interface ContentAttributes {
   updatedAt: Date;
 }
 
-interface ContentCreationAttributes extends Optional<ContentAttributes, 'id'> {}
+interface ContentCreationAttributes extends Optional<ContentAttributes, 'id'| 'createdAt' | 'updatedAt'> {}
 
 class Content extends Model<ContentAttributes, ContentCreationAttributes> implements ContentAttributes {
   public id!: number;

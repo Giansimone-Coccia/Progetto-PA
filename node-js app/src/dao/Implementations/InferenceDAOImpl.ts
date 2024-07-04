@@ -1,5 +1,5 @@
-import Inference, { InferenceAttributes, InferenceCreationAttributes } from '../../models/Inference';
-import IInferenceDAO from '../Interfaces/IInferenceDAO';
+import Inference, { InferenceAttributes, InferenceCreationAttributes } from '../../models/inference';
+import IInferenceDAO from '../interfaces/iInferenceDAO';
 
 class InferenceDAO implements IInferenceDAO {
   async create(inference: InferenceCreationAttributes): Promise<InferenceAttributes> {

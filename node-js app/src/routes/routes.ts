@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import * as UserController from '../controllers/UserController';
-import * as InferenceController from '../controllers/InferenceController';
-import * as DatasetController from '../controllers/DatasetController';
-import * as ContentController from '../controllers/ContentController';
-import { register, login } from '../controllers/AuthController';
+import * as UserController from '../controllers/userController';
+import * as InferenceController from '../controllers/inferenceController';
+import * as DatasetController from '../controllers/datasetController';
+import * as ContentController from '../controllers/contentController';
+import { register, login } from '../controllers/authController';
 import { authenticateJWT } from '../middleware/authMiddleware';
 import { authorizeAdmin } from '../middleware/isAdminMiddleware';
 

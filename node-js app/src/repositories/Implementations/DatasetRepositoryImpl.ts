@@ -1,6 +1,6 @@
-import IDatasetDAO from '../../dao/Interfaces/IDatasetDAO';
-import { DatasetAttributes, DatasetCreationAttributes } from '../../models/Dataset';
-import IDatasetRepository from '../Interfaces/IDatasetRepository';
+import IDatasetDAO from '../../dao/interfaces/iDatasetDAO';
+import { DatasetAttributes, DatasetCreationAttributes } from '../../models/dataset';
+import IDatasetRepository from '../interfaces/iDatasetRepository';
 
 
 class DatasetRepository implements IDatasetRepository {

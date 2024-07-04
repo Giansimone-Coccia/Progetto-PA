@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
-import { UserAttributes } from '../models/User';
+import { UserAttributes } from '../models/user';
 
 export interface CustomRequest extends Request {
   //user?: string | JwtPayload | UserAttributes; // Aggiungi la proprietà user all'interfaccia Request

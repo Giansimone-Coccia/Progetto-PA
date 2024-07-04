@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { InferenceService } from '../services/InferenceService';
-import InferenceRepositoryImpl from '../repositories/Implementations/InferenceRepositoryImpl';
-import InferenceDAO from '../dao/Implementations/InferenceDAOImpl';
+import { InferenceService } from '../services/inferenceService';
+import InferenceRepositoryImpl from '../repositories/implementations/inferenceRepositoryImpl';
+import InferenceDAO from '../dao/implementations/inferenceDAOImpl';
 
 const inferenceDAO = new InferenceDAO()
 const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);

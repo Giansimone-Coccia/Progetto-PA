@@ -1,19 +1,15 @@
 import { Request, Response } from 'express';
-import { DatasetService } from '../services/DatasetService';
-import DatasetRepositoryImpl from '../repositories/Implementations/DatasetRepositoryImpl';
-import DatasetDAO from '../dao/Implementations/DatasetDAOImpl';
+import { DatasetService } from '../services/datasetService';
+import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
+import DatasetDAO from '../dao/implementations/datasetDAOImpl';
 import { CustomRequest } from '../middleware/authMiddleware';
-import { UserService } from '../services/UserService';
-import UserDAO from '../dao/Implementations/UserDAOImpl';
-import UserRepositoryImpl from '../repositories/Implementations/UserRepositoryImpl';
+import { UserService } from '../services/userService';
+import UserDAO from '../dao/implementations/userDAOImpl';
+import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
 
 const datasetDAO = new DatasetDAO()
 const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
 const datasetService = new DatasetService(datasetRepository);
-
-const userDAO = new UserDAO()
-const userRepository = new UserRepositoryImpl(userDAO);
-const userService = new UserService(userRepository);
 
 export const getAllDatasets = async (req: Request, res: Response) => {
   const datasets = await datasetService.getAllDatasets();

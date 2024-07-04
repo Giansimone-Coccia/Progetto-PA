@@ -1,5 +1,5 @@
-import User, { UserAttributes, UserCreationAttributes } from '../../models/User';
-import IUserDAO from '../Interfaces/IUserDAO';
+import User, { UserAttributes, UserCreationAttributes } from '../../models/user';
+import IUserDAO from '../interfaces/iUserDAO';
 
 class UserDAO implements IUserDAO {
   async create(user: UserCreationAttributes): Promise<UserAttributes> {

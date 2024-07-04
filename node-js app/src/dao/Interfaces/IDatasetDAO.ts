@@ -1,4 +1,4 @@
-import { DatasetAttributes, DatasetCreationAttributes } from '../../models/Dataset';
+import { DatasetAttributes, DatasetCreationAttributes } from '../../models/dataset';
 
 interface IDatasetDAO {
   create(dataset: DatasetCreationAttributes): Promise<DatasetAttributes>;
