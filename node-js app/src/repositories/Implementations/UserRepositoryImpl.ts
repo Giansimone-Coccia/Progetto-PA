@@ -14,6 +14,10 @@ class UserRepository implements IUserRepository{
     return this.userDAO.create(user);
   }
 
+  async findAll(): Promise<UserAttributes[]> {
+    return this.userDAO.findAll();
+  }
+
   async findById(id: number): Promise<UserAttributes | null> {
     return this.userDAO.findById(id);
   }

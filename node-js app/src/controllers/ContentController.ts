@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { ContentService } from '../services/ContentService';
-import { ContentRepositoryImpl } from '../repositories/Implementations/ContentRepositoryImpl';
+import ContentRepositoryImpl from '../repositories/Implementations/ContentRepositoryImpl';
+import ContentDAO from '../dao/Implementations/ContentDAO';
 
-const contentRepository = new ContentRepositoryImpl(); 
+const contentDAO = new ContentDAO()
+const contentRepository = new ContentRepositoryImpl(contentDAO); 
 const contentService = new ContentService(contentRepository);
 
 export const getAllContents = async (req: Request, res: Response) => {

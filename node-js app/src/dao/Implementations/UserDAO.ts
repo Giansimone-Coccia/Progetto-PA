@@ -7,6 +7,11 @@ class UserDAO implements IUserDAO {
     return newUser.toJSON() as UserAttributes;
   }
 
+  async findAll(): Promise<UserAttributes[]> {
+    const contents = await User.findAll();
+    return contents.map(User => User.toJSON() as UserAttributes);
+  }  
+
   async findById(id: number): Promise<UserAttributes | null> {
     const user = await User.findByPk(id);
     return user ? user.toJSON() as UserAttributes : null;

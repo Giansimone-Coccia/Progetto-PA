@@ -8,7 +8,7 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  async getAllUsers(): Promise<User[]> {
+  async getAllUsers(): Promise<UserAttributes[]> {
     return this.userRepository.findAll();
   }
 
