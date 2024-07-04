@@ -13,6 +13,10 @@ class ContentRepository implements IContentRepository {
     return this.contentDAO.create(content);
   }
 
+  async findAll(): Promise<ContentAttributes[]> {
+    return this.contentDAO.findAll();
+  }
+
   async findById(id: number): Promise<ContentAttributes | null> {
     return this.contentDAO.findById(id);
   }

@@ -1,10 +1,10 @@
-import { IRepository } from '../repositories/Interfaces/IRepository';
-import Dataset from '../models/Dataset';
+import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models/Dataset';
+import IDatasetRepository from '../repositories/Interfaces/IDatasetRepository';
 
 export class DatasetService {
-  private datasetRepository: IRepository<Dataset>;
+  private datasetRepository: IDatasetRepository;
 
-  constructor(datasetRepository: IRepository<Dataset>) {
+  constructor(datasetRepository: IDatasetRepository) {
     this.datasetRepository = datasetRepository;
   }
 
@@ -12,15 +12,15 @@ export class DatasetService {
     return this.datasetRepository.findAll();
   }
 
-  async getDatasetById(id: number): Promise<Dataset | null> {
+  async getDatasetById(id: number): Promise<DatasetAttributes | null> {
     return this.datasetRepository.findById(id);
   }
 
-  async createDataset(dataset: Partial<Dataset>): Promise<Dataset> {
+  async createDataset(dataset: DatasetCreationAttributes): Promise<DatasetAttributes> {
     return this.datasetRepository.create(dataset);
   }
 
-  async updateDataset(id: number, dataset: Partial<Dataset>): Promise<Dataset | null> {
+  async updateDataset(id: number, dataset: Partial<DatasetAttributes>): Promise<boolean> {
     return this.datasetRepository.update(id, dataset);
   }
 

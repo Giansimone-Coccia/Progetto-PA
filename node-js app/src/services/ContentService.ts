@@ -1,26 +1,26 @@
-import { IRepository } from '../repositories/Interfaces/IRepository';
-import Content from '../models/Content';
+import Content, { ContentAttributes, ContentCreationAttributes } from '../models/Content';
+import IContentRepository from '../repositories/Interfaces/IContentRepository';
 
 export class ContentService {
-  private contentRepository: IRepository<Content>;
+  private contentRepository: IContentRepository;
 
-  constructor(contentRepository: IRepository<Content>) {
+  constructor(contentRepository: IContentRepository) {
     this.contentRepository = contentRepository;
   }
 
-  async getAllContents(): Promise<Content[]> {
+  async getAllContents(): Promise<ContentAttributes[]> {
     return this.contentRepository.findAll();
   }
 
-  async getContentById(id: number): Promise<Content | null> {
+  async getContentById(id: number): Promise<ContentAttributes | null> {
     return this.contentRepository.findById(id);
   }
 
-  async createContent(content: Partial<Content>): Promise<Content> {
+  async createContent(content: ContentCreationAttributes): Promise<ContentAttributes> {
     return this.contentRepository.create(content);
   }
 
-  async updateContent(id: number, content: Partial<Content>): Promise<Content | null> {
+  async updateContent(id: number, content: Partial<ContentAttributes>): Promise<boolean> {
     return this.contentRepository.update(id, content);
   }
 

@@ -7,6 +7,11 @@ class ContentDAO implements IContentDAO {
     return newContent.toJSON() as ContentAttributes;
   }
 
+  async findAll(): Promise<ContentAttributes[]> {
+    const contents = await Content.findAll();
+    return contents.map(content => content.toJSON() as ContentAttributes);
+  }  
+
   async findById(id: number): Promise<ContentAttributes | null> {
     const content = await Content.findByPk(id);
     return content ? content.toJSON() as ContentAttributes : null;

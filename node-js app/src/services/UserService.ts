@@ -1,10 +1,10 @@
-import { IRepository } from '../repositories/Interfaces/IRepository';
-import User from '../models/User';
+import User, { UserAttributes, UserCreationAttributes } from '../models/User';
+import IUserRepository from '../repositories/Interfaces/IUserRepository';
 
 export class UserService {
-  private userRepository: IRepository<User>;
+  private userRepository: IUserRepository;
 
-  constructor(userRepository: IRepository<User>) {
+  constructor(userRepository: IUserRepository) {
     this.userRepository = userRepository;
   }
 
@@ -12,15 +12,15 @@ export class UserService {
     return this.userRepository.findAll();
   }
 
-  async getUserById(id: number): Promise<User | null> {
+  async getUserById(id: number): Promise<UserAttributes | null> {
     return this.userRepository.findById(id);
   }
 
-  async createUser(user: Partial<User>): Promise<User> {
+  async createUser(user: UserCreationAttributes): Promise<UserAttributes> {
     return this.userRepository.create(user);
   }
 
-  async updateUser(id: number, user: Partial<User>): Promise<User | null> {
+  async updateUser(id: number, user: Partial<UserAttributes>): Promise<boolean> {
     return this.userRepository.update(id, user);
   }
 
