@@ -20,19 +20,35 @@ export const getAllDatasets = async (req: Request, res: Response) => {
   res.json(datasets);
 };
 
-export const getDatasetById = async (req: Request, res: Response) => {
+export const getDatasetById = async (req: CustomRequest, res: Response) => {
   const id = Number(req.params.id);
-  const dataset = await datasetService.getDatasetById(id);
-  if (dataset) {
+  const userId = req.user?.id;
+
+  try {
+    const dataset = await datasetService.getDatasetById(id);
+
+    if (!dataset || dataset.userId !== userId) {
+      return res.status(404).json({ message: 'Dataset not found or unauthorized' });
+    }
+
     res.json(dataset);
-  } else {
-    res.status(404).json({ message: 'Dataset not found' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-export const createDataset = async (req: Request, res: Response) => {
-  const dataset = await datasetService.createDataset(req.body);
-  res.status(201).json(dataset);
+
+export const createDataset = async (req: CustomRequest, res: Response) => {
+  const userId = req.user?.id;
+
+  const datasetData = { ...req.body, userId };
+
+  try {
+    const dataset = await datasetService.createDataset(datasetData);
+    res.status(201).json(dataset);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
 
 export const updateDataset = async (req: CustomRequest, res: Response) => {
@@ -59,12 +75,25 @@ export const updateDataset = async (req: CustomRequest, res: Response) => {
 };
 
 
-export const deleteDataset = async (req: Request, res: Response) => {
+export const deleteDataset = async (req: CustomRequest, res: Response) => {
   const id = Number(req.params.id);
-  const success = await datasetService.deleteDataset(id);
-  if (success) {
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: 'Dataset not found' });
+  const userId = req.user?.id;
+
+  try {
+    let dataset = await datasetService.getDatasetById(id);
+
+    if (!dataset || dataset.userId !== userId) {
+      return res.status(404).json({ message: 'Dataset not found or unauthorized' });
+    }
+
+    const success = await datasetService.deleteDataset(id);
+
+    if (success) {
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: 'Dataset not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
