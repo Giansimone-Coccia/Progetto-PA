@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { InferenceService } from '../services/InferenceService';
-import { InferenceRepositoryImpl } from '../repositories/Implementations/InferenceRepositoryImpl';
+import InferenceRepositoryImpl from '../repositories/Implementations/InferenceRepositoryImpl';
+import InferenceDAO from '../dao/Implementations/InferenceDAO';
 
-const inferenceRepository = new InferenceRepositoryImpl();
+const inferenceDAO = new InferenceDAO()
+const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
 const inferenceService = new InferenceService(inferenceRepository);
 
 export const getAllInferences = async (req: Request, res: Response) => {

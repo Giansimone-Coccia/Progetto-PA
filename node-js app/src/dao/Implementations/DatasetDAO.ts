@@ -8,8 +8,8 @@ class DatasetDAO implements IDatasetDAO {
   }
 
   async findAll(): Promise<DatasetAttributes[]> {
-    const contents = await Dataset.findAll();
-    return contents.map(dataset => dataset.toJSON() as DatasetAttributes);
+    const datasets = await Dataset.findAll();
+    return datasets.map(dataset => dataset.toJSON() as DatasetAttributes);
   } 
 
   async findById(id: number): Promise<DatasetAttributes | null> {

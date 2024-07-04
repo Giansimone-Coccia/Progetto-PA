@@ -8,7 +8,7 @@ export class InferenceService {
     this.inferenceRepository = inferenceRepository;
   }
 
-  async getAllInferences(): Promise<Inference[]> {
+  async getAllInferences(): Promise<InferenceAttributes[]> {
     return this.inferenceRepository.findAll();
   }
 

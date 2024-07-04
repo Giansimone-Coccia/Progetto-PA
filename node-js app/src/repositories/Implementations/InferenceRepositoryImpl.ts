@@ -14,6 +14,10 @@ class InferenceRepository implements IInferenceRepository {
     return this.inferenceDAO.create(inference);
   }
 
+  async findAll(): Promise<InferenceAttributes[]> {
+    return this.inferenceDAO.findAll();
+  }
+
   async findById(id: number): Promise<InferenceAttributes | null> {
     return this.inferenceDAO.findById(id);
   }

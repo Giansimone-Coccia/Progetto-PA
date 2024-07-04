@@ -7,6 +7,11 @@ class InferenceDAO implements IInferenceDAO {
     return newInference.toJSON() as InferenceAttributes;
   }
 
+  async findAll(): Promise<InferenceAttributes[]> {
+    const inferences = await Inference.findAll();
+    return inferences.map(inference => inference.toJSON() as InferenceAttributes);
+  }  
+
   async findById(id: number): Promise<InferenceAttributes | null> {
     const inference = await Inference.findByPk(id);
     return inference ? inference.toJSON() as InferenceAttributes : null;
