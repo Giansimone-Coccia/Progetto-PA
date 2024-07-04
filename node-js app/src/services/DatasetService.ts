@@ -1,3 +1,4 @@
+import { ContentAttributes } from '../models/content';
 import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models/dataset';
 import IDatasetRepository from '../repositories/interfaces/iDatasetRepository';
 
