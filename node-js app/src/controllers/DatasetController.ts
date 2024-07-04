@@ -27,8 +27,11 @@ export const getDatasetById = async (req: CustomRequest, res: Response) => {
   try {
     const dataset = await datasetService.getDatasetById(id);
 
-    if (!dataset || dataset.userId !== userId) {
-      return res.status(404).json({ message: 'Dataset not found or unauthorized' });
+    if (!dataset) {
+      return res.status(404).json({ message: 'Dataset not found' });
+    }
+    else if (dataset.userId !== userId){
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
     res.json(dataset);
@@ -58,8 +61,11 @@ export const updateDataset = async (req: CustomRequest, res: Response) => {
   try {
     let dataset = await datasetService.getDatasetById(id);
 
-    if (!dataset || dataset.userId !== userId) {
-      return res.status(404).json({ message: 'Dataset not found or unauthorized' });
+    if (!dataset) {
+      return res.status(404).json({ message: 'Dataset not found' });
+    }
+    else if (dataset.userId !== userId){
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
     let datasetUpdated = await datasetService.updateDataset(id, req.body);
@@ -82,8 +88,11 @@ export const deleteDataset = async (req: CustomRequest, res: Response) => {
   try {
     let dataset = await datasetService.getDatasetById(id);
 
-    if (!dataset || dataset.userId !== userId) {
-      return res.status(404).json({ message: 'Dataset not found or unauthorized' });
+    if (!dataset) {
+      return res.status(404).json({ message: 'Dataset not found' });
+    }
+    else if (dataset.userId !== userId){
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
     const success = await datasetService.deleteDataset(id);
