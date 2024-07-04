@@ -73,12 +73,12 @@ export const updateDataset = async (req: CustomRequest, res: Response) => {
     if (datasetUpdated) {
       res.json("Dataset updated");
     } else {
-      res.status(404).json({ message: 'Failed to update dataset' });
+      res.status(400).json({ message: 'Failed to update dataset' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
-  }
-};
+  };
+}
 
 
 export const deleteDataset = async (req: CustomRequest, res: Response) => {
