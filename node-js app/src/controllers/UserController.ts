@@ -1,9 +1,11 @@
 import { Response } from 'express';
 import { CustomRequest } from '../middleware/authMiddleware'; // Importa il tipo CustomRequest
 import { UserService } from '../services/UserService';
-import { UserRepositoryImpl } from '../repositories/Implementations/UserRepositoryImpl';
+import UserRepositoryImpl from '../repositories/Implementations/UserRepositoryImpl';
+import UserDAO from '../dao/Implementations/UserDAO';
 
-const userRepository = new UserRepositoryImpl();
+const userDAO = new UserDAO()
+const userRepository = new UserRepositoryImpl(userDAO);
 const userService = new UserService(userRepository);
 
 export const getAllUsers = async (req: CustomRequest, res: Response) => {

@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { DatasetService } from '../services/DatasetService';
-import { DatasetRepositoryImpl } from '../repositories/Implementations/DatasetRepositoryImpl';
+import DatasetRepositoryImpl from '../repositories/Implementations/DatasetRepositoryImpl';
+import DatasetDAO from '../dao/Implementations/DatasetDAO';
 
-const datasetRepository = new DatasetRepositoryImpl();
+const datasetDAO = new DatasetDAO()
+const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
 const datasetService = new DatasetService(datasetRepository);
 
 export const getAllDatasets = async (req: Request, res: Response) => {

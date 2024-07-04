@@ -1,29 +1,38 @@
-import { IRepository } from '../IRepository';
-import User from '../../models/User';
+import IUserDAO from '../../dao/Interfaces/IUserDAO';
+import { UserCreationAttributes, UserAttributes } from '../../models/User';
+import IUserRepository from '../Interfaces/IUserRepository';
 
-export class UserRepositoryImpl implements IRepository<User> {
-  async findAll(): Promise<User[]> {
-    return User.findAll();
+
+class UserRepository implements IUserRepository{
+  private userDAO: IUserDAO;
+
+  constructor(userDAO: IUserDAO) {
+    this.userDAO = userDAO;
   }
 
-  async findById(id: number): Promise<User | null> {
-    return User.findByPk(id);
+  async create(user: UserCreationAttributes): Promise<UserAttributes> {
+    return this.userDAO.create(user);
   }
 
-  async create(user: Partial<User>): Promise<User> {
-    return User.create(user as User);
+  async findAll(): Promise<UserAttributes[]> {
+    return this.userDAO.findAll();
   }
 
-  async update(id: number, user: Partial<User>): Promise<User | null> {
-    const existingUser = await User.findByPk(id);
-    if (!existingUser) {
-      return null;
-    }
-    return existingUser.update(user);
+  async findById(id: number): Promise<UserAttributes | null> {
+    return this.userDAO.findById(id);
+  }
+
+  async findByEmail(email: string): Promise<UserAttributes | null> {
+    return this.userDAO.findByEmail(email);
+  }
+
+  async update(id: number, updates: Partial<UserAttributes>): Promise<boolean> {
+    return this.userDAO.update(id, updates);
   }
 
   async delete(id: number): Promise<boolean> {
-    const result = await User.destroy({ where: { id } });
-    return result > 0;
+    return this.userDAO.delete(id);
   }
 }
+
+export default UserRepository;

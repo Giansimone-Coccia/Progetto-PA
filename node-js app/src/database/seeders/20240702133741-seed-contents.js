@@ -4,7 +4,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Contents', [
       {
-        datasetId: 1,
+        dataset_id: 1,
         type: 'image',
         path: '/path/to/image1.jpg',
         cost: 0.65,
@@ -12,7 +12,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        datasetId: 1,
+        dataset_id: 1,
         type: 'zip',
         path: '/path/to/file.zip',
         cost: 0.70,
@@ -20,7 +20,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        datasetId: 2,
+        dataset_id: 2,
         type: 'image',
         path: '/path/to/image2.jpg',
         cost: 0.65,

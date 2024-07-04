@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      datasetId: {
+      dataset_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

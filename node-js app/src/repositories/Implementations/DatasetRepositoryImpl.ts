@@ -1,29 +1,34 @@
-import { IRepository } from '../IRepository';
-import Dataset from '../../models/Dataset';
+import IDatasetDAO from '../../dao/Interfaces/IDatasetDAO';
+import { DatasetAttributes, DatasetCreationAttributes } from '../../models/Dataset';
+import IDatasetRepository from '../Interfaces/IDatasetRepository';
 
-export class DatasetRepositoryImpl implements IRepository<Dataset> {
-  async findAll(): Promise<Dataset[]> {
-    return Dataset.findAll();
+
+class DatasetRepository implements IDatasetRepository {
+  private datasetDAO: IDatasetDAO;
+
+  constructor(datasetDAO: IDatasetDAO) {
+    this.datasetDAO = datasetDAO;
   }
 
-  async findById(id: number): Promise<Dataset | null> {
-    return Dataset.findByPk(id);
+  async create(dataset: DatasetCreationAttributes): Promise<DatasetAttributes> {
+    return this.datasetDAO.create(dataset);
   }
 
-  async create(dataset: Partial<Dataset>): Promise<Dataset> {
-    return Dataset.create(dataset as Dataset);
+  async findAll(): Promise<DatasetAttributes[]> {
+    return this.datasetDAO.findAll();
   }
 
-  async update(id: number, dataset: Partial<Dataset>): Promise<Dataset | null> {
-    const existingDataset = await Dataset.findByPk(id);
-    if (!existingDataset) {
-      return null;
-    }
-    return existingDataset.update(dataset);
+  async findById(id: number): Promise<DatasetAttributes | null> {
+    return this.datasetDAO.findById(id);
+  }
+
+  async update(id: number, updates: Partial<DatasetAttributes>): Promise<boolean> {
+    return this.datasetDAO.update(id, updates);
   }
 
   async delete(id: number): Promise<boolean> {
-    const result = await Dataset.destroy({ where: { id } });
-    return result > 0;
+    return this.datasetDAO.delete(id);
   }
 }
+
+export default DatasetRepository;

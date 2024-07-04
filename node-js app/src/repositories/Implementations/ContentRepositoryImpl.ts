@@ -1,29 +1,33 @@
-import { IRepository } from '../IRepository';
-import Content from '../../models/Content';
+import IContentDAO from '../../dao/Interfaces/IContentDAO';
+import { ContentAttributes, ContentCreationAttributes } from '../../models/Content';
+import IContentRepository from '../Interfaces/IContentRepository';
 
-export class ContentRepositoryImpl implements IRepository<Content> {
-  async findAll(): Promise<Content[]> {
-    return Content.findAll();
+class ContentRepository implements IContentRepository {
+  private contentDAO: IContentDAO;
+
+  constructor(contentDAO: IContentDAO) {
+    this.contentDAO = contentDAO;
   }
 
-  async findById(id: number): Promise<Content | null> {
-    return Content.findByPk(id);
+  async create(content: ContentCreationAttributes): Promise<ContentAttributes> {
+    return this.contentDAO.create(content);
   }
 
-  async create(content: Partial<Content>): Promise<Content> {
-    return Content.create(content as Content);
+  async findAll(): Promise<ContentAttributes[]> {
+    return this.contentDAO.findAll();
   }
 
-  async update(id: number, content: Partial<Content>): Promise<Content | null> {
-    const existingContent = await Content.findByPk(id);
-    if (!existingContent) {
-      return null;
-    }
-    return existingContent.update(content);
+  async findById(id: number): Promise<ContentAttributes | null> {
+    return this.contentDAO.findById(id);
+  }
+
+  async update(id: number, updates: Partial<ContentAttributes>): Promise<boolean> {
+    return this.contentDAO.update(id, updates);
   }
 
   async delete(id: number): Promise<boolean> {
-    const result = await Content.destroy({ where: { id } });
-    return result > 0;
+    return this.contentDAO.delete(id);
   }
 }
+
+export default ContentRepository;
