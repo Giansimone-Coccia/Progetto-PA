@@ -29,6 +29,10 @@ class DatasetRepository implements IDatasetRepository {
   async delete(id: number): Promise<boolean> {
     return this.datasetDAO.delete(id);
   }
+
+  async datasetWithSameName(name: string, userId: number ): Promise<DatasetAttributes[]> {
+    return this.datasetDAO.datasetWithSameName(name, userId);
+  }
 }
 
 export default DatasetRepository;
