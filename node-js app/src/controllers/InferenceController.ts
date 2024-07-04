@@ -3,46 +3,54 @@ import { InferenceService } from '../services/inferenceService';
 import InferenceRepositoryImpl from '../repositories/implementations/inferenceRepositoryImpl';
 import InferenceDAO from '../dao/implementations/inferenceDAOImpl';
 
-const inferenceDAO = new InferenceDAO()
-const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
-const inferenceService = new InferenceService(inferenceRepository);
+class InferenceController {
+  private inferenceService: InferenceService;
 
-export const getAllInferences = async (req: Request, res: Response) => {
-  const inferences = await inferenceService.getAllInferences();
-  res.json(inferences);
-};
-
-export const getInferenceById = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const inference = await inferenceService.getInferenceById(id);
-  if (inference) {
-    res.json(inference);
-  } else {
-    res.status(404).json({ message: 'Inference not found' });
+  constructor() {
+    const inferenceDAO = new InferenceDAO();
+    const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
+    this.inferenceService = new InferenceService(inferenceRepository);
   }
-};
 
-export const createInference = async (req: Request, res: Response) => {
-  const inference = await inferenceService.createInference(req.body);
-  res.status(201).json(inference);
-};
+  getAllInferences = async (req: Request, res: Response) => {
+    const inferences = await this.inferenceService.getAllInferences();
+    res.json(inferences);
+  };
 
-export const updateInference = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const inference = await inferenceService.updateInference(id, req.body);
-  if (inference) {
-    res.json(inference);
-  } else {
-    res.status(404).json({ message: 'Inference not found' });
-  }
-};
+  getInferenceById = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const inference = await this.inferenceService.getInferenceById(id);
+    if (inference) {
+      res.json(inference);
+    } else {
+      res.status(404).json({ message: 'Inference not found' });
+    }
+  };
 
-export const deleteInference = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const success = await inferenceService.deleteInference(id);
-  if (success) {
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: 'Inference not found' });
-  }
-};
+  createInference = async (req: Request, res: Response) => {
+    const inference = await this.inferenceService.createInference(req.body);
+    res.status(201).json(inference);
+  };
+
+  updateInference = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const inference = await this.inferenceService.updateInference(id, req.body);
+    if (inference) {
+      res.json(inference);
+    } else {
+      res.status(404).json({ message: 'Inference not found' });
+    }
+  };
+
+  deleteInference = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const success = await this.inferenceService.deleteInference(id);
+    if (success) {
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: 'Inference not found' });
+    }
+  };
+}
+
+export default new InferenceController();

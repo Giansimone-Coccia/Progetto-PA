@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import * as UserController from '../controllers/userController';
-import * as InferenceController from '../controllers/inferenceController';
-import * as DatasetController from '../controllers/datasetController';
-import * as ContentController from '../controllers/contentController';
-import { register, login } from '../controllers/authController';
+import UserController from '../controllers/userController';
+import InferenceController from '../controllers/inferenceController';
+import DatasetController from '../controllers/datasetController';
+import ContentController from '../controllers/contentController';
+import AuthController from '../controllers/authController';
 import { authenticateJWT } from '../middleware/authMiddleware';
 import { authorizeAdmin } from '../middleware/isAdminMiddleware';
 
 const router = Router();
 
 // Rotte di autenticazione
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
 
 // Rotte utente (protette)
 router.get('/users', authenticateJWT, authorizeAdmin, UserController.getAllUsers); //opzionale
