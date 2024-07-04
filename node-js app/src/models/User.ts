@@ -13,7 +13,9 @@ interface UserAttributes {
   updatedAt: Date;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+//interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'tokens' | 'createdAt' | 'updatedAt'> {}
+
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
@@ -45,7 +47,7 @@ User.init(
     tokens: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 100,
     },
     role: {
       type: DataTypes.STRING,
