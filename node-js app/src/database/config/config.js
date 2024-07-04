@@ -1,4 +1,3 @@
-//require('dotenv').config(); // this is important!
 const dotenv = require('dotenv');
 const path = require('path');
 

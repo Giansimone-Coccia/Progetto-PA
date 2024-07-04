@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
+      user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -29,7 +29,7 @@ module.exports = {
         allowNull: false,
         defaultValue: []
       },
-      isDeleted: {
+      is_deleted: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false

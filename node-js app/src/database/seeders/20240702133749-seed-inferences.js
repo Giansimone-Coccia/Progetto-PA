@@ -4,7 +4,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Inferences', [
       {
-        datasetId: 1,
+        dataset_id: 1,
         model: 'model1',
         status: 'COMPLETED',
         result: JSON.stringify({ data: 'some results' }),
@@ -13,7 +13,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        datasetId: 2,
+        dataset_id: 2,
         model: 'model2',
         status: 'PENDING',
         result: null,
