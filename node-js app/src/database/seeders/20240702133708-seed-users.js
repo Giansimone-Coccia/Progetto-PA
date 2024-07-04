@@ -1,11 +1,15 @@
 'use strict';
+const bcrypt = require('bcryptjs');
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
+    const hashedPassword1 = await bcrypt.hash('password1', 10);
+    const hashedPassword2 = await bcrypt.hash('adminpassword', 10);
+
     return queryInterface.bulkInsert('Users', [
       {
         email: 'user1@example.com',
-        password: 'password1', // Ricordati di criptare le password in un'applicazione reale
+        password: hashedPassword1,
         tokens: 100,
         role: 'user',
         created_at: new Date(),
@@ -13,7 +17,7 @@ module.exports = {
       },
       {
         email: 'admin@example.com',
-        password: 'adminpassword', // Ricordati di criptare le password in un'applicazione reale
+        password: hashedPassword2,
         tokens: 1000,
         role: 'admin',
         created_at: new Date(),
@@ -22,7 +26,7 @@ module.exports = {
     ], {});
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     return queryInterface.bulkDelete('Users', null, {});
   }
 };

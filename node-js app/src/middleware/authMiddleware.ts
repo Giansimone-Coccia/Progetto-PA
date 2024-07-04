@@ -4,7 +4,8 @@ import { JwtPayload } from 'jsonwebtoken';
 import { UserAttributes } from '../models/User';
 
 export interface CustomRequest extends Request {
-  user?: string | JwtPayload | UserAttributes; // Aggiungi la proprietà user all'interfaccia Request
+  //user?: string | JwtPayload | UserAttributes; // Aggiungi la proprietà user all'interfaccia Request
+  user?: UserAttributes;
 }
 
 const secret = process.env.JWT_SECRET || 'your_jwt_secret';

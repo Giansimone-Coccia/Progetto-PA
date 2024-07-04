@@ -5,6 +5,7 @@ import * as DatasetController from '../controllers/DatasetController';
 import * as ContentController from '../controllers/ContentController';
 import { register, login } from '../controllers/AuthController';
 import { authenticateJWT } from '../middleware/authMiddleware';
+import { authorizeAdmin } from '../middleware/isAdminMiddleware';
 
 const router = Router();
 
@@ -13,8 +14,8 @@ router.post('/register', register);
 router.post('/login', login);
 
 // Rotte utente (protette)
-router.get('/users', authenticateJWT, UserController.getAllUsers);
-router.get('/users/:id', authenticateJWT, UserController.getUserById);
+router.get('/users', authenticateJWT, authorizeAdmin, UserController.getAllUsers);
+router.get('/users/:id', authenticateJWT, authorizeAdmin, UserController.getUserById);
 router.post('/users', authenticateJWT, UserController.createUser);
 router.put('/users/:id', authenticateJWT, UserController.updateUser);
 router.delete('/users/:id', authenticateJWT, UserController.deleteUser);
