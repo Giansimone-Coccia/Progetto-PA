@@ -53,4 +53,4 @@ class InferenceController {
   };
 }
 
-export default new InferenceController();
+export default InferenceController;
