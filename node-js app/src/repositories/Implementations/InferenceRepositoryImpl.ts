@@ -1,29 +1,30 @@
-import { IRepository } from '../Interfaces/IRepository';
-import Inference from '../../models/Inference';
+import IInferenceDAO from '../../dao/Interfaces/IInferenceDAO';
+import { InferenceAttributes, InferenceCreationAttributes } from '../../models/Inference';
+import IInferenceRepository from '../Interfaces/IInferenceRepository';
 
-export class InferenceRepositoryImpl implements IRepository<Inference> {
-  async findAll(): Promise<Inference[]> {
-    return Inference.findAll();
+
+class InferenceRepository implements IInferenceRepository {
+  private inferenceDAO: IInferenceDAO;
+
+  constructor(inferenceDAO: IInferenceDAO) {
+    this.inferenceDAO = inferenceDAO;
   }
 
-  async findById(id: number): Promise<Inference | null> {
-    return Inference.findByPk(id);
+  async create(inference: InferenceCreationAttributes): Promise<InferenceAttributes> {
+    return this.inferenceDAO.create(inference);
   }
 
-  async create(inference: Partial<Inference>): Promise<Inference> {
-    return Inference.create(inference as Inference);
+  async findById(id: number): Promise<InferenceAttributes | null> {
+    return this.inferenceDAO.findById(id);
   }
 
-  async update(id: number, inference: Partial<Inference>): Promise<Inference | null> {
-    const existingInference = await Inference.findByPk(id);
-    if (!existingInference) {
-      return null;
-    }
-    return existingInference.update(inference);
+  async update(id: number, updates: Partial<InferenceAttributes>): Promise<boolean> {
+    return this.inferenceDAO.update(id, updates);
   }
 
   async delete(id: number): Promise<boolean> {
-    const result = await Inference.destroy({ where: { id } });
-    return result > 0;
+    return this.inferenceDAO.delete(id);
   }
 }
+
+export default InferenceRepository;
