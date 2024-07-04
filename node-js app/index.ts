@@ -1,11 +1,14 @@
 import express from 'express';
-import routes from './src/routes/routes';  // Assicurati che il percorso sia corretto
+import routes from './src/routes/routes';
 
 const app = express();
 
 app.use(express.json());
 
-// Utilizza le rotte definite in routes/routes.ts
+// Rotte di autenticazione
+app.use('/auth', routes);
+
+// Utilizza le rotte definite in routes/routes.ts per tutte le altre richieste (protette)
 app.use('/api', routes);
 
 app.get('/', (req, res) => {

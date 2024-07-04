@@ -1,16 +1,17 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { CustomRequest } from '../middleware/authMiddleware'; // Importa il tipo CustomRequest
 import { UserService } from '../services/UserService';
 import { UserRepositoryImpl } from '../repositories/Implementations/UserRepositoryImpl';
 
 const userRepository = new UserRepositoryImpl();
 const userService = new UserService(userRepository);
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (req: CustomRequest, res: Response) => {
   const users = await userService.getAllUsers();
   res.json(users);
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req: CustomRequest, res: Response) => {
   const id = Number(req.params.id);
   const user = await userService.getUserById(id);
   if (user) {
@@ -20,12 +21,12 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: CustomRequest, res: Response) => {
   const user = await userService.createUser(req.body);
   res.status(201).json(user);
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: CustomRequest, res: Response) => {
   const id = Number(req.params.id);
   const user = await userService.updateUser(id, req.body);
   if (user) {
@@ -35,7 +36,7 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: CustomRequest, res: Response) => {
   const id = Number(req.params.id);
   const success = await userService.deleteUser(id);
   if (success) {

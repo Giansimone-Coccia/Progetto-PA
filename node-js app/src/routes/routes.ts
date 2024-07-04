@@ -1,33 +1,43 @@
 import { Router } from 'express';
-import * as UserController from '../controllers/UserController'
+import * as UserController from '../controllers/UserController';
 import * as InferenceController from '../controllers/InferenceController';
 import * as DatasetController from '../controllers/DatasetController';
 import * as ContentController from '../controllers/ContentController';
+import { register, login } from '../controllers/AuthController';
+import { authenticateJWT } from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.get('/users', UserController.getAllUsers);
-router.get('/users/:id', UserController.getUserById);
-router.post('/users', UserController.createUser);
-router.put('/users/:id', UserController.updateUser);
-router.delete('/users/:id', UserController.deleteUser);
+// Rotte di autenticazione
+router.post('/register', register);
+router.post('/login', login);
 
-router.get('/inferences', InferenceController.getAllInferences);
-router.get('/inferences/:id', InferenceController.getInferenceById);
-router.post('/inferences', InferenceController.createInference);
-router.put('/inferences/:id', InferenceController.updateInference);
-router.delete('/inferences/:id', InferenceController.deleteInference);
+// Rotte utente (protette)
+router.get('/users', authenticateJWT, UserController.getAllUsers);
+router.get('/users/:id', authenticateJWT, UserController.getUserById);
+router.post('/users', authenticateJWT, UserController.createUser);
+router.put('/users/:id', authenticateJWT, UserController.updateUser);
+router.delete('/users/:id', authenticateJWT, UserController.deleteUser);
 
-router.get('/datasets', DatasetController.getAllDatasets);
-router.get('/datasets/:id', DatasetController.getDatasetById);
-router.post('/datasets', DatasetController.createDataset);
-router.put('/datasets/:id', DatasetController.updateDataset);
-router.delete('/datasets/:id', DatasetController.deleteDataset);
+// Rotte di inferenze (protette)
+router.get('/inferences', authenticateJWT, InferenceController.getAllInferences);
+router.get('/inferences/:id', authenticateJWT, InferenceController.getInferenceById);
+router.post('/inferences', authenticateJWT, InferenceController.createInference);
+router.put('/inferences/:id', authenticateJWT, InferenceController.updateInference);
+router.delete('/inferences/:id', authenticateJWT, InferenceController.deleteInference);
 
-router.get('/contents', ContentController.getAllContents);
-router.get('/contents/:id', ContentController.getContentById);
-router.post('/contents', ContentController.createContent);
-router.put('/contents/:id', ContentController.updateContent);
-router.delete('/contents/:id', ContentController.deleteContent);
+// Rotte dataset (protette)
+router.get('/datasets', authenticateJWT, DatasetController.getAllDatasets);
+router.get('/datasets/:id', authenticateJWT, DatasetController.getDatasetById);
+router.post('/datasets', authenticateJWT, DatasetController.createDataset);
+router.put('/datasets/:id', authenticateJWT, DatasetController.updateDataset);
+router.delete('/datasets/:id', authenticateJWT, DatasetController.deleteDataset);
+
+// Rotte contenuti (protette)
+router.get('/contents', authenticateJWT, ContentController.getAllContents);
+router.get('/contents/:id', authenticateJWT, ContentController.getContentById);
+router.post('/contents', authenticateJWT, ContentController.createContent);
+router.put('/contents/:id', authenticateJWT, ContentController.updateContent);
+router.delete('/contents/:id', authenticateJWT, ContentController.deleteContent);
 
 export default router;
