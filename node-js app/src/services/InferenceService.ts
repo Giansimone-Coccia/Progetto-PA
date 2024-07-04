@@ -1,4 +1,4 @@
-import { IRepository } from '../repositories/IRepository';
+import { IRepository } from '../repositories/Interfaces/IRepository';
 import Inference from '../models/Inference';
 
 export class InferenceService {

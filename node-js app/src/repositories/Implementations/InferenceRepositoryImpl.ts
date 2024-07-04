@@ -1,4 +1,4 @@
-import { IRepository } from '../IRepository';
+import { IRepository } from '../Interfaces/IRepository';
 import Inference from '../../models/Inference';
 
 export class InferenceRepositoryImpl implements IRepository<Inference> {

@@ -1,4 +1,4 @@
-import { IRepository } from '../IRepository';
+import { IRepository } from '../Interfaces/IRepository';
 import Dataset from '../../models/Dataset';
 
 export class DatasetRepositoryImpl implements IRepository<Dataset> {

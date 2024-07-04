@@ -1,4 +1,4 @@
-import { IRepository } from '../IRepository';
+import { IRepository } from '../Interfaces/IRepository';
 import Content from '../../models/Content';
 
 export class ContentRepositoryImpl implements IRepository<Content> {

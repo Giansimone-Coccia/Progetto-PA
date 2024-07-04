@@ -1,4 +1,4 @@
-import { IRepository } from '../repositories/IRepository';
+import { IRepository } from '../repositories/Interfaces/IRepository';
 import Dataset from '../models/Dataset';
 
 export class DatasetService {
