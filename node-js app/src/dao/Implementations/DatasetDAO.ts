@@ -7,6 +7,11 @@ class DatasetDAO implements IDatasetDAO {
     return newDataset.toJSON() as DatasetAttributes;
   }
 
+  async findAll(): Promise<DatasetAttributes[]> {
+    const contents = await Dataset.findAll();
+    return contents.map(dataset => dataset.toJSON() as DatasetAttributes);
+  } 
+
   async findById(id: number): Promise<DatasetAttributes | null> {
     const dataset = await Dataset.findByPk(id);
     return dataset ? dataset.toJSON() as DatasetAttributes : null;

@@ -14,6 +14,10 @@ class DatasetRepository implements IDatasetRepository {
     return this.datasetDAO.create(dataset);
   }
 
+  async findAll(): Promise<DatasetAttributes[]> {
+    return this.datasetDAO.findAll();
+  }
+
   async findById(id: number): Promise<DatasetAttributes | null> {
     return this.datasetDAO.findById(id);
   }

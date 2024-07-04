@@ -8,7 +8,7 @@ export class DatasetService {
     this.datasetRepository = datasetRepository;
   }
 
-  async getAllDatasets(): Promise<Dataset[]> {
+  async getAllDatasets(): Promise<DatasetAttributes[]> {
     return this.datasetRepository.findAll();
   }
 
