@@ -74,6 +74,7 @@ class DatasetController {
     }
   
     if ( name || userId) {
+      
       const datasetsWithSameName = await this.datasetService.getDatasetWithSameName(name, userId);
   
       for (const dataset of datasetsWithSameName) {
