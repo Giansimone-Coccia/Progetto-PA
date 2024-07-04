@@ -1,5 +1,5 @@
-import Content, { ContentAttributes, ContentCreationAttributes } from '../../models/Content';
-import IContentDAO from '../Interfaces/IContentDAO';
+import Content, { ContentAttributes, ContentCreationAttributes } from '../../models/content';
+import IContentDAO from '../interfaces/iContentDAO';
 
 class ContentDAO implements IContentDAO {
   async create(content: ContentCreationAttributes): Promise<ContentAttributes> {

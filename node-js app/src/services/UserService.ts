@@ -1,5 +1,5 @@
-import User, { UserAttributes, UserCreationAttributes } from '../models/User';
-import IUserRepository from '../repositories/Interfaces/IUserRepository';
+import User, { UserAttributes, UserCreationAttributes } from '../models/user';
+import IUserRepository from '../repositories/interfaces/iUserRepository';
 
 export class UserService {
   private userRepository: IUserRepository;

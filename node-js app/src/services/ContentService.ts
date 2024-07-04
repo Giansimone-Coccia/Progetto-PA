@@ -1,5 +1,5 @@
-import Content, { ContentAttributes, ContentCreationAttributes } from '../models/Content';
-import IContentRepository from '../repositories/Interfaces/IContentRepository';
+import Content, { ContentAttributes, ContentCreationAttributes } from '../models/content';
+import IContentRepository from '../repositories/interfaces/iContentRepository';
 
 export class ContentService {
   private contentRepository: IContentRepository;

@@ -1,6 +1,6 @@
-import IInferenceDAO from '../../dao/Interfaces/IInferenceDAO';
-import { InferenceAttributes, InferenceCreationAttributes } from '../../models/Inference';
-import IInferenceRepository from '../Interfaces/IInferenceRepository';
+import IInferenceDAO from '../../dao/interfaces/iInferenceDAO';
+import { InferenceAttributes, InferenceCreationAttributes } from '../../models/inference';
+import IInferenceRepository from '../interfaces/iInferenceRepository';
 
 
 class InferenceRepository implements IInferenceRepository {

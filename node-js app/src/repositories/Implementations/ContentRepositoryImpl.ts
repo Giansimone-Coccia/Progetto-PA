@@ -1,6 +1,6 @@
-import IContentDAO from '../../dao/Interfaces/IContentDAO';
-import { ContentAttributes, ContentCreationAttributes } from '../../models/Content';
-import IContentRepository from '../Interfaces/IContentRepository';
+import IContentDAO from '../../dao/interfaces/iContentDAO';
+import { ContentAttributes, ContentCreationAttributes } from '../../models/content';
+import IContentRepository from '../interfaces/iContentRepository';
 
 class ContentRepository implements IContentRepository {
   private contentDAO: IContentDAO;

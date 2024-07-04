@@ -1,4 +1,4 @@
-import { InferenceAttributes, InferenceCreationAttributes } from '../../models/Inference';
+import { InferenceAttributes, InferenceCreationAttributes } from '../../models/inference';
 
 interface IInferenceDAO {
   create(inference: InferenceCreationAttributes): Promise<InferenceAttributes>;

@@ -1,5 +1,5 @@
 import { Model, DataTypes, Optional } from 'sequelize';
-import SequelizeSingleton from '../utils/SequelizeSingleton';
+import SequelizeSingleton from '../utils/sequelizeSingleton';
 
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 

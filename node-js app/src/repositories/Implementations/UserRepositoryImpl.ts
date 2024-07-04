@@ -1,6 +1,6 @@
-import IUserDAO from '../../dao/Interfaces/IUserDAO';
-import { UserCreationAttributes, UserAttributes } from '../../models/User';
-import IUserRepository from '../Interfaces/IUserRepository';
+import IUserDAO from '../../dao/interfaces/iUserDAO';
+import { UserCreationAttributes, UserAttributes } from '../../models/user';
+import IUserRepository from '../interfaces/iUserRepository';
 
 
 class UserRepository implements IUserRepository{

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { UserService } from '../services/UserService';
-import UserRepositoryImpl from '../repositories/Implementations/UserRepositoryImpl';
-import UserDAO from '../dao/Implementations/UserDAOImpl';
+import { UserService } from '../services/userService';
+import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
+import UserDAO from '../dao/implementations/userDAOImpl';
 
 const userDAO = new UserDAO()
 const userRepository = new UserRepositoryImpl(userDAO);

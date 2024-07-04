@@ -1,6 +1,5 @@
-import Content from '../../models/Content';
-import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../../models/Dataset';
-import IDatasetDAO from '../Interfaces/IDatasetDAO';
+import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../../models/dataset';
+import IDatasetDAO from '../interfaces/iDatasetDAO';
 
 class DatasetDAO implements IDatasetDAO {
   async create(dataset: DatasetCreationAttributes): Promise<DatasetAttributes> {

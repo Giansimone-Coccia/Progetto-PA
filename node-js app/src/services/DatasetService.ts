@@ -1,6 +1,5 @@
-import Content, { ContentAttributes } from '../models/Content';
-import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models/Dataset';
-import IDatasetRepository from '../repositories/Interfaces/IDatasetRepository';
+import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models/dataset';
+import IDatasetRepository from '../repositories/interfaces/iDatasetRepository';
 
 export class DatasetService {
   private datasetRepository: IDatasetRepository;
