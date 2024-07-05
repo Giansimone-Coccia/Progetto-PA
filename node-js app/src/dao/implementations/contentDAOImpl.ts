@@ -17,6 +17,11 @@ class ContentDAO implements IContentDAO {
     return content ? content.toJSON() as ContentAttributes : null;
   }
 
+  async findContentByDatasetId(datasetId: number): Promise<ContentAttributes[] | null> {
+    const contents = await Content.findAll({ where: { datasetId } });
+    return contents ? contents.map((item) => item.toJSON() as ContentAttributes) : null;
+  }
+  
   async update(id: number, updates: Partial<ContentAttributes>): Promise<boolean> {
     const [updatedRows] = await Content.update(updates, { where: { id } });
     return updatedRows > 0;

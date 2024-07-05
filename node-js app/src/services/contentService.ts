@@ -19,6 +19,10 @@ export class ContentService {
     return this.contentRepository.findById(id);
   }
 
+  async getContentByDatasetId(datasetId: number): Promise<ContentAttributes[] | null> {
+    return this.contentRepository.findContentByDatasetId(datasetId);
+  }
+
   async createContent(content: ContentCreationAttributes): Promise<ContentAttributes> {
     return this.contentRepository.create(content);
   }
