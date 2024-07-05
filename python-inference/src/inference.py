@@ -23,11 +23,8 @@ r.set(key, value)
 result = r.get(key)
 print(f"Valore letto da Redis: {result.decode('utf-8')}")
 
-# Define the model architecture with weights
-#model = models.resnet50()
-
 # Load the entire model
-model_path = 'pyModels/armocromia_4_seasons_resnet50_full.pth'
+model_path = 'pyModels/armocromia_12_seasons_resnet50_full.pth'
 model = torch.load(model_path, map_location=torch.device('cpu'))
 
 # Put the model in evaluation mode
@@ -40,6 +37,29 @@ preprocess = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
+
+# Define the class names map
+class_names_12 = {
+    0: "autunno deep",
+    1: "autunno soft",
+    2: "autunno warm",
+    3: "inverno bright",
+    4: "inverno cool",
+    5: "inverno deep",
+    6: "primavera bright",
+    7: "primavera light",
+    8: "primavera warm",
+    9: "summer cool",
+    10: "summer light",
+    11: "summer soft"
+}
+
+class_names_4 = {
+    0: "autunno",
+    1: "estate",
+    2: "inverno",
+    3: "primavera"
+}
 
 # Function to perform inference on an image
 def predict(image_path):
@@ -55,10 +75,11 @@ def predict(image_path):
     # The output has unnormalized scores. To get probabilities, you can run a softmax on it.
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
-    if probabilities.size(0) >= 5:
+    if probabilities.size(0) >= 5: #Quì va diviso il caso da 12 e 4
         top5_prob, top5_catid = torch.topk(probabilities, 5)
         for i in range(top5_prob.size(0)):
-            print(f"{top5_prob[i].item()} -> {top5_catid[i].item()}")
+            class_name = class_names_12[top5_catid[i].item()]
+            print(f"{top5_prob[i].item()} -> {class_name}")
     else:
         print("Less than 5 classes in output, cannot perform top-5.")
 
