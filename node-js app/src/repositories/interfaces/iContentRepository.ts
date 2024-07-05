@@ -6,6 +6,7 @@ interface IContentRepository {
   findById(id: number): Promise<ContentAttributes | null>;
   update(id: number, updates: Partial<ContentAttributes>): Promise<boolean>;
   delete(id: number): Promise<boolean>;
+  findContentByDatasetId(datasetId: number): Promise<ContentAttributes[] | null>;
 }
 
 export default IContentRepository;

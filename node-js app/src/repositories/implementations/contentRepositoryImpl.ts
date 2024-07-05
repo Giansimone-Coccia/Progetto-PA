@@ -21,6 +21,10 @@ class ContentRepository implements IContentRepository {
     return this.contentDAO.findById(id);
   }
 
+  async findContentByDatasetId(datasetId: number): Promise<ContentAttributes[] | null> {
+    return this.contentDAO.findContentByDatasetId(datasetId);
+  }
+
   async update(id: number, updates: Partial<ContentAttributes>): Promise<boolean> {
     return this.contentDAO.update(id, updates);
   }
