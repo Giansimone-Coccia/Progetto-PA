@@ -9,6 +9,10 @@ services:
     depends_on:
       - redis
       - inference
+    networks:
+      - my-network
+    volumes:
+      - ./node-js/app:/app
 
   redis:
     image: redis:alpine
@@ -16,6 +20,8 @@ services:
       - .env
     ports:
       - "${REDIS_INTERNAL_PORT}:${REDIS_EXTERNAL_PORT}"
+    networks:
+      - my-network
 
   inference:
     build: ./python-inference
@@ -23,3 +29,9 @@ services:
       - .env
     ports:
       - "${PYTHON_INTERNAL_PORT}:${PYTHON_EXTERNAL_PORT}"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

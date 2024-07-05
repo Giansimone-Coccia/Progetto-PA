@@ -74,7 +74,14 @@ class InferenceController {
     // Percorso del file Python da eseguire
     const scriptPath = path.join(__dirname, '../../../python-inference/src/inference.py');
     console.log(scriptPath);
-    exec(`python ${scriptPath}`);
+
+    exec(`python ${scriptPath}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing Python script: ${error}`);
+        return;
+      }
+      console.log(`Python script output: ${stdout}`);
+    });
 
     // Esegui il file Python passando gli ID del dataset e del modello come argomenti
     /* exec(`python ${scriptPath} ${datasetId} ${modelId}`, (error, stdout, stderr) => {
