@@ -12,6 +12,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy the rest of your application code
+COPY ./server.py /PyApp/server.py
 COPY . .
 
 # Expose port if needed (you may not need to expose a port for PyTorch unless you have a web interface)
