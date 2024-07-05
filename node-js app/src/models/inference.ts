@@ -8,7 +8,7 @@ interface InferenceAttributes {
   datasetId: number;
   model: string;
   status: string;
-  result: any; // Può essere qualsiasi tipo di dato JSON
+  result: any; 
   cost: number;
   createdAt: Date;
   updatedAt: Date;

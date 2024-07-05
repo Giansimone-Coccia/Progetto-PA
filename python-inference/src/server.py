@@ -1,3 +1,4 @@
+import zipfile
 from flask import Flask, request, jsonify # type: ignore
 import redis # type: ignore
 import os
@@ -6,6 +7,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 from torchvision import models
 import os
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -55,20 +57,53 @@ class_names_4 = {
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    if 'image_path' not in request.json:
-        return jsonify({'error': 'No image path provided'}), 400
-    
-    image_name = request.json['image_path']
-    dir_path = os.getcwd()
-    input_image = Image.open(os.path.join(dir_path, 'images', image_name))
+
+    if request.method == 'POST':
+        all_results={}
+        try:
+            data = request.json
+
+            for item in data:
+                id = item['id']
+                datasetId = item['datasetId']
+                type = item['type']
+                file = item['data'] 
+                cost = item['cost']
+                createdAt = item['createdAt']
+                updatedAt = item['updatedAt']
+
+                if(type == 'image'):
+                    input_image = Image.open(BytesIO(file.read()))
+                    all_results[file.filename]=predict_image(input_image, model, class_names_12)
+                
+                if(type == 'zip'):
+                    zip_bytes = file.read()
+                    zip_results = {}
+
+                    with zipfile.ZipFile(BytesIO(zip_bytes), 'r') as zip_file:
+
+                        file_list = zip_file.namelist()
+
+                        for filename in file_list:
+                            zip_results[filename]=predict_image(filename, model, class_names_12)
+
+                    all_results[file.filename]=zip_results
+
+            return jsonify(all_results)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Metodo non consentito'}), 405
+
+def predict_image(input_image, model, class_names_12):
     input_tensor = preprocess(input_image)
     input_batch = input_tensor.unsqueeze(0)
-
+    
     with torch.no_grad():
         output = model(input_batch)
-
+    
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
-
+    
     results = []
     if probabilities.size(0) >= 5:
         top5_prob, top5_catid = torch.topk(probabilities, 5)
@@ -80,9 +115,9 @@ def predict():
             }
             results.append(result_entry)
     else:
-        return jsonify({'error': 'Less than 5 classes in output, cannot perform top-5'}), 500
-
-    return jsonify(results)
+        return {'error': 'Less than 5 classes in output, cannot perform top-5'}, 500
+    
+    return results
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
