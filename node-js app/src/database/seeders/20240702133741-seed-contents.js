@@ -8,7 +8,7 @@ module.exports = {
       return queryInterface.bulkInsert('Contents', [
         {
           dataset_id: 1,
-          type: 'jpg',
+          type: 'image',
           data: fs.readFileSync(path.join(__dirname, 'seeders images', 'image 1.jpg')), 
           cost: 0.65,
           created_at: new Date(),
@@ -16,7 +16,7 @@ module.exports = {
         },
         {
           dataset_id: 1,
-          type: 'jpg',
+          type: 'image',
           data: fs.readFileSync(path.join(__dirname, 'seeders images', 'image 2.jpg')), 
           cost: 0.65,
           created_at: new Date(),
@@ -24,7 +24,7 @@ module.exports = {
         },
         {
           dataset_id: 2,
-          type: 'jpg',
+          type: 'image',
           data: fs.readFileSync(path.join(__dirname, 'seeders images', 'image 3.jpg')), 
           cost: 0.65,
           created_at: new Date(),

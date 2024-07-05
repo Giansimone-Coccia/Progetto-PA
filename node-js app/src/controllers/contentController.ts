@@ -49,50 +49,57 @@ class ContentController {
     const userId = req.user?.id;
 
     if (!userId) {
-        return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
     try {
-        const user = await this.userService.getUserById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+      const user = await this.userService.getUserById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
 
-        const cost = ContentService.calculateCost(type);
-        if (cost === null) {
-            return res.status(400).json({ message: 'Invalid file type' });
-        }
+      if (!req.file) {
+        return res.status(400).json({ error: 'Nessun file caricato' });
+      }
 
-        if (typeof user.tokens !== 'number') {
-            return res.status(500).json({ message: 'User tokens are not a number' });
-        }
+      const data = req.file.buffer;
+      const mimetype =  req.file.mimetype;
 
-        if (cost > user.tokens) {
-            return res.status(400).json({ message: 'Not enough tokens' });
-        }
+      if(!ContentService.checkMimetype(type, mimetype)){
+        return res.status(400).json({ message: 'Invalid file type' });
+      }
 
-        if (!req.file) {
-            return res.status(400).json({ error: 'Nessun file caricato' });
-        }
+      const cost = ContentService.calculateCost(type, data);
 
-        const data = req.file.buffer;
-        const contentData = { ...req.body, cost, data };
+      if (cost === null) {
+        return res.status(400).json({ message: 'Invalid file type' });
+      }
 
-        await this.userService.updateUser(userId, { tokens: user.tokens - cost });
+      if (typeof user.tokens !== 'number') {
+        return res.status(500).json({ message: 'User tokens are not a number' });
+      }
 
-        const dataset = await this.datasetService.getDatasetById(datasetId);
-        if (!dataset) {
-            return res.status(404).json({ message: 'Dataset not found' });
-        }
+      if (cost > user.tokens) {
+        return res.status(400).json({ message: 'Not enough tokens' });
+      }
 
-        if (dataset.userId !== userId) {
-            return res.status(403).json({ message: 'Unauthorized access to dataset' });
-        }
+      const contentData = { ...req.body, cost, data };
 
-        const content = await this.contentService.createContent(contentData);
-        return res.status(201).json(content);
+      await this.userService.updateUser(userId, { tokens: user.tokens - cost });
+
+      const dataset = await this.datasetService.getDatasetById(datasetId);
+      if (!dataset) {
+        return res.status(404).json({ message: 'Dataset not found' });
+      }
+
+      if (dataset.userId !== userId) {
+        return res.status(403).json({ message: 'Unauthorized access to dataset' });
+      }
+
+      const content = await this.contentService.createContent(contentData);
+      return res.status(201).json(content);
     } catch (error) {
-        return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ message: 'Internal server error' });
     }
   };
 
@@ -115,32 +122,6 @@ class ContentController {
       res.status(404).json({ message: 'Content not found' });
     }
   };
-
-  /*async uploadImage(req: Request, res: Response): Promise<void> {
-    try {
-      if (!req.file) {
-        res.status(400).json({ error: 'Nessun file caricato' });
-        return;
-      }
-
-      // Dati binari dell'immagine
-      const imageData = req.file.buffer;
-
-      // Creazione di un nuovo record nel database con Sequelize
-      const newContent = await Content.create({
-        datasetId: req.body.datasetId,
-        type: 'image', 
-        data: imageData, 
-        cost: req.body.cost,
-      });
-
-      // Risposta di successo
-      res.json({ message: 'Immagine caricata con successo!', content: newContent });
-    } catch (error) {
-      console.error('Errore durante il caricamento dell\'immagine:', error);
-      res.status(500).json({ error: 'Errore durante il caricamento dell\'immagine. Controlla i log per i dettagli.' });
-    }
-  }*/
 }
 
 export default ContentController;

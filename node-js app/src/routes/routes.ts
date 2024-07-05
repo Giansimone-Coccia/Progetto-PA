@@ -45,13 +45,10 @@ router.post('/datasets', authenticateJWT, datasetController.createDataset);
 router.put('/datasets/:id', authenticateJWT, datasetController.updateDataset);
 router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset);
 
-// Rotta per il caricamento di un'immagine
-//router.post('/upload-image', authenticateJWT, upload.single('image'), contentController.uploadImage);
-
 // Rotte contenuti (protette)
 router.get('/contents', authenticateJWT, contentController.getAllContents); //opzionale
 router.get('/contents/:id', authenticateJWT, contentController.getContentById); //opzionale
-router.post('/contents', authenticateJWT, contentController.createContent);
+router.post('/contents', authenticateJWT, upload.single('data'), contentController.createContent);
 router.put('/contents/:id', authenticateJWT, contentController.updateContent); //opzionale
 router.delete('/contents/:id', authenticateJWT, contentController.deleteContent); //opzionale
 
