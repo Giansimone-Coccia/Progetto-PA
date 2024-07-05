@@ -54,12 +54,22 @@ class ContentController {
 
     try {
       const user = await this.userService.getUserById(userId);
-
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
 
-      const cost = ContentService.calculateCost(type);
+      if (!req.file) {
+        return res.status(400).json({ error: 'Nessun file caricato' });
+      }
+
+      const data = req.file.buffer;
+      const mimetype =  req.file.mimetype;
+
+      if(!ContentService.checkMimetype(type, mimetype)){
+        return res.status(400).json({ message: 'Invalid file type' });
+      }
+
+      const cost = ContentService.calculateCost(type, data);
 
       if (cost === null) {
         return res.status(400).json({ message: 'Invalid file type' });
@@ -72,13 +82,12 @@ class ContentController {
       if (cost > user.tokens) {
         return res.status(400).json({ message: 'Not enough tokens' });
       }
-      
-      const contentData = { ...req.body, cost };
-      const tokens = user.tokens - cost;
-      await this.userService.updateUser(userId, { tokens });
+
+      const contentData = { ...req.body, cost, data };
+
+      await this.userService.updateUser(userId, { tokens: user.tokens - cost });
 
       const dataset = await this.datasetService.getDatasetById(datasetId);
-
       if (!dataset) {
         return res.status(404).json({ message: 'Dataset not found' });
       }
