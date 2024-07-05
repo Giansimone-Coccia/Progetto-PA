@@ -12,11 +12,10 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy the rest of your application code
-COPY ./server.py /PyApp/server.py
 COPY . .
 
 # Expose port if needed (you may not need to expose a port for PyTorch unless you have a web interface)
 EXPOSE 5000
 
 # Command to run the inference script or your main application
-CMD ["python", "server.py"]
+CMD ["python", "src/server.py"]

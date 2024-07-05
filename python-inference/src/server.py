@@ -5,6 +5,7 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from torchvision import models
+import os
 
 app = Flask(__name__)
 
@@ -57,8 +58,9 @@ def predict():
     if 'image_path' not in request.json:
         return jsonify({'error': 'No image path provided'}), 400
     
-    image_path = request.json['image_path']
-    input_image = Image.open(image_path)
+    image_name = request.json['image_path']
+    dir_path = os.getcwd()
+    input_image = Image.open(os.path.join(dir_path, 'images', image_name))
     input_tensor = preprocess(input_image)
     input_batch = input_tensor.unsqueeze(0)
 
