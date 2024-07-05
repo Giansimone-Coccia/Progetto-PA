@@ -81,10 +81,13 @@ class DatasetController {
         const datasetsWithSameName = await this.datasetService.getDatasetWithSameName(name, userId);
     
         for (const dataset of datasetsWithSameName) {
-          if (dataset.id === id) continue; // Skip the current dataset
+          if (dataset.id === id) continue; 
+
+          const existingContents = (await this.contentService.getContentByDatasetId(dataset.id)) || [];
+          const currentContents = (await this.contentService.getContentByDatasetId(id)) || [];  
     
-          const existingContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === dataset.id);
-          const currentContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === id);
+          /*const existingContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === dataset.id);
+          const currentContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === id);*/
         
           const existingContentHashes = new Set(existingContents.map(content => DatasetService.createContentHash(content)));
           const currentContentHashes = new Set(currentContents.map(content => DatasetService.createContentHash(content)));
