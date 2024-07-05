@@ -36,11 +36,23 @@ class ContentController {
 
   getContentById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const content = await this.contentService.getContentById(id);
-    if (content) {
-      res.json(content);
-    } else {
-      res.status(404).json({ message: 'Content not found' });
+
+    // Controlla se l'id non è un numero o è NaN
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid ID. ID must be a number' });
+    }
+
+    try {
+      const content = await this.contentService.getContentById(id);
+
+      if (content) {
+        res.json(content);
+      } else {
+        res.status(404).json({ message: 'Content not found' });
+      }
+    } catch (error) {
+      console.error(`Error retrieving content: ${error}`);
+      res.status(500).json({ error: 'Failed to retrieve content' });
     }
   };
 
@@ -105,21 +117,45 @@ class ContentController {
 
   updateContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const content = await this.contentService.updateContent(id, req.body);
-    if (content) {
-      res.json(content);
-    } else {
-      res.status(404).json({ message: 'Content not found' });
+
+    // Controlla se l'id non è un numero o è NaN
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid ID. ID must be a number' });
+    }
+
+    try {
+      const content = await this.contentService.updateContent(id, req.body);
+
+      if (content) {
+        res.json(content);
+      } else {
+        res.status(404).json({ message: 'Content not found' });
+      }
+    } catch (error) {
+      console.error(`Error updating content: ${error}`);
+      res.status(500).json({ error: 'Failed to update content' });
     }
   };
 
   deleteContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const success = await this.contentService.deleteContent(id);
-    if (success) {
-      res.status(204).end();
-    } else {
-      res.status(404).json({ message: 'Content not found' });
+
+    // Controlla se l'id non è un numero o è NaN
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid ID. ID must be a number' });
+    }
+
+    try {
+      const success = await this.contentService.deleteContent(id);
+
+      if (success) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({ message: 'Content not found' });
+      }
+    } catch (error) {
+      console.error(`Error deleting content: ${error}`);
+      res.status(500).json({ error: 'Failed to delete content' });
     }
   };
 }

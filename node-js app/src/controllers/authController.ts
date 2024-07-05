@@ -20,6 +20,10 @@ class AuthController {
   register = async (req: Request, res: Response) => {
     const { email, password, role } = req.body;
 
+    if (!email || !password || !role) {
+      return res.status(400).json({ error: 'Email, password, and role are required' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
@@ -32,6 +36,10 @@ class AuthController {
 
   login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
 
     const user = await this.userService.findUserByEmail(email);
 
