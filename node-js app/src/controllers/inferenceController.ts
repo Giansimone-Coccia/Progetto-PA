@@ -4,6 +4,7 @@ import InferenceRepositoryImpl from '../repositories/implementations/inferenceRe
 import InferenceDAO from '../dao/implementations/inferenceDAOImpl';
 import { exec } from 'child_process';
 import path from 'path';
+import axios from 'axios';
 
 interface ProcessInfo {
   status: string;
@@ -72,7 +73,7 @@ class InferenceController {
     this.processes[processId] = { status: 'running', result: null }; */
 
     // Percorso del file Python da eseguire
-    const scriptPath = path.join(__dirname, '../../../python-inference/src/inference.py');
+    /* const scriptPath = path.join(__dirname, '../../../python-inference/src/inference.py');
     console.log(scriptPath);
 
     exec(`python ${scriptPath}`, (error, stdout, stderr) => {
@@ -81,7 +82,19 @@ class InferenceController {
         return;
       }
       console.log(`Python script output: ${stdout}`);
-    });
+    }); */
+    const { image_path } = req.body;
+    if (!image_path) {
+      return res.status(400).send('Image path is required');
+    }
+
+    try {
+      const response = await axios.post(`http://inference:5000/predict`, { image_path });
+      res.json(response.data);
+    } catch (error) {
+      console.error(`Error calling inference service: ${error}`);
+      res.status(500).send('Error performing inference');
+    }
 
     // Esegui il file Python passando gli ID del dataset e del modello come argomenti
     /* exec(`python ${scriptPath} ${datasetId} ${modelId}`, (error, stdout, stderr) => {
