@@ -72,7 +72,7 @@ class InferenceController {
     const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     this.processes[processId] = { status: 'running', result: null };
 
-    // Percorso del file Python da eseguire
+    /* // Percorso del file Python da eseguire
     const scriptPath = path.join(__dirname, '../../../python-inference/src/inference.py');
     console.log(scriptPath);
 
@@ -82,7 +82,7 @@ class InferenceController {
         return;
       }
       console.log(`Python script output: ${stdout}`);
-    }); 
+    });  */
 
     const { image_path } = req.body;
     if (!image_path) {

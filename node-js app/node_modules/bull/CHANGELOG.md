@@ -1,3 +1,10 @@
+## [4.15.1](https://github.com/OptimalBits/bull/compare/v4.15.0...v4.15.1) (2024-07-04)
+
+
+### Bug Fixes
+
+* **job:** check jobKey when saving stacktrace ([#2755](https://github.com/OptimalBits/bull/issues/2755)) ([96675f5](https://github.com/OptimalBits/bull/commit/96675f51d1a9e5a30df0a0fe24a40a2d14078203))
+
 # [4.15.0](https://github.com/OptimalBits/bull/compare/v4.14.0...v4.15.0) (2024-06-30)
 
 
