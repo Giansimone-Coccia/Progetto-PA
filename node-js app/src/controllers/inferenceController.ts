@@ -2,23 +2,28 @@ import { Request, Response } from 'express';
 import { InferenceService } from '../services/inferenceService';
 import InferenceRepositoryImpl from '../repositories/implementations/inferenceRepositoryImpl';
 import InferenceDAO from '../dao/implementations/inferenceDAOImpl';
-import { exec } from 'child_process';
-import path from 'path';
 import axios from 'axios';
+import ContentDAO from '../dao/implementations/contentDAOImpl';
+import { ContentService } from '../services/contentService';
+import ContentRepositoryImpl from '../repositories/implementations/contentRepositoryImpl';
 
 interface ProcessInfo {
   status: string;
-  result: string | null;
+  result: JSON | null;
 }
 
 class InferenceController {
   private inferenceService: InferenceService;
   private processes: { [key: string]: ProcessInfo } = {};
+  private contentService: ContentService;
 
   constructor() {
     const inferenceDAO = new InferenceDAO();
     const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
     this.inferenceService = new InferenceService(inferenceRepository);
+    const contentDAO = new ContentDAO();
+    const contentRepository = new ContentRepositoryImpl(contentDAO);
+    this.contentService = new ContentService(contentRepository);
   }
 
   getAllInferences = async (req: Request, res: Response) => {
@@ -72,44 +77,31 @@ class InferenceController {
     const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     this.processes[processId] = { status: 'running', result: null };
 
-    // Percorso del file Python da eseguire
-    const scriptPath = path.join(__dirname, '../../../python-inference/src/inference.py');
-    console.log(scriptPath);
-
-    exec(`python ${scriptPath}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing Python script: ${error}`);
-        return;
-      }
-      console.log(`Python script output: ${stdout}`);
-    }); 
-
-    const { image_path } = req.body;
-    if (!image_path) {
-      return res.status(400).send('Image path is required');
-    }
-
     try {
-      const response = await axios.post(`http://inference:5000/predict`, { image_path });
-      res.json(response.data);
+      // Recupera i contenuti dalla tabella Contents usando datasetId
+      const contents = await this.contentService.getContentByDatasetId(datasetId);
+
+      // Trasforma la lista dei contenuti in una stringa JSON
+      const jsonContents = JSON.stringify(contents);
+
+      let response;
+      try {
+        response = await axios.post(`http://inference:5000/predict`, { jsonContents, modelId });
+        this.processes[processId].status = 'completed';
+        this.processes[processId].result = response.data;
+        res.json({ processId: processId, result: response.data });
+      } catch (error) {
+        console.error(`Error calling inference service: ${error}`);
+        this.processes[processId].status = 'error';
+        //this.processes[processId].result = error.message;
+        res.status(500).send('Error performing inference');
+      }
     } catch (error) {
-      console.error(`Error calling inference service: ${error}`);
+      console.error(`Error performing inference: ${error}`);
+      this.processes[processId].status = 'error';
+      //this.processes[processId].result = error.message;
       res.status(500).send('Error performing inference');
     }
-
-    /* // Esegui il file Python passando gli ID del dataset e del modello come argomenti
-    exec(`python ${scriptPath} ${datasetId} ${modelId}`, (error, stdout, stderr) => {
-      if (error) {
-        this.processes[processId].status = 'error';
-        this.processes[processId].result = stderr;
-      } else {
-        this.processes[processId].status = 'completed';
-        this.processes[processId].result = stdout;
-      }
-    }); */
-
-    res.json({ processId: processId });
-    //res.json({ processId: processId });
   };
 
   getStatus = (req: Request, res: Response) => {
