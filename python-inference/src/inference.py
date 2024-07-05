@@ -4,6 +4,7 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from torchvision import models
+from torchvision.models import ResNet50_Weights
 
 # Redis configuration
 redis_host = os.getenv('REDIS_HOST', 'localhost')
@@ -22,12 +23,12 @@ r.set(key, value)
 result = r.get(key)
 print(f"Valore letto da Redis: {result.decode('utf-8')}")
 
-# Load the ResNet-50 model architecture
-model = models.resnet50(pretrained=False)
+# Define the model architecture with weights
+#model = models.resnet50()
 
-# Load the model weights
-model_path = 'path/to/your/model.pth'
-model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+# Load the entire model
+model_path = 'pyModels/armocromia_4_seasons_resnet50_full.pth'
+model = torch.load(model_path, map_location=torch.device('cpu'))
 
 # Put the model in evaluation mode
 model.eval()
@@ -54,13 +55,15 @@ def predict(image_path):
     # The output has unnormalized scores. To get probabilities, you can run a softmax on it.
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
-    # Print top 5 predicted categories
-    top5_prob, top5_catid = torch.topk(probabilities, 5)
-    for i in range(top5_prob.size(0)):
-        print(f"{top5_prob[i].item()} -> {top5_catid[i].item()}")
+    if probabilities.size(0) >= 5:
+        top5_prob, top5_catid = torch.topk(probabilities, 5)
+        for i in range(top5_prob.size(0)):
+            print(f"{top5_prob[i].item()} -> {top5_catid[i].item()}")
+    else:
+        print("Less than 5 classes in output, cannot perform top-5.")
 
 # Example usage
-image_path = "path/to/your/image.jpg"
+image_path = "images/prova_volto.jpg"
 predict(image_path)
 
 # Now print something to localhost
