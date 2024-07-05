@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 5000
 
 # Command to run the inference script or your main application
-CMD ["python", "src/inference.py"]
+CMD ["python"]

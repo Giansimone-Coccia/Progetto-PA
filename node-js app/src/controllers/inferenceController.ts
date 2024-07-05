@@ -61,7 +61,7 @@ class InferenceController {
   };
 
   startInference = async (req: Request, res: Response) => {
-    const { datasetId, modelId } = req.body;
+    /* const { datasetId, modelId } = req.body;
 
     if (!datasetId || !modelId) {
       return res.status(400).send('datasetId e modelId sono richiesti');
@@ -69,13 +69,15 @@ class InferenceController {
 
     // Genera un ID unico per il processo
     const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-    this.processes[processId] = { status: 'running', result: null };
+    this.processes[processId] = { status: 'running', result: null }; */
 
     // Percorso del file Python da eseguire
     const scriptPath = path.join(__dirname, '../../../python-inference/src/inference.py');
+    console.log(scriptPath);
+    exec(`python ${scriptPath}`);
 
     // Esegui il file Python passando gli ID del dataset e del modello come argomenti
-    exec(`python ${scriptPath} ${datasetId} ${modelId}`, (error, stdout, stderr) => {
+    /* exec(`python ${scriptPath} ${datasetId} ${modelId}`, (error, stdout, stderr) => {
       if (error) {
         this.processes[processId].status = 'error';
         this.processes[processId].result = stderr;
@@ -85,7 +87,8 @@ class InferenceController {
       }
     });
 
-    res.json({ processId: processId });
+    res.json({ processId: processId }); */
+    //res.json({ processId: processId });
   };
 
   getStatus = (req: Request, res: Response) => {

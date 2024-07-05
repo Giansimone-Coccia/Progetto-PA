@@ -4,7 +4,7 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from torchvision import models
-from torchvision.models import ResNet50_Weights
+import json
 
 # Redis configuration
 redis_host = os.getenv('REDIS_HOST', 'localhost')
@@ -62,7 +62,7 @@ class_names_4 = {
 }
 
 # Function to perform inference on an image
-def predict(image_path):
+def predict(image_path, class_names):
     # Load the image
     input_image = Image.open(image_path)
     input_tensor = preprocess(input_image)
@@ -75,17 +75,22 @@ def predict(image_path):
     # The output has unnormalized scores. To get probabilities, you can run a softmax on it.
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
-    if probabilities.size(0) >= 5: #Quì va diviso il caso da 12 e 4
+    results = []
+    if probabilities.size(0) >= 5:
         top5_prob, top5_catid = torch.topk(probabilities, 5)
         for i in range(top5_prob.size(0)):
-            class_name = class_names_12[top5_catid[i].item()]
-            print(f"{top5_prob[i].item()} -> {class_name}")
+            class_name = class_names[top5_catid[i].item()]
+            result_entry = {
+                "probability": top5_prob[i].item(),
+                "class_name": class_name
+            }
+            results.append(result_entry)
     else:
         print("Less than 5 classes in output, cannot perform top-5.")
 
+    return json.dumps(results, indent=4)
+
 # Example usage
 image_path = "images/prova_volto.jpg"
-predict(image_path)
-
-# Now print something to localhost
-print("Stampa qualcosa su localhost!")
+result_json = predict(image_path, class_names_12)
+print(result_json)
