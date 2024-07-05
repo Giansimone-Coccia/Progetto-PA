@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import multer from 'multer';
 import UserController from '../controllers/userController';
 import InferenceController from '../controllers/inferenceController';
 import DatasetController from '../controllers/datasetController';
@@ -8,6 +9,8 @@ import { authenticateJWT } from '../middleware/authMiddleware';
 import { authorizeAdmin } from '../middleware/isAdminMiddleware';
 
 const router = Router();
+
+const upload = multer();
 
 // Inizializzazione dei controller
 const userController = new UserController();
@@ -33,8 +36,6 @@ router.get('/inferences/:id', authenticateJWT, inferenceController.getInferenceB
 router.post('/inferences', authenticateJWT, inferenceController.createInference);
 router.put('/inferences/:id', authenticateJWT, inferenceController.updateInference);
 router.delete('/inferences/:id', authenticateJWT, inferenceController.deleteInference);
-router.post('/start-inference', authenticateJWT, inferenceController.startInference); //sicura
-router.get('/status/:processId', authenticateJWT, inferenceController.getStatus); //sicura
 
 // Rotte dataset (protette)
 router.get('/datasets', authenticateJWT, datasetController.getAllDatasets);
@@ -43,6 +44,9 @@ router.get('/datasets/:id', authenticateJWT, datasetController.getDatasetById); 
 router.post('/datasets', authenticateJWT, datasetController.createDataset);
 router.put('/datasets/:id', authenticateJWT, datasetController.updateDataset);
 router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset);
+
+// Rotta per il caricamento di un'immagine
+//router.post('/upload-image', authenticateJWT, upload.single('image'), contentController.uploadImage);
 
 // Rotte contenuti (protette)
 router.get('/contents', authenticateJWT, contentController.getAllContents); //opzionale

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { DatasetService } from '../services/datasetService';
 import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
-import DatasetDAO from '../dao/implementations/DatasetDAOImpl';
+import DatasetDAO from '../dao/implementations/datasetDAOImpl';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { ContentService } from '../services/contentService';
 import ContentDAO from '../dao/implementations/contentDAOImpl';
@@ -60,7 +60,8 @@ class DatasetController {
   updateDataset = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     const userId = req.user?.id;
-    const datasetData = { ...req.body, userId };
+    const updatedAt = new Date()
+    const datasetData = { ...req.body, userId , updatedAt};
     const { name } = datasetData
   
     // Trova il dataset esistente
@@ -72,29 +73,29 @@ class DatasetController {
     if (existingDataset.userId !== userId) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
-  
-    if ( name || userId) {
-      
-      const datasetsWithSameName = await this.datasetService.getDatasetWithSameName(name, userId);
-  
-      for (const dataset of datasetsWithSameName) {
-        if (dataset.id === id) continue; // Skip the current dataset
-  
-        const existingContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === dataset.id);
-        const currentContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === id);
-      
-        const existingContentHashes = new Set(existingContents.map(content => DatasetService.createContentHash(content)));
-        const currentContentHashes = new Set(currentContents.map(content => DatasetService.createContentHash(content)));
-      
-        const intersection = [...existingContentHashes].filter(hash => currentContentHashes.has(hash));
-  
-        if (intersection.length > 0) {
-          return res.status(401).json({ message: 'Duplicate content detected in datasets with the same name for the user' });
+
+    try {
+
+      if ( name || userId) {
+        
+        const datasetsWithSameName = await this.datasetService.getDatasetWithSameName(name, userId);
+    
+        for (const dataset of datasetsWithSameName) {
+          if (dataset.id === id) continue; // Skip the current dataset
+    
+          const existingContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === dataset.id);
+          const currentContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === id);
+        
+          const existingContentHashes = new Set(existingContents.map(content => DatasetService.createContentHash(content)));
+          const currentContentHashes = new Set(currentContents.map(content => DatasetService.createContentHash(content)));
+        
+          const intersection = [...existingContentHashes].filter(hash => currentContentHashes.has(hash));
+    
+          if (intersection.length > 0) {
+            return res.status(401).json({ message: 'Duplicate content detected in datasets with the same name for the user' });
+          }
         }
       }
-    }
-  
-    try {
       
       let datasetUpdated = await this.datasetService.updateDataset(id, req.body);
   

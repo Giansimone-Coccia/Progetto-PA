@@ -7,7 +7,7 @@ interface ContentAttributes {
   id: number;
   datasetId: number;
   type: string;
-  path: string;
+  data: Buffer; // Assuming data is stored as a Buffer (blob)
   cost: number;
   createdAt: Date;
   updatedAt: Date;
@@ -19,7 +19,7 @@ class Content extends Model<ContentAttributes, ContentCreationAttributes> implem
   public id!: number;
   public datasetId!: number;
   public type!: string;
-  public path!: string;
+  public data!: Buffer;
   public cost!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -41,8 +41,8 @@ Content.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    path: {
-      type: DataTypes.STRING,
+    data: {
+      type: DataTypes.BLOB('long'),
       allowNull: false,
     },
     cost: {

@@ -34,6 +34,6 @@ export class DatasetService {
   }
 
   static createContentHash(content: ContentAttributes) {
-    return `${content.type}-${content.path}-${content.cost}`;
+    return `${content.type}-${content.data}-${content.cost}`;
   };
 }
