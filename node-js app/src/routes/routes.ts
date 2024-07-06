@@ -13,11 +13,11 @@ const router = Router();
 const upload = multer();
 
 // Inizializzazione dei controller
-const userController = new UserController();
-const inferenceController = new InferenceController();
-const datasetController = new DatasetController();
-const contentController = new ContentController();
-const authController = new AuthController();
+const userController = UserController.getInstance();
+const inferenceController = InferenceController.getInstance();
+const datasetController = DatasetController.getInstance();
+const contentController = ContentController.getInstance();
+const authController = AuthController.getInstance();
 
 // Rotte di autenticazione
 router.post('/register', authController.register);

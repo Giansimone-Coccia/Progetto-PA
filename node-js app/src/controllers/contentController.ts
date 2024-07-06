@@ -11,11 +11,12 @@ import UserDAO from '../dao/implementations/userDAOImpl';
 import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
 
 class ContentController {
+  private static instance: ContentController;
   private contentService: ContentService;
   private datasetService: DatasetService;
   private userService: UserService;
 
-  constructor() {
+  private constructor() {
     const contentDAO = new ContentDAO();
     const contentRepository = new ContentRepositoryImpl(contentDAO);
     this.contentService = new ContentService(contentRepository);
@@ -29,12 +30,19 @@ class ContentController {
     this.userService = new UserService(userRepository);
   }
 
-  getAllContents = async (req: Request, res: Response) => {
+  public static getInstance(): ContentController {
+    if (!ContentController.instance) {
+      ContentController.instance = new ContentController();
+    }
+    return ContentController.instance;
+  }
+
+  public getAllContents = async (req: Request, res: Response) => {
     const contents = await this.contentService.getAllContents();
     res.json(contents);
   };
 
-  getContentById = async (req: Request, res: Response) => {
+  public getContentById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
     // Controlla se l'id non è un numero o è NaN
@@ -56,7 +64,7 @@ class ContentController {
     }
   };
 
-  createContent = async (req: CustomRequest, res: Response) => {
+  public createContent = async (req: CustomRequest, res: Response) => {
     const { datasetId, type } = req.body;
     const userId = req.user?.id;
 
@@ -120,7 +128,7 @@ class ContentController {
     }
   };
 
-  updateContent = async (req: Request, res: Response) => {
+  public updateContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
     // Controlla se l'id non è un numero o è NaN
@@ -142,7 +150,7 @@ class ContentController {
     }
   };
 
-  deleteContent = async (req: Request, res: Response) => {
+  public deleteContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
     // Controlla se l'id non è un numero o è NaN
