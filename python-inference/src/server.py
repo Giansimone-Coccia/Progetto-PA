@@ -1,3 +1,4 @@
+import logging
 import zipfile
 from flask import Flask, request, jsonify # type: ignore
 import redis # type: ignore
@@ -55,45 +56,74 @@ class_names_4 = {
     3: "primavera"
 }
 
+# Configura il logger
+logging.basicConfig(level=logging.INFO)
+
 @app.route('/predict', methods=['POST'])
 def predict():
+    app.logger.info("Request method: %s", request.method)
 
     if request.method == 'POST':
-        all_results={}
+        all_results = {}
         try:
             data = request.json
 
-            for item in data:
-                id = item['id']
-                datasetId = item['datasetId']
-                type = item['type']
-                file = item['data'] 
-                cost = item['cost']
-                createdAt = item['createdAt']
-                updatedAt = item['updatedAt']
+            # Controllo che data non sia None
+            if data is None:
+                return jsonify({'error': "Nessun dato JSON trovato"})
 
-                if(type == 'image'):
-                    input_image = Image.open(BytesIO(file.read()))
-                    all_results[file.filename]=predict_image(input_image, model, class_names_12)
+            jsonContents = data.get('jsonContents')
+            modelId = data.get('modelId') 
+
+            # Controllo che jsonContents sia una lista
+            if not isinstance(jsonContents, list):
+                return jsonify({'error': "jsonContents deve essere una lista"})
+            
+            for item in jsonContents:
+
+                if not isinstance(item, list) or len(item) != 3:
+                    return jsonify({'error': "Ogni elemento di jsonContents deve essere una lista con due elementi"})
+
+                app.logger.info("4")
+
+                filename = item[0]
+                type = item[1] 
+                file = item[2] 
+
+                if not isinstance(type, str):
+                    return jsonify({'error': "Il type deve essere una stringa"})
                 
-                if(type == 'zip'):
-                    zip_bytes = file.read()
+                app.logger.info(isinstance(file, bytes))
+
+                if not isinstance(file, dict) or file.get('type') != 'Buffer' or not isinstance(file.get('data'), list):
+                    return jsonify({'error': "Il file deve essere un Buffer valido"})
+
+                file = bytes(file.get('data'))
+
+                if type == 'image':
+                    input_image = Image.open(BytesIO(file))
+                    all_results[filename] = predict_image(input_image, model, class_names_12)
+                
+                elif type == 'zip':
                     zip_results = {}
 
-                    with zipfile.ZipFile(BytesIO(zip_bytes), 'r') as zip_file:
-
+                    with zipfile.ZipFile(BytesIO(file), 'r') as zip_file:
                         file_list = zip_file.namelist()
 
-                        for filename in file_list:
-                            zip_results[filename]=predict_image(filename, model, class_names_12)
+                        for filename_zip in file_list:
+                            with zip_file.open(filename_zip) as file_in_zip:
+                                zip_results[filename_zip] = predict_image(file_in_zip, model, class_names_12)
 
-                    all_results[file.filename]=zip_results
+                    all_results[filename] = zip_results
+                else:
+                    return jsonify({'error': f"Tipo non supportato: {type}"})
 
             return jsonify(all_results)
         except Exception as e:
-            return jsonify({'error': str(e)}), 500
+            return jsonify({'error': str(e)})
     else:
-        return jsonify({'error': 'Metodo non consentito'}), 405
+        return jsonify({'error': 'Metodo non consentito'})
+
 
 def predict_image(input_image, model, class_names_12):
     input_tensor = preprocess(input_image)

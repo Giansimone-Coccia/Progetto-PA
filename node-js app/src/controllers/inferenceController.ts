@@ -123,7 +123,7 @@ class InferenceController {
       }
   
       // Trasforma la lista dei contenuti in una stringa JSON
-      const jsonContents = contents.map(content => [content.type, content.data]);
+      const jsonContents = contents.map(content => [content.name, content.type, content.data]);
   
       try {
         // Chiamata HTTP all'endpoint di inferenza
