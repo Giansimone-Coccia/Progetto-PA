@@ -1,3 +1,5 @@
 redis
 Pillow
 Flask
+opencv-python-headless
+numpy

@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import multer from 'multer';
+import { NextFunction, Router } from 'express';
+import multer, { MulterError } from 'multer';
 import UserController from '../controllers/userController';
 import InferenceController from '../controllers/inferenceController';
 import DatasetController from '../controllers/datasetController';
@@ -11,8 +11,19 @@ import { authorizeAdmin } from '../middleware/isAdminMiddleware';
 const router = Router();
 
 const upload = multer({
-    storage: multer.memoryStorage(),
-  });
+  storage: multer.memoryStorage(),
+});
+
+// Middleware per gestire gli errori di Multer
+/*const handleMulterError = (err: any, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof MulterError) {
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+      return res.status(400).json({ error: 'Campo del form non previsto per il caricamento del file' });
+    }
+  }
+  next(err); // Passa l'errore agli altri middleware di gestione degli errori
+};*/
+
 
 // Inizializzazione dei controller
 const userController = UserController.getInstance();

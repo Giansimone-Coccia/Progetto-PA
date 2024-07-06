@@ -1,7 +1,9 @@
 import Content, { ContentAttributes, ContentCreationAttributes } from '../models/content';
 import IContentRepository from '../repositories/interfaces/iContentRepository';
 import AdmZip = require('adm-zip');
-import * as ffmpeg from 'fluent-ffmpeg';
+import { spawn } from 'child_process';
+import * as path from 'path';
+import * as fs from 'fs';
 
 
 export class ContentService {
@@ -52,74 +54,84 @@ export class ContentService {
     return allowedMimeTypes ? allowedMimeTypes.includes(mimetype) : false;
   }
 
-  static calculateCost(type: string, data: Buffer): number | null {
+  static async calculateCost(type: string, data: Buffer): Promise<number | null> {
     switch (type) {
       case 'image':
         return 0.65;
       case 'video':
-        return this.countFramesInVideo(data);
+        const frames: number = await this.countFramesInVideo(data)
+        return frames * 0.45;
       case 'zip':
-        return this.countImagesInZip(data);
+        return (this.countImagesInZip(data) || 0) * 0.65;
       default:
         return null;
     }
   }
-  
+
   private static countImagesInZip(data: Buffer): number | null {
     try {
       const zip = new AdmZip(data);
-  
+
       const zipEntries = zip.getEntries();
-  
+
       let imageCount = 0;
       zipEntries.forEach(entry => {
         if (entry.name.match(/\.(jpg|jpeg|png)$/i)) {
           imageCount++;
         }
       });
-  
-      return imageCount * 0.65;
+
+      return imageCount;
     } catch (error) {
       console.error('Errore durante il conteggio delle immagini nel file zip:', error);
       return null;
     }
   }
 
-  private static countFramesInVideo(data: Buffer): number{
-    return 1
-    /*return new Promise((resolve, reject) => {
-        // Salva il buffer in un file temporaneo (opzionale, puoi anche utilizzare il buffer direttamente con ffprobe)
-        const tempFilePath = '/tmp/tempvideo.mp4'; // Cambia il percorso a seconda del tuo ambiente
 
-        // Scrivi il buffer su un file temporaneo
-        fs.writeFile(tempFilePath, data, async (err) => {
-            if (err) {
-                console.error('Errore durante il salvataggio del buffer su file temporaneo:', err);
-                reject(null);
-                return;
-            }
+  private static async countFramesInVideo(data: Buffer): Promise<number> {
+    // Comando per ottenere le informazioni video con ffprobe
+    const ffprobeCommand = 'ffprobe';
+    const args = [
+      '-v', 'error',
+      '-select_streams', 'v:0',
+      '-show_entries', 'stream=nb_frames',
+      '-of', 'default=nokey=1:noprint_wrappers=1',
+      '-'
+    ];
 
-            // Ottieni le informazioni del video utilizzando ffprobe di ffmpeg
-            ffmpeg.ffprobe(tempFilePath, (ffprobeErr, metadata) => {
-                if (ffprobeErr) {
-                    console.error('Errore durante il probing del video:', ffprobeErr);
-                    reject(null);
-                    return;
-                }
+    return new Promise((resolve, reject) => {
+      const ffprobeProcess = spawn(ffprobeCommand, args);
 
-                // Ottieni il numero di frame
-                const numFrames = metadata.streams[0].nb_frames;
+      let frameCount = 0;
 
-                // Rimuovi il file temporaneo (opzionale)
-                fs.unlink(tempFilePath, (unlinkErr) => {
-                    if (unlinkErr) {
-                        console.error('Errore durante la rimozione del file temporaneo:', unlinkErr);
-                    }
-                });
+      // Scrivi il buffer nel processo di ffprobe
+      ffprobeProcess.stdin.write(data);
+      ffprobeProcess.stdin.end();
 
-                resolve(numFrames);
-            });
-        });
-    });*/
+      ffprobeProcess.stdout.on('data', (data) => {
+        const frames = parseInt(data.toString().trim(), 10);
+        if (!isNaN(frames)) {
+          frameCount = frames;
+        }
+      });
+
+      ffprobeProcess.stderr.on('data', (data) => {
+        console.error(`Error during frame count: ${data}`);
+      });
+
+      ffprobeProcess.on('close', (code) => {
+        if (code === 0) {
+          resolve(frameCount);
+        } else {
+          reject(new Error(`ffprobe exited with code ${code}`));
+        }
+      });
+
+      ffprobeProcess.on('error', (err) => {
+        console.error(`Error executing ffprobe: ${err}`);
+        reject(err);
+      });
+    });
   }
 }
