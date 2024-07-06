@@ -14,7 +14,7 @@ interface ContentAttributes {
   updatedAt: Date;
 }
 
-interface ContentCreationAttributes extends Optional<ContentAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ContentCreationAttributes extends Optional<ContentAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
 
 class Content extends Model<ContentAttributes, ContentCreationAttributes> implements ContentAttributes {
   public id!: number;

@@ -13,7 +13,7 @@ interface DatasetAttributes {
   updatedAt: Date;
 }
 
-interface DatasetCreationAttributes extends Optional<DatasetAttributes, 'id' | 'isDeleted' | 'createdAt' | 'updatedAt'> {}
+interface DatasetCreationAttributes extends Optional<DatasetAttributes, 'id' | 'isDeleted' | 'createdAt' | 'updatedAt'> { }
 
 class Dataset extends Model<DatasetAttributes, DatasetCreationAttributes> implements DatasetAttributes {
   public id!: number;

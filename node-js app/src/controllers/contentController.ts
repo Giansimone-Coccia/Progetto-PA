@@ -111,10 +111,6 @@ class ContentController {
         return res.status(400).json({ message: 'Invalid file type' });
       }
 
-      if (typeof user.tokens !== 'number') {
-        return res.status(500).json({ message: 'User tokens are not a number' });
-      }
-
       if (cost > user.tokens) {
         return res.status(400).json({ message: 'Not enough tokens' });
       }

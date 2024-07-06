@@ -10,6 +10,9 @@ import { CustomRequest } from '../middleware/authMiddleware';
 import { DatasetService } from '../services/datasetService';
 import DatasetDAO from '../dao/implementations/datasetDAOImpl';
 import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
+import UserDAO from '../dao/implementations/userDAOImpl';
+import { UserService } from '../services/userService';
+import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
 
 interface ProcessInfo {
   status: string;
@@ -22,6 +25,7 @@ class InferenceController {
   private processes: { [key: string]: ProcessInfo } = {};
   private contentService: ContentService;
   private datasetService: DatasetService;
+  private userService: UserService;
 
   private constructor() {
     const inferenceDAO = new InferenceDAO();
@@ -35,6 +39,10 @@ class InferenceController {
     const datasetDAO = new DatasetDAO();
     const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
     this.datasetService = new DatasetService(datasetRepository);
+
+    const userDAO = new UserDAO();
+    const userRepository = new UserRepositoryImpl(userDAO);
+    this.userService = new UserService(userRepository);
   }
 
   public static getInstance(): InferenceController {
@@ -140,11 +148,11 @@ class InferenceController {
       const dataset = await this.datasetService.getDatasetById(datasetId);
 
       if (!dataset) {
-        return res.status(404).json({ message: 'Dataset not found' });
+        return res.status(404).send('Dataset not found' );
       }
 
       if (dataset.userId !== userId) {
-        return res.status(403).json({ message: 'Unauthorized access to dataset' });
+        return res.status(403).send('Unauthorized access to dataset');
       }
 
       const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
@@ -153,21 +161,45 @@ class InferenceController {
       const contents = await this.contentService.getContentByDatasetId(datasetId);
 
       if (contents == null || contents === undefined) {
-        throw new Error('Il servizio getContentByDatasetId ha restituito un valore null o undefined.');
+        return res.status(404).send('Il servizio getContentByDatasetId ha restituito un valore null o undefined.');
       }
 
-      const jsonContents = contents.map(content => [content.name, content.type, content.data]);
+      const cost = ContentService.calculateContentsCost(contents);
+
+      console.log(cost)
+
+      const user = await this.userService.getUserById(userId);
+
+      if(!user){
+        return res.status(401).send('Unauthorized');
+      }
+
+      if (cost > user.tokens) {
+        return res.status(400).send('Not enough tokens');
+      }
+
+      const jsonContents = ContentService.reduceContents(contents);
 
       try {
         const response = await axios.post(`http://inference:5000/predict`, { jsonContents, modelId });
 
         if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
-          res.status(response.data.error_code).send(response.data.error);
+          return res.status(response.data.error_code).send(response.data.error);
         }
+        
+        const status = 'completed';
+
+        let tokens = user.tokens - cost
+
+        await this.userService.updateUser(userId, { tokens });
+
+        console.log({...req.body, cost, status, response  });
+
+        const inference = await this.inferenceService.createInference({...req.body, cost, status, result: response.data, model: modelId });
 
         this.processes[processId].status = 'completed';
         this.processes[processId].result = response.data;
-        res.json(response.data);
+        res.json(inference);
       } catch (error) {
         console.error(`Errore durante la chiamata al servizio di inferenza: ${error}`);
         this.processes[processId].status = 'error';

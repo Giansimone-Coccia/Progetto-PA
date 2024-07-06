@@ -54,6 +54,25 @@ export class ContentService {
     return allowedMimeTypes ? allowedMimeTypes.includes(mimetype) : false;
   }
 
+  static calculateContentsCost(contents: ContentAttributes[]): number {
+    return contents.reduce((accumulator, currentContent) => {
+      if (currentContent.type == 'image') {
+        accumulator += (currentContent.cost / 0.65) * 2.75
+      }
+      else if (currentContent.type == 'zip') {
+        accumulator += (currentContent.cost / 0.7) * 2.75
+      }
+      else {
+        accumulator += (currentContent.cost / 0.45) * 2.75
+      }
+      return accumulator;
+    }, 0);
+  }
+
+  static reduceContents(contents: ContentAttributes[]): (string | Buffer)[][] {
+    return contents.map(content => [content.name, content.type, content.data]);
+  }
+
   static async calculateCost(type: string, data: Buffer): Promise<number | null> {
     switch (type) {
       case 'image':
@@ -62,7 +81,7 @@ export class ContentService {
         const frames: number = await this.countFramesInVideo(data)
         return frames * 0.45;
       case 'zip':
-        return (this.countImagesInZip(data) || 0) * 0.65;
+        return (this.countImagesInZip(data) || 0) * 0.7;
       default:
         return null;
     }

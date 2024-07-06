@@ -13,7 +13,7 @@ interface UserAttributes {
   updatedAt: Date;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'tokens' | 'createdAt' | 'updatedAt'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'tokens' | 'createdAt' | 'updatedAt'> { }
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
@@ -62,7 +62,7 @@ User.init(
     },
   },
   {
-    sequelize: sequelizeInstance, // Utilizza l'istanza di Sequelize importata
+    sequelize: sequelizeInstance,
     tableName: 'Users',
     modelName: 'User',
     timestamps: true,
