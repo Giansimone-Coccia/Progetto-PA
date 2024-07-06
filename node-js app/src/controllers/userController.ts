@@ -60,6 +60,29 @@ class UserController {
       res.status(404).json({ message: 'User not found' });
     }
   };
+
+  public getToken = async (req: CustomRequest, res: Response) => {
+    const userId = req.user?.id;
+  
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  
+    try {
+      const user = await this.userService.getUserById(userId);
+      const tokens = user?.tokens;
+  
+      if (tokens !== undefined) {
+        res.status(200).json({ tokens });
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      console.error(`Error fetching user tokens: ${error}`);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
 }
 
 export default UserController;
