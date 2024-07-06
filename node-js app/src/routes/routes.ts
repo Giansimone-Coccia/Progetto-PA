@@ -10,7 +10,9 @@ import { authorizeAdmin } from '../middleware/isAdminMiddleware';
 
 const router = Router();
 
-const upload = multer();
+const upload = multer({
+    storage: multer.memoryStorage(),
+  });
 
 // Inizializzazione dei controller
 const userController = new UserController();

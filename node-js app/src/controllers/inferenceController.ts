@@ -6,6 +6,10 @@ import axios from 'axios';
 import ContentDAO from '../dao/implementations/contentDAOImpl';
 import { ContentService } from '../services/contentService';
 import ContentRepositoryImpl from '../repositories/implementations/contentRepositoryImpl';
+import { CustomRequest } from '../middleware/authMiddleware';
+import { DatasetService } from '../services/datasetService';
+import DatasetDAO from '../dao/implementations/datasetDAOImpl';
+import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
 
 interface ProcessInfo {
   status: string;
@@ -16,14 +20,20 @@ class InferenceController {
   private inferenceService: InferenceService;
   private processes: { [key: string]: ProcessInfo } = {};
   private contentService: ContentService;
+  private datasetService: DatasetService;
 
   constructor() {
     const inferenceDAO = new InferenceDAO();
     const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
     this.inferenceService = new InferenceService(inferenceRepository);
+
     const contentDAO = new ContentDAO();
     const contentRepository = new ContentRepositoryImpl(contentDAO);
     this.contentService = new ContentService(contentRepository);
+
+    const datasetDAO = new DatasetDAO();
+    const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
+    this.datasetService = new DatasetService(datasetRepository);
   }
 
   getAllInferences = async (req: Request, res: Response) => {
@@ -101,51 +111,69 @@ class InferenceController {
     }
   };
 
-  startInference = async (req: Request, res: Response) => {
+  startInference = async (req: CustomRequest, res: Response) => {
     const { datasetId, modelId } = req.body;
-  
-    // Verifica che datasetId e modelId siano presenti
-    if (!datasetId || !modelId) {
-      return res.status(400).send('datasetId e modelId sono richiesti');
-    }
-  
-    // Genera un ID unico per il processo
-    const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-    this.processes[processId] = { status: 'running', result: null };
-  
+    const userId = req.user?.id;
+
     try {
-      // Recupera i contenuti dalla tabella Contents usando datasetId
-      const contents = await this.contentService.getContentByDatasetId(datasetId);
-  
-      // Verifica se contents è null o undefined
-      if (contents === null || contents === undefined) {
-        throw new Error('Il servizio getContentByDatasetId ha restituito un valore null o undefined.');
-      }
-  
-      // Trasforma la lista dei contenuti in una stringa JSON
-      const jsonContents = contents.map(content => [content.name, content.type, content.data]);
-  
-      try {
-        // Chiamata HTTP all'endpoint di inferenza
-        const response = await axios.post(`http://inference:5000/predict`, { jsonContents, modelId });
-  
-        // Aggiorna lo stato del processo e il risultato
-        this.processes[processId].status = 'completed';
-        this.processes[processId].result = response.data;
-        res.json(response.data);
-      } catch (error) {
-        console.error(`Errore durante la chiamata al servizio di inferenza: ${error}`);
-        this.processes[processId].status = 'error';
-        //this.processes[processId].result = error.message;
-        res.status(500).send('Errore nella comunicazione con Axios: ' + error);
-      }
+        
+        if (userId === undefined) {
+          return res.status(401).send('Utente non autenticato');
+        }
+
+        const dataset = await this.datasetService.getDatasetById(datasetId);
+
+        if (!dataset) {
+            return res.status(404).json({ message: 'Dataset not found' });
+        }
+
+        if (dataset.userId !== userId) {
+            return res.status(403).json({ message: 'Unauthorized access to dataset' });
+        }
+
+        if (!datasetId) {
+            return res.status(400).send('datasetId è richiesto');
+        }
+
+        if (!datasetId || !modelId) {
+            return res.status(400).send('datasetId e modelId sono richiesti');
+        }
+
+        const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+        this.processes[processId] = { status: 'running', result: null };
+
+        const contents = await this.contentService.getContentByDatasetId(datasetId);
+
+        if (contents == null || contents === undefined) {
+            throw new Error('Il servizio getContentByDatasetId ha restituito un valore null o undefined.');
+        }
+
+        const jsonContents = contents.map(content => [content.name, content.type, content.data]);
+
+        try {
+            const response = await axios.post(`http://inference:5000/predict`, { jsonContents, modelId });
+
+            if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
+                res.status(response.data.error_code).send(response.data.error);
+            }
+
+            this.processes[processId].status = 'completed';
+            this.processes[processId].result = response.data;
+            res.json(response.data);
+        } catch (error) {
+            console.error(`Errore durante la chiamata al servizio di inferenza: ${error}`);
+            this.processes[processId].status = 'error';
+            // this.processes[processId].result = error.message;
+            res.status(500).send('Errore nella comunicazione con Axios');
+        }
     } catch (error) {
-      console.error(`Errore durante l'esecuzione dell'inferenza: ${error}`);
-      this.processes[processId].status = 'error';
-      //this.processes[processId].result = error.message;
-      res.status(500).send('Errore durante l esecuzione dell inferenza');
+        console.error(`Errore durante l'esecuzione dell'inferenza: ${error}`);
+        //this.processes[processId].status = 'error';
+        // this.processes[processId].result = error.message;
+        res.status(500).send('Errore durante l esecuzione dell inferenza');
     }
-  };
+};
+
   
 
   getStatus = (req: Request, res: Response) => {
