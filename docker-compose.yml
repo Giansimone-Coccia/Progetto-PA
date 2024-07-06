@@ -29,7 +29,7 @@ services:
       - "${PYTHON_INTERNAL_PORT}:${PYTHON_EXTERNAL_PORT}"
     networks:
       - my_network
-      
+
 networks:
   my_network:
     driver: bridge

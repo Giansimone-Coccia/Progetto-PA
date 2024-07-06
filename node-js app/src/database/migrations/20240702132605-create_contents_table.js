@@ -1,9 +1,9 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+/** @type {import('sequelize').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Inferences', {
+    await queryInterface.createTable('Contents', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,25 +20,21 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      model: {
+      type: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      status: {
-        type: Sequelize.STRING,
+      data: {
+        type: Sequelize.BLOB('long'),
         allowNull: false
-      },
-      result: {
-        type: Sequelize.JSON,
-        allowNull: true
       },
       cost: {
         type: Sequelize.FLOAT,
         allowNull: false
       },
-      data: {
-        type: Sequelize.BLOB('long'),
-        allowNull: true
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       created_at: {
         allowNull: false,
@@ -52,6 +48,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Inferences');
+    await queryInterface.dropTable('Contents');
   }
 };

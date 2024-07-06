@@ -48,6 +48,10 @@ class ContentController {
     const { datasetId, type } = req.body;
     const userId = req.user?.id;
 
+    if (!datasetId || !type) {
+      return res.status(400).send('datasetId and type are required');
+    }
+
     if (!userId) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -64,6 +68,7 @@ class ContentController {
 
       const data = req.file.buffer;
       const mimetype =  req.file.mimetype;
+      const name =  req.file.filename;
 
       if(!ContentService.checkMimetype(type, mimetype)){
         return res.status(400).json({ message: 'Invalid file type' });
@@ -83,7 +88,7 @@ class ContentController {
         return res.status(400).json({ message: 'Not enough tokens' });
       }
 
-      const contentData = { ...req.body, cost, data };
+      const contentData = { ...req.body, cost, data, name };
 
       await this.userService.updateUser(userId, { tokens: user.tokens - cost });
 

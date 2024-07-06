@@ -68,41 +68,50 @@ class InferenceController {
 
   startInference = async (req: Request, res: Response) => {
     const { datasetId, modelId } = req.body;
-
+  
+    // Verifica che datasetId e modelId siano presenti
     if (!datasetId || !modelId) {
       return res.status(400).send('datasetId e modelId sono richiesti');
     }
-
+  
     // Genera un ID unico per il processo
     const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     this.processes[processId] = { status: 'running', result: null };
-
+  
     try {
       // Recupera i contenuti dalla tabella Contents usando datasetId
       const contents = await this.contentService.getContentByDatasetId(datasetId);
-
+  
+      // Verifica se contents è null o undefined
+      if (contents === null || contents === undefined) {
+        throw new Error('Il servizio getContentByDatasetId ha restituito un valore null o undefined.');
+      }
+  
       // Trasforma la lista dei contenuti in una stringa JSON
-      const jsonContents = JSON.stringify(contents);
-
-      let response;
+      const jsonContents = contents.map(content => [content.type, content.data]);
+  
       try {
-        response = await axios.post(`http://inference:5000/predict`, { jsonContents, modelId });
+        // Chiamata HTTP all'endpoint di inferenza
+        const response = await axios.post(`http://inference:5000/predict`, { jsonContents, modelId });
+  
+        // Aggiorna lo stato del processo e il risultato
         this.processes[processId].status = 'completed';
         this.processes[processId].result = response.data;
-        res.json({ processId: processId, result: response.data });
+        res.json(response.data);
       } catch (error) {
-        console.error(`Error calling inference service: ${error}`);
+        console.error(`Errore durante la chiamata al servizio di inferenza: ${error}`);
         this.processes[processId].status = 'error';
         //this.processes[processId].result = error.message;
-        res.status(500).send('Error performing inference');
+        res.status(500).send('Errore nella comunicazione con Axios: ' + error);
       }
     } catch (error) {
-      console.error(`Error performing inference: ${error}`);
+      console.error(`Errore durante l'esecuzione dell'inferenza: ${error}`);
       this.processes[processId].status = 'error';
       //this.processes[processId].result = error.message;
-      res.status(500).send('Error performing inference');
+      res.status(500).send('Errore durante l esecuzione dell inferenza');
     }
   };
+  
 
   getStatus = (req: Request, res: Response) => {
     const processId = req.params.processId;
