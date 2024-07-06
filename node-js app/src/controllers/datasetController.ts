@@ -30,17 +30,26 @@ class DatasetController {
     const id = Number(req.params.id);
     const userId = req.user?.id;
 
+    // Controlla se l'id non è un numero o è NaN
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid ID. ID must be a number' });
+    }
+
     try {
       const dataset = await this.datasetService.getDatasetById(id);
 
       if (!dataset) {
         return res.status(404).json({ message: 'Dataset not found' });
-      } else if (dataset.userId !== userId) {
+      }
+
+      // Verifica se l'utente è autorizzato a accedere al dataset
+      if (dataset.userId !== userId) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
 
       res.json(dataset);
     } catch (error) {
+      console.error(`Error retrieving dataset: ${error}`);
       res.status(500).json({ message: 'Internal server error' });
     }
   };
@@ -117,6 +126,11 @@ class DatasetController {
     const userId = req.user?.id;
 
     try {
+
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
+      }
+      
       const dataset = await this.datasetService.getDatasetById(id);
 
       if (!dataset) {

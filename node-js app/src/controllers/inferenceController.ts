@@ -34,10 +34,25 @@ class InferenceController {
   getInferenceById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const inference = await this.inferenceService.getInferenceById(id);
-    if (inference) {
+    try {
+      // Controlla se l'id è un numero valido
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
+      }
+
+      // Ottieni l'inferenza dal servizio
+      const inference = await this.inferenceService.getInferenceById(id);
+
+      // Verifica se l'inferenza esiste
+      if (!inference) {
+        return res.status(404).json({ message: 'Inference not found' });
+      }
+
+      // Ritorna l'inferenza trovata
       res.json(inference);
-    } else {
-      res.status(404).json({ message: 'Inference not found' });
+    } catch (error) {
+      console.error(`Error fetching inference: ${error}`);
+      res.status(500).json({ message: 'Internal server error' });
     }
   };
 
@@ -48,21 +63,41 @@ class InferenceController {
 
   updateInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const inference = await this.inferenceService.updateInference(id, req.body);
-    if (inference) {
-      res.json(inference);
-    } else {
-      res.status(404).json({ message: 'Inference not found' });
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
+    }
+
+    try {
+      const inference = await this.inferenceService.updateInference(id, req.body);
+      if (inference) {
+        res.json(inference);
+      } else {
+        res.status(404).json({ message: 'Inference not found' });
+      }
+    }catch (error) {
+      console.error(`Error updating inference: ${error}`);
+      res.status(500).json({ message: 'Internal server error' });
     }
   };
 
   deleteInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const success = await this.inferenceService.deleteInference(id);
-    if (success) {
-      res.status(204).end();
-    } else {
-      res.status(404).json({ message: 'Inference not found' });
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
+    }
+    
+    try{
+      const success = await this.inferenceService.deleteInference(id);
+      if (success) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({ message: 'Inference not found' });
+      }
+    }catch (error) {
+      console.error(`Error updating inference: ${error}`);
+      res.status(500).json({ message: 'Internal server error' });
     }
   };
 
