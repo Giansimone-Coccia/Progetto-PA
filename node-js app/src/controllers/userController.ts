@@ -6,19 +6,27 @@ import UserRepositoryImpl from '../repositories/implementations/userRepositoryIm
 
 class UserController {
   private userService: UserService;
+  private static instance: UserController;
 
-  constructor() {
+  private constructor() {
     const userDAO = new UserDAO();
     const userRepository = new UserRepositoryImpl(userDAO);
     this.userService = new UserService(userRepository);
   }
 
-  getAllUsers = async (req: CustomRequest, res: Response) => {
+  public static getInstance(): UserController {
+    if (!UserController.instance) {
+      UserController.instance = new UserController();
+    }
+    return UserController.instance;
+  }
+
+  public getAllUsers = async (req: CustomRequest, res: Response) => {
     const users = await this.userService.getAllUsers();
     res.json(users);
   };
 
-  getUserById = async (req: CustomRequest, res: Response) => {
+  public getUserById = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     const user = await this.userService.getUserById(id);
     if (user) {
@@ -28,12 +36,12 @@ class UserController {
     }
   };
 
-  createUser = async (req: CustomRequest, res: Response) => {
+  public createUser = async (req: CustomRequest, res: Response) => {
     const user = await this.userService.createUser(req.body);
     res.status(201).json(user);
   };
 
-  updateUser = async (req: CustomRequest, res: Response) => {
+  public updateUser = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     const user = await this.userService.updateUser(id, req.body);
     if (user) {
@@ -43,7 +51,7 @@ class UserController {
     }
   };
 
-  deleteUser = async (req: CustomRequest, res: Response) => {
+  public deleteUser = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     const success = await this.userService.deleteUser(id);
     if (success) {

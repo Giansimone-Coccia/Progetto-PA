@@ -6,10 +6,11 @@ import UserRepositoryImpl from '../repositories/implementations/userRepositoryIm
 import UserDAO from '../dao/implementations/userDAOImpl';
 
 class AuthController {
+  private static instance: AuthController;
   private userService: UserService;
   private secret: string;
 
-  constructor() {
+  private constructor() {
     const userDAO = new UserDAO();
     const userRepository = new UserRepositoryImpl(userDAO);
     this.userService = new UserService(userRepository);
@@ -17,7 +18,14 @@ class AuthController {
     this.secret = process.env.JWT_SECRET || 'your_jwt_secret';
   }
 
-  register = async (req: Request, res: Response) => {
+  public static getInstance(): AuthController {
+    if (!AuthController.instance) {
+      AuthController.instance = new AuthController();
+    }
+    return AuthController.instance;
+  }
+
+  public register = async (req: Request, res: Response) => {
     const { email, password, role } = req.body;
 
     if (!email || !password || !role) {
@@ -34,7 +42,7 @@ class AuthController {
     }
   };
 
-  login = async (req: Request, res: Response) => {
+  public login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {

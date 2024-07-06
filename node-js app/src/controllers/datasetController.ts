@@ -8,10 +8,11 @@ import ContentDAO from '../dao/implementations/contentDAOImpl';
 import ContentRepositoryImpl from '../repositories/implementations/contentRepositoryImpl';
 
 class DatasetController {
+  private static instance: DatasetController;
   private datasetService: DatasetService;
   private contentService: ContentService;
 
-  constructor() {
+  private constructor() {
     const datasetDAO = new DatasetDAO();
     const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
     this.datasetService = new DatasetService(datasetRepository);
@@ -21,12 +22,19 @@ class DatasetController {
     this.contentService = new ContentService(contentRepository);
   }
 
-  getAllDatasets = async (req: Request, res: Response) => {
+  public static getInstance(): DatasetController {
+    if (!DatasetController.instance) {
+      DatasetController.instance = new DatasetController();
+    }
+    return DatasetController.instance;
+  }
+
+  public getAllDatasets = async (req: Request, res: Response) => {
     const datasets = await this.datasetService.getAllDatasets();
     res.json(datasets);
   };
 
-  getDatasetById = async (req: CustomRequest, res: Response) => {
+  public getDatasetById = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     const userId = req.user?.id;
 
@@ -54,7 +62,7 @@ class DatasetController {
     }
   };
 
-  createDataset = async (req: CustomRequest, res: Response) => {
+  public createDataset = async (req: CustomRequest, res: Response) => {
     const userId = req.user?.id;
     const datasetData = { ...req.body, userId };
 
@@ -66,7 +74,7 @@ class DatasetController {
     }
   };
 
-  updateDataset = async (req: CustomRequest, res: Response) => {
+  public updateDataset = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     const userId = req.user?.id;
     const updatedAt = new Date()
@@ -121,7 +129,7 @@ class DatasetController {
     };
   };
 
-  deleteDataset = async (req: CustomRequest, res: Response) => {
+  public deleteDataset = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     const userId = req.user?.id;
 

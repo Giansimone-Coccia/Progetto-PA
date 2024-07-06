@@ -17,12 +17,13 @@ interface ProcessInfo {
 }
 
 class InferenceController {
+  private static instance: InferenceController;
   private inferenceService: InferenceService;
   private processes: { [key: string]: ProcessInfo } = {};
   private contentService: ContentService;
   private datasetService: DatasetService;
 
-  constructor() {
+  private constructor() {
     const inferenceDAO = new InferenceDAO();
     const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
     this.inferenceService = new InferenceService(inferenceRepository);
@@ -36,12 +37,19 @@ class InferenceController {
     this.datasetService = new DatasetService(datasetRepository);
   }
 
-  getAllInferences = async (req: Request, res: Response) => {
+  public static getInstance(): InferenceController {
+    if (!InferenceController.instance) {
+      InferenceController.instance = new InferenceController();
+    }
+    return InferenceController.instance;
+  }
+
+  public getAllInferences = async (req: Request, res: Response) => {
     const inferences = await this.inferenceService.getAllInferences();
     res.json(inferences);
   };
 
-  getInferenceById = async (req: Request, res: Response) => {
+  public getInferenceById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const inference = await this.inferenceService.getInferenceById(id);
     try {
@@ -66,12 +74,12 @@ class InferenceController {
     }
   };
 
-  createInference = async (req: Request, res: Response) => {
+  public createInference = async (req: Request, res: Response) => {
     const inference = await this.inferenceService.createInference(req.body);
     res.status(201).json(inference);
   };
 
-  updateInference = async (req: Request, res: Response) => {
+  public updateInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
     if (isNaN(id)) {
@@ -91,7 +99,7 @@ class InferenceController {
     }
   };
 
-  deleteInference = async (req: Request, res: Response) => {
+  public deleteInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
     if (isNaN(id)) {
@@ -176,7 +184,7 @@ class InferenceController {
 
   
 
-  getStatus = (req: Request, res: Response) => {
+  public getStatus = (req: Request, res: Response) => {
     const processId = req.params.processId;
     const processInfo = this.processes[processId];
 
