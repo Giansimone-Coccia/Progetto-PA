@@ -13,6 +13,7 @@ import DatasetRepositoryImpl from '../repositories/implementations/datasetReposi
 import UserDAO from '../dao/implementations/userDAOImpl';
 import { UserService } from '../services/userService';
 import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
+import inferenceQueue from '../que/inferenceQue';
 
 interface ProcessInfo {
   status: string;
@@ -127,18 +128,13 @@ class InferenceController {
     }
   };
 
-  startInference = async (req: CustomRequest, res: Response) => {
+  public startInference = async (req: CustomRequest, res: Response) => {
     const { datasetId, modelId } = req.body;
     const userId = req.user?.id;
 
     try {
-
       if (!userId) {
         return res.status(401).send('Unauthorized');
-      }
-
-      if (!datasetId) {
-        return res.status(400).send('datasetId è richiesto');
       }
 
       if (!datasetId || !modelId) {
@@ -148,7 +144,7 @@ class InferenceController {
       const dataset = await this.datasetService.getDatasetById(datasetId);
 
       if (!dataset) {
-        return res.status(404).send('Dataset not found' );
+        return res.status(404).send('Dataset not found');
       }
 
       if (dataset.userId !== userId) {
@@ -165,54 +161,26 @@ class InferenceController {
       }
 
       const cost = ContentService.calculateContentsCost(contents);
-
-      //console.log(cost)
-
       const user = await this.userService.getUserById(userId);
 
-      if(!user){
+      if (!user) {
         this.processes[processId] = { status: 'failed', result: null };
         return res.status(401).send('Unauthorized');
       }
 
       if (cost > user.tokens) {
         this.processes[processId] = { status: 'aborted', result: null };
-        return res.status(400).send(`Not enough tokens`);
+        return res.status(400).send('Not enough tokens');
       }
 
       const jsonContents = ContentService.reduceContents(contents);
 
-      try {
-        const response = await axios.post(`http://inference:5000/predict`, { jsonContents, modelId });
+      // Aggiornamento: aggiungere il job alla coda
+      await inferenceQueue.add({ datasetId, modelId, userId, processId, token: user.tokens });
 
-        if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
-          return res.status(response.data.error_code).send(response.data.error);
-        }
-        
-        const status = 'completed';
-
-        let tokens = user.tokens - cost
-
-        await this.userService.updateUser(userId, { tokens });
-
-        //console.log({...req.body, cost, status, response  });
-
-        const inference = await this.inferenceService.createInference({...req.body, cost, status, result: response.data, model: modelId });
-
-        this.processes[processId].status = 'completed';
-        this.processes[processId].result = response.data;
-        console.log("inference", inference);
-        res.json(inference);
-      } catch (error) {
-        console.error(`Errore durante la chiamata al servizio di inferenza: ${error}`);
-        this.processes[processId].status = 'error';
-        // this.processes[processId].result = error.message;
-        res.status(500).send('Errore nella comunicazione con Axios');
-      }
+      res.json({ processId, status: 'queued' });
     } catch (error) {
       console.error(`Errore durante l'esecuzione dell'inferenza: ${error}`);
-      //this.processes[processId].status = 'error';
-      // this.processes[processId].result = error.message;
       res.status(500).send('Errore durante l esecuzione dell inferenza');
     }
   };
