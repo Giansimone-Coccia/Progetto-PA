@@ -166,16 +166,18 @@ class InferenceController {
 
       const cost = ContentService.calculateContentsCost(contents);
 
-      console.log(cost)
+      //console.log(cost)
 
       const user = await this.userService.getUserById(userId);
 
       if(!user){
+        this.processes[processId] = { status: 'failed', result: null };
         return res.status(401).send('Unauthorized');
       }
 
       if (cost > user.tokens) {
-        return res.status(400).send('Not enough tokens');
+        this.processes[processId] = { status: 'aborted', result: null };
+        return res.status(400).send(`Not enough tokens`);
       }
 
       const jsonContents = ContentService.reduceContents(contents);
@@ -193,12 +195,13 @@ class InferenceController {
 
         await this.userService.updateUser(userId, { tokens });
 
-        console.log({...req.body, cost, status, response  });
+        //console.log({...req.body, cost, status, response  });
 
         const inference = await this.inferenceService.createInference({...req.body, cost, status, result: response.data, model: modelId });
 
         this.processes[processId].status = 'completed';
         this.processes[processId].result = response.data;
+        console.log("inference", inference);
         res.json(inference);
       } catch (error) {
         console.error(`Errore durante la chiamata al servizio di inferenza: ${error}`);
@@ -214,21 +217,34 @@ class InferenceController {
     }
   };
 
+  public getStatus = async (req: CustomRequest, res: Response) => {
+    const processId = req.body.processId;
 
+    try {
+      console.log(processId);
+      if (!processId) {
+        return res.status(400).json({ message: 'Invalid ID' });
+      }
 
-  public getStatus = (req: Request, res: Response) => {
-    const processId = req.params.processId;
-    const processInfo = this.processes[processId];
+      // Ottieni l'inferenza dal servizio
+      const inference = await this.inferenceService.getInferenceById(processId);
+      console.log(inference);
+      // Verifica se l'inferenza esiste
+      if (!inference) {
+        return res.status(404).json({ message: 'Inference not found' });
+      }
 
-    if (!processInfo) {
-      return res.status(404).json({ message: 'Process not found' });
+      // Ritorna l'inferenza trovata
+      res.json({
+        status: inference.status,
+        result: inference.result,
+      });
+    } catch (error) {
+      console.error(`Error fetching inference: ${error}`);
+      res.status(500).json({ message: 'Internal server error' });
     }
-
-    res.json({
-      status: processInfo.status,
-      result: processInfo.result,
-    });
   };
+
 }
 
 export default InferenceController;

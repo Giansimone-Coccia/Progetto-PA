@@ -18,11 +18,6 @@ redis_port = int(os.getenv('REDIS_PORT', 6379))
 
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
 
-# Load the entire model
-model_path = 'pyModels/armocromia_12_seasons_resnet50_full.pth'
-model = torch.load(model_path, map_location=torch.device('cpu'))
-model.eval()
-
 class_names_12 = {
     0: "autunno deep",
     1: "autunno soft",
@@ -71,6 +66,8 @@ def predict():
             jsonContents = data.get('jsonContents')
             modelId = data.get('modelId')
 
+            model = modelType(modelId)
+
             if not isinstance(jsonContents, list):
                 return jsonify({'error': "jsonContents deve essere una lista",'error_code': 400})
 
@@ -112,6 +109,23 @@ def predict():
 
     else:
         return jsonify({'error': 'Metodo non consentito', 'error_code': 405})
+    
+def modelType(modelId):
+    if modelId == "1":
+        model_path = 'pyModels/armocromia_12_seasons_resnet50_full.pth'
+        model = torch.load(model_path, map_location=torch.device('cpu'))
+        model.eval()
+        return model
+    elif modelId == "2":
+        model_path = 'pyModels/armocromia_4_seasons_resnet50_full.pth'
+        model = torch.load(model_path, map_location=torch.device('cpu'))
+        model.eval()
+        return model
+    elif modelId == "3":
+        # clustering - Placeholder for future functionality
+        return None
+    else:
+        raise ValueError(f"modelId not supported: {modelId}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
