@@ -1,3 +1,7 @@
 redis
 Pillow
 Flask
+scikit-learn
+git+https://github.com/FacePerceiver/facer.git@main
+pandas
+numpy

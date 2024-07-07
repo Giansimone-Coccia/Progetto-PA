@@ -1,12 +1,13 @@
 from io import BytesIO
 import logging
 from flask import Flask, request, jsonify # type: ignore
-import redis
+import redis # type: ignore
 import os
 import torch
 from PIL import Image
 from utils.image_processing import predict_image
 from utils.zip_processing import predict_zip_results
+from cluster import clustering
 
 app = Flask(__name__)
 
@@ -49,6 +50,16 @@ logging.basicConfig(level=logging.INFO)
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
+        '''try:
+            clustering_instance = clustering.Clustering()
+            result = clustering_instance.execute()
+            return jsonify(result)
+        except ValueError as ve:
+            logging.error("ValueError occurred", exc_info=True)
+            return jsonify({'error': str(ve)})
+        except Exception as e:
+            logging.error("Exception occurred", exc_info=True)
+            return jsonify({'error': str(e)})'''
         all_results = {}
         try:
             data = request.json
@@ -96,8 +107,6 @@ def predict():
 
     else:
         return jsonify({'error': 'Metodo non consentito', 'error_code': 405})
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
