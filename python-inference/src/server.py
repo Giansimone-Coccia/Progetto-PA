@@ -8,6 +8,7 @@ from PIL import Image
 from utils.image_processing import predict_image
 from utils.zip_processing import predict_zip_results
 from cluster import clustering
+from utils.video_processing import predict_video_results
 
 app = Flask(__name__)
 
@@ -96,6 +97,10 @@ def predict():
                 elif type == 'zip':
                     zip_results = predict_zip_results(file_data, model, class_names_12)
                     all_results[filename] = zip_results
+
+                elif type == 'video':
+                    video_results = predict_video_results(file_data, model, class_names_12)
+                    all_results[filename] = video_results
 
                 else:
                     return jsonify({'error': f"Tipo non supportato: {type}", 'error_code': 400})

@@ -8,13 +8,13 @@ interface InferenceAttributes {
   datasetId: number;
   model: string;
   status: string;
-  result: any; 
+  result: any;
   cost: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
-interface InferenceCreationAttributes extends Optional<InferenceAttributes, 'id'> {}
+interface InferenceCreationAttributes extends Optional<InferenceAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
 
 class Inference extends Model<InferenceAttributes, InferenceCreationAttributes> implements InferenceAttributes {
   public id!: number;

@@ -46,7 +46,6 @@ class ContentController {
   public getContentById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
-    // Controlla se l'id non è un numero o è NaN
     if (isNaN(id)) {
       return res.status(400).json({ error: 'Invalid ID. ID must be a number' });
     }
@@ -69,68 +68,66 @@ class ContentController {
     const { datasetId, type } = req.body;
     let { name } = req.body;
     const userId = req.user?.id;
-  
+
     if (!datasetId || !type || !name) {
       return res.status(400).send('datasetId, type and name are required');
     }
-  
+
     if (!userId) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
-  
+
     try {
       const user = await this.userService.getUserById(userId);
+
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-  
-      if (!req.file) {
-        return res.status(400).json({ error: 'Nessun file caricato' });
-      }
-  
-      const data = req.file.buffer;
-      const mimetype = req.file.mimetype;
-  
-      if (!ContentService.checkMimetype(type, mimetype)) {
-        return res.status(400).json({ message: 'Invalid file type' });
-      }
-  
-      const cost = ContentService.calculateCost(type, data);
-  
-      if (cost === null) {
-        return res.status(400).json({ message: 'Invalid file type' });
-      }
-  
-      if (typeof user.tokens !== 'number') {
-        return res.status(500).json({ message: 'User tokens are not a number' });
-      }
-  
-      if (cost > user.tokens) {
-        return res.status(400).json({ message: 'Not enough tokens' });
-      }
-  
-      await this.userService.updateUser(userId, { tokens: user.tokens - cost });
-  
+
       const dataset = await this.datasetService.getDatasetById(datasetId);
+
       if (!dataset) {
         return res.status(404).json({ message: 'Dataset not found' });
       }
-  
+
       if (dataset.userId !== userId) {
         return res.status(403).json({ message: 'Unauthorized access to dataset' });
       }
-  
+
+      if (!req.file) {
+        return res.status(400).json({ error: 'Nessun file caricato' });
+      }
+
+      const data = req.file.buffer;
+      const mimetype = req.file.mimetype;
+
+      if (!ContentService.checkMimetype(type, mimetype)) {
+        return res.status(400).json({ message: 'Invalid file type' });
+      }
+
+      const cost = await ContentService.calculateCost(type, data);
+
+      if (cost === null) {
+        return res.status(400).json({ message: 'Invalid file type' });
+      }
+
+      if (cost > user.tokens) {
+        return res.status(400).json({ message: 'Not enough tokens' });
+      }
+
+      await this.userService.updateUser(userId, { tokens: user.tokens - cost });
+
       if (req.file.filename) {
         name = req.file.filename;
       }
-  
+
       const contentData = { ...req.body, cost, data, name };
       const content = await this.contentService.createContent(contentData);
       return res.status(201).json("Contenuto creato con successo");
     } catch (error) {
       return res.status(500).json({ message: 'Internal server error' });
     }
-  };  
+  };
 
   public updateContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
@@ -157,7 +154,6 @@ class ContentController {
   public deleteContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
-    // Controlla se l'id non è un numero o è NaN
     if (isNaN(id)) {
       return res.status(400).json({ error: 'Invalid ID. ID must be a number' });
     }

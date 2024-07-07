@@ -1,0 +1,33 @@
+import tempfile
+from PIL import Image
+import cv2
+from .image_processing import predict_image
+
+def predict_video_results(video_data, model, class_names):
+    video_results = {}
+
+    with tempfile.NamedTemporaryFile(suffix='.mp4') as video_file:
+        video_file.write(video_data)
+        video_file.flush()
+
+        video = cv2.VideoCapture(video_file.name)
+
+        frame_number = 0
+
+        while True:
+            ret, frame = video.read()
+
+            if not ret:
+                break
+
+            image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+
+            prediction = predict_image(image, model, class_names)
+            
+            video_results[f"frame {frame_number}"] = prediction
+
+            frame_number += 1
+
+        video.release()
+
+    return video_results
