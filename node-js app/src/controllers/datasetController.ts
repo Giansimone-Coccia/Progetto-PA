@@ -106,8 +106,8 @@ class DatasetController {
           /*const existingContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === dataset.id);
           const currentContents = (await this.contentService.getAllContents()).filter(content => content.datasetId === id);*/
         
-          const existingContentHashes = new Set(existingContents.map(content => DatasetService.createContentHash(content)));
-          const currentContentHashes = new Set(currentContents.map(content => DatasetService.createContentHash(content)));
+          const existingContentHashes = new Set(existingContents.map(content => this.datasetService.createContentHash(content)));
+          const currentContentHashes = new Set(currentContents.map(content => this.datasetService.createContentHash(content)));
         
           const intersection = [...existingContentHashes].filter(hash => currentContentHashes.has(hash));
     

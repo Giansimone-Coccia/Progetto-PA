@@ -33,7 +33,7 @@ export class DatasetService {
     return this.datasetRepository.datasetWithSameName(name, userId);
   }
 
-  static createContentHash(content: ContentAttributes) {
+  createContentHash(content: ContentAttributes) {
     return `${content.type}-${content.data}-${content.cost}`;
   };
 }
