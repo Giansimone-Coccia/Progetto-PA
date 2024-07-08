@@ -17,7 +17,7 @@ inferenceQueue.process(async (job) => {
   
   const inferenceDAO = new InferenceDAO();
   const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
-  const inferenceService = new InferenceService(inferenceRepository);
+  const inferenceService = InferenceService.getInstance(inferenceRepository);
   const inferenceUrl = process.env.INFERENCE_URL;
 
   // Logica per l'esecuzione dell'inferenza

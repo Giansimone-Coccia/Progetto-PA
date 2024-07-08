@@ -11,7 +11,7 @@ class UserController {
   private constructor() {
     const userDAO = new UserDAO();
     const userRepository = new UserRepositoryImpl(userDAO);
-    this.userService = new UserService(userRepository);
+    this.userService = UserService.getInstance(userRepository);
   }
 
   public static getInstance(): UserController {
