@@ -125,7 +125,7 @@ class InferenceController {
         const result = job.returnvalue;
 
         if (progress["state"] == "completed") {
-          return res.status(progress["error_code"]).json({
+          return res.json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"],
@@ -133,7 +133,7 @@ class InferenceController {
           });
         }
         else {
-          return res.json({
+          return res.status(progress["error_code"]).json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"],
