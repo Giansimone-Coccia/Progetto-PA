@@ -3,10 +3,18 @@ import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models
 import IDatasetRepository from '../repositories/interfaces/iDatasetRepository';
 
 export class DatasetService {
+  private static instance: DatasetService;
   private datasetRepository: IDatasetRepository;
 
-  constructor(datasetRepository: IDatasetRepository) {
+  private constructor(datasetRepository: IDatasetRepository) {
     this.datasetRepository = datasetRepository;
+  }
+
+  static getInstance(datasetRepository: IDatasetRepository): DatasetService {
+    if (!DatasetService.instance) {
+      DatasetService.instance = new DatasetService(datasetRepository);
+    }
+    return DatasetService.instance;
   }
 
   async getAllDatasets(): Promise<DatasetAttributes[]> {

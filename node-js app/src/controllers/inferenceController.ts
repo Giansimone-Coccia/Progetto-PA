@@ -31,19 +31,19 @@ class InferenceController {
   private constructor() {
     const inferenceDAO = new InferenceDAO();
     const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
-    this.inferenceService = new InferenceService(inferenceRepository);
+    this.inferenceService = InferenceService.getInstance(inferenceRepository);
 
     const contentDAO = new ContentDAO();
     const contentRepository = new ContentRepositoryImpl(contentDAO);
-    this.contentService = new ContentService(contentRepository);
+    this.contentService = ContentService.getInstance(contentRepository);
 
     const datasetDAO = new DatasetDAO();
     const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
-    this.datasetService = new DatasetService(datasetRepository);
+    this.datasetService = DatasetService.getInstance(datasetRepository);
 
     const userDAO = new UserDAO();
     const userRepository = new UserRepositoryImpl(userDAO);
-    this.userService = new UserService(userRepository);
+    this.userService = UserService.getInstance(userRepository);
   }
 
   public static getInstance(): InferenceController {

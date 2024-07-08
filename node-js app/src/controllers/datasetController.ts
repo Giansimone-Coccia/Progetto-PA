@@ -15,11 +15,11 @@ class DatasetController {
   private constructor() {
     const datasetDAO = new DatasetDAO();
     const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
-    this.datasetService = new DatasetService(datasetRepository);
+    this.datasetService = DatasetService.getInstance(datasetRepository);
 
     const contentDAO = new ContentDAO();
     const contentRepository = new ContentRepositoryImpl(contentDAO);
-    this.contentService = new ContentService(contentRepository);
+    this.contentService = ContentService.getInstance(contentRepository);
   }
 
   public static getInstance(): DatasetController {

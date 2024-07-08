@@ -7,6 +7,7 @@ import ContentController from '../controllers/contentController';
 import AuthController from '../controllers/authController';
 import { authenticateJWT } from '../middleware/authMiddleware';
 import { authorizeAdmin } from '../middleware/isAdminMiddleware';
+import { errorMulterMiddleware } from '../middleware/errorMulterMiddleware';
 
 const router = Router();
 
@@ -65,7 +66,7 @@ router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset)
 // Rotte contenuti (protette)
 router.get('/contents', authenticateJWT, contentController.getAllContents); //opzionale
 router.get('/contents/:id', authenticateJWT, contentController.getContentById); //opzionale
-router.post('/contents', authenticateJWT, upload.single('data'), contentController.createContent);
+router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent);
 router.put('/contents/:id', authenticateJWT, contentController.updateContent); //opzionale
 router.delete('/contents/:id', authenticateJWT, contentController.deleteContent); //opzionale
 
