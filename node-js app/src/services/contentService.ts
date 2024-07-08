@@ -7,10 +7,18 @@ import * as fs from 'fs';
 
 
 export class ContentService {
+  private static instance: ContentService;
   private contentRepository: IContentRepository;
 
-  constructor(contentRepository: IContentRepository) {
+  private constructor(contentRepository: IContentRepository) {
     this.contentRepository = contentRepository;
+  }
+
+  static getInstance(contentRepository: IContentRepository): ContentService {
+    if (!ContentService.instance) {
+      ContentService.instance = new ContentService(contentRepository);
+    }
+    return ContentService.instance;
   }
 
   async getAllContents(): Promise<ContentAttributes[]> {

@@ -2,10 +2,18 @@ import User, { UserAttributes, UserCreationAttributes } from '../models/user';
 import IUserRepository from '../repositories/interfaces/iUserRepository';
 
 export class UserService {
+  private static instance: UserService;
   private userRepository: IUserRepository;
 
-  constructor(userRepository: IUserRepository) {
+  private constructor(userRepository: IUserRepository) {
     this.userRepository = userRepository;
+  }
+
+  static getInstance(userRepository: IUserRepository): UserService {
+    if (!UserService.instance) {
+      UserService.instance = new UserService(userRepository);
+    }
+    return UserService.instance;
   }
 
   async getAllUsers(): Promise<UserAttributes[]> {
