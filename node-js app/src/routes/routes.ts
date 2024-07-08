@@ -44,6 +44,7 @@ router.post('/users', authenticateJWT, userController.createUser); //opzionale
 router.put('/users/:id', authenticateJWT, userController.updateUser); //opzionale
 router.delete('/users/:id', authenticateJWT, userController.deleteUser); //opzionale
 router.post('/users/token', authenticateJWT, userController.getToken);
+router.post('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge);
 
 // Rotte di inferenze (protette)
 router.get('/inferences', authenticateJWT, inferenceController.getAllInferences);
