@@ -21,7 +21,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   const jobStatus = {
     state: 'running',
-    error_code: 0,
+    error_code: 500,
     message: 'Job in esecuzione',
   };
 

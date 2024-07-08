@@ -118,32 +118,33 @@ class InferenceController {
         const progress = job.progress();
         const result = job.returnvalue;
 
-        if (progress["state"] == "completed") {
-          return res.status(200).json({
+        if (!progress["state"]) {
+          return res.json({
+            jobId: job.id,
+            state: "pending",
+            message: "Job in queue",
+          });
+        } else if (progress["state"] === "completed") {
+          return res.json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"],
             result
           });
-        }
-        else {
-          console.log("Dentro else 1")
-          return res.json({
+        } else {
+          return res.status(200).json({
             jobId: job.id,
             state: progress["state"],
-            message: progress["message"],
+            message: progress["message"]
           });
         }
       } else {
-        console.log("Dentro else 2")
-        res.status(404).json({ message: 'Job not found' });
+        return res.status(404).json({ message: 'Job not found' });
       }
     } catch (error) {
-      res.status(500).json({ message: 'Error retrieving job status', error });
+      return res.status(500).json({ message: 'Error retrieving job status', error });
     }
-  }
+  };
 }
-
-
 
 export default InferenceController;
