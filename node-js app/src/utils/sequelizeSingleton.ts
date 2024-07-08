@@ -13,6 +13,10 @@ class SequelizeSingleton {
       host: process.env.DB_HOST,
       dialect: 'mysql',
       logging: false,
+      dialectOptions: {
+        timezone: 'Etc/GMT0',
+      },
+      timezone: 'Europe/Rome',
     });
   }
 

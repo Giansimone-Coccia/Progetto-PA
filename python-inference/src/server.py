@@ -51,10 +51,6 @@ def predict():
             
             model, class_names = select_model(model_id)
 
-            logging.info(model)
-            logging.info(model == "clustering")
-            logging.info(not model)
-
             if (not model):
                 return jsonify({'error': "Inserito modelId errato",'error_code': 400})
 
@@ -78,34 +74,27 @@ def predict():
 
                 file_data = bytes(file.get('data'))
 
-                logging.info('image')
 
                 if type == 'image':
                     input_image = Image.open(BytesIO(file_data))
                     if model == 'clustering' :  
                         all_images.append([filename, input_image])
-                        logging.info("in image")
                     else: 
                        all_results[filename] = predict_image(input_image, model, class_names)
-                       logging.info(all_results)
                 
                 elif type == 'zip':
                     zip_data = process_zip(file_data, model, class_names)
                     if model == 'clustering' :
                         all_images.extend(zip_data)
-                        logging.info('in zip')
                     else: 
                         all_results[filename] = zip_data
-                        logging.info(all_results)
 
                 elif type == 'video':
                     video_data = process_video(file_data, model, class_names)
                     if model == 'clustering' : 
                         all_images.extend(video_data)
-                        logging.info("in video")
                     else:
                         all_results[filename] = video_data
-                        logging.info(all_results)
 
                 else:
                     return jsonify({'error': f"Tipo non supportato: {type}", 'error_code': 400})
