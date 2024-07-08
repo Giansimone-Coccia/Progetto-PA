@@ -126,7 +126,7 @@ class InferenceController {
         const result = job.returnvalue;
 
         if (progress["state"] == "completed") {
-          return res.status(progress["error_code"]).json({
+          return res.status(200).json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"],
@@ -134,6 +134,7 @@ class InferenceController {
           });
         }
         else {
+          console.log("Dentro else 1")
           return res.json({
             jobId: job.id,
             state: progress["state"],
@@ -141,6 +142,7 @@ class InferenceController {
           });
         }
       } else {
+        console.log("Dentro else 2")
         res.status(404).json({ message: 'Job not found' });
       }
     } catch (error) {
