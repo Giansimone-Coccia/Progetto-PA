@@ -1,13 +1,22 @@
+import DatasetDAO from '../../dao/implementations/datasetDAOImpl';
 import IDatasetDAO from '../../dao/interfaces/iDatasetDAO';
 import { DatasetAttributes, DatasetCreationAttributes } from '../../models/dataset';
 import IDatasetRepository from '../interfaces/iDatasetRepository';
 
 
 class DatasetRepository implements IDatasetRepository {
+  private static instance: DatasetRepository;
   private datasetDAO: IDatasetDAO;
 
-  constructor(datasetDAO: IDatasetDAO) {
-    this.datasetDAO = datasetDAO;
+  private constructor() {
+    this.datasetDAO = DatasetDAO.getInstance();
+  }
+
+  static getInstance(){
+    if (!this.instance) {
+      this.instance = new DatasetRepository();
+    }
+    return this.instance;
   }
 
   async create(dataset: DatasetCreationAttributes): Promise<DatasetAttributes> {

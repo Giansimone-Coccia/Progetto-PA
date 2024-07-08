@@ -11,18 +11,15 @@ class AuthController {
   private secret: string;
 
   private constructor() {
-    const userDAO = new UserDAO();
-    const userRepository = new UserRepositoryImpl(userDAO);
-    this.userService = UserService.getInstance(userRepository);
-
+    this.userService = UserService.getInstance();
     this.secret = process.env.JWT_SECRET || 'your_jwt_secret';
   }
 
   public static getInstance(): AuthController {
-    if (!AuthController.instance) {
-      AuthController.instance = new AuthController();
+    if (!this.instance) {
+      this.instance = new AuthController();
     }
-    return AuthController.instance;
+    return this.instance;
   }
 
   public register = async (req: Request, res: Response) => {

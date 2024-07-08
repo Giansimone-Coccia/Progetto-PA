@@ -1,13 +1,22 @@
+import InferenceDAO from '../../dao/implementations/inferenceDAOImpl';
 import IInferenceDAO from '../../dao/interfaces/iInferenceDAO';
 import { InferenceAttributes, InferenceCreationAttributes } from '../../models/inference';
 import IInferenceRepository from '../interfaces/iInferenceRepository';
 
 
 class InferenceRepository implements IInferenceRepository {
+  private static instance: InferenceRepository;
   private inferenceDAO: IInferenceDAO;
 
-  constructor(inferenceDAO: IInferenceDAO) {
-    this.inferenceDAO = inferenceDAO;
+  private constructor() {
+    this.inferenceDAO = InferenceDAO.getInstance();
+  }
+
+  static getInstance(){
+    if (!this.instance) {
+      this.instance = new InferenceRepository();
+    }
+    return this.instance;
   }
 
   async create(inference: InferenceCreationAttributes): Promise<InferenceAttributes> {

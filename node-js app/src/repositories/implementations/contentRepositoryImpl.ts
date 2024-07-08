@@ -1,12 +1,21 @@
+import ContentDAO from '../../dao/implementations/contentDAOImpl';
 import IContentDAO from '../../dao/interfaces/iContentDAO';
 import { ContentAttributes, ContentCreationAttributes } from '../../models/content';
 import IContentRepository from '../interfaces/iContentRepository';
 
 class ContentRepository implements IContentRepository {
+  private static instance: ContentRepository;
   private contentDAO: IContentDAO;
 
-  constructor(contentDAO: IContentDAO) {
-    this.contentDAO = contentDAO;
+  private constructor() {
+    this.contentDAO = ContentDAO.getInstance();
+  }
+
+  static getInstance(){
+    if (!this.instance) {
+      this.instance = new ContentRepository();
+    }
+    return this.instance;
   }
 
   async create(content: ContentCreationAttributes): Promise<ContentAttributes> {

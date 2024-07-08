@@ -1,20 +1,21 @@
 import { ContentAttributes } from '../models/content';
 import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models/dataset';
+import DatasetRepository from '../repositories/implementations/datasetRepositoryImpl';
 import IDatasetRepository from '../repositories/interfaces/iDatasetRepository';
 
 export class DatasetService {
   private static instance: DatasetService;
   private datasetRepository: IDatasetRepository;
 
-  private constructor(datasetRepository: IDatasetRepository) {
-    this.datasetRepository = datasetRepository;
+  constructor() {
+    this.datasetRepository = DatasetRepository.getInstance();
   }
 
-  static getInstance(datasetRepository: IDatasetRepository): DatasetService {
-    if (!DatasetService.instance) {
-      DatasetService.instance = new DatasetService(datasetRepository);
+  static getInstance(): DatasetService {
+    if (!this.instance) {
+      this.instance = new DatasetService();
     }
-    return DatasetService.instance;
+    return this.instance;
   }
 
   async getAllDatasets(): Promise<DatasetAttributes[]> {

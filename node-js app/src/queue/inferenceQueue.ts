@@ -1,16 +1,7 @@
-import Bull from 'bull';
 import { InferenceService } from '../services/inferenceService';
-import InferenceRepositoryImpl from '../repositories/implementations/inferenceRepositoryImpl';
-import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
-import ContentRepositoryImpl from '../repositories/implementations/contentRepositoryImpl';
-import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
-import InferenceDAO from '../dao/implementations/inferenceDAOImpl';
 import axios from 'axios';
 import { ContentService } from '../services/contentService';
-import ContentDAO from '../dao/implementations/contentDAOImpl';
-import DatasetDAO from '../dao/implementations/datasetDAOImpl';
 import { DatasetService } from '../services/datasetService';
-import UserDAO from '../dao/implementations/userDAOImpl';
 import { UserService } from '../services/userService';
 const Queue = require('bull');
 
@@ -20,23 +11,14 @@ const inferenceQueue = new Queue('inference',
 
 inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userId: any; }; id: any; progress: (arg0: { state: string; message: string; }) => void; }) => {
   const { datasetId, modelId, userId } = job.data;
-  console.log("struolo");
 
-  const inferenceDAO = new InferenceDAO();
-  const inferenceRepository = new InferenceRepositoryImpl(inferenceDAO);
-  const inferenceService = new InferenceService(inferenceRepository);
+  const inferenceService = InferenceService.getInstance();
 
-  const contentDAO = new ContentDAO();
-  const contentRepository = new ContentRepositoryImpl(contentDAO);
-  const contentService = new ContentService(contentRepository);
+  const contentService = ContentService.getInstance();
 
-  const datasetDAO = new DatasetDAO();
-  const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
-  const datasetService = new DatasetService(datasetRepository);
+  const datasetService = DatasetService.getInstance();
 
-  const userDAO = new UserDAO();
-  const userRepository = new UserRepositoryImpl(userDAO);
-  const userService = new UserService(userRepository);
+  const userService = UserService.getInstance();
 
   const inferenceUrl = process.env.INFERENCE_URL;
 
@@ -105,9 +87,9 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   const jsonContents = contentService.reduceContents(contents);
 
-  console.log("yolo")
   try {
     const response = await axios.post(`${inferenceUrl}/predict`, { jsonContents, modelId });
+
     if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
       jobStatus.state = 'failed';
       jobStatus.message = `Error ${response.data.error_code}: ${response.data.error}`;
@@ -117,8 +99,6 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
     let tokens = user.tokens - cost
 
     await userService.updateUser(userId, { tokens });
-
-    console.log({ ...job.data, cost, status: 'completed', response });
 
     const inference = await inferenceService.createInference({ ...job.data, cost, status: 'completed', result: response.data, model: modelId });
 

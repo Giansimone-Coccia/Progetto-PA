@@ -1,24 +1,20 @@
 import { Response } from 'express';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { UserService } from '../services/userService';
-import UserDAO from '../dao/implementations/userDAOImpl';
-import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
 
 class UserController {
   private userService: UserService;
   private static instance: UserController;
 
   private constructor() {
-    const userDAO = new UserDAO();
-    const userRepository = new UserRepositoryImpl(userDAO);
-    this.userService = UserService.getInstance(userRepository);
+    this.userService = UserService.getInstance();
   }
 
   public static getInstance(): UserController {
-    if (!UserController.instance) {
-      UserController.instance = new UserController();
+    if (!this.instance) {
+      this.instance = new UserController();
     }
-    return UserController.instance;
+    return this.instance;
   }
 
   public getAllUsers = async (req: CustomRequest, res: Response) => {

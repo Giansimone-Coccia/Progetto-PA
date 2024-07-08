@@ -2,6 +2,19 @@ import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../../mod
 import IDatasetDAO from '../interfaces/iDatasetDAO';
 
 class DatasetDAO implements IDatasetDAO {
+
+  private static instance: DatasetDAO;
+
+  private constructor() {
+  }
+
+  public static getInstance(): DatasetDAO {
+    if (!DatasetDAO.instance) {
+      DatasetDAO.instance = new DatasetDAO();
+    }
+    return DatasetDAO.instance;
+  }
+
   async create(dataset: DatasetCreationAttributes): Promise<DatasetAttributes> {
     const newDataset = await Dataset.create(dataset);
     return newDataset.toJSON() as DatasetAttributes;
@@ -10,7 +23,7 @@ class DatasetDAO implements IDatasetDAO {
   async findAll(): Promise<DatasetAttributes[]> {
     const datasets = await Dataset.findAll();
     return datasets.map(dataset => dataset.toJSON() as DatasetAttributes);
-  } 
+  }
 
   async findById(id: number): Promise<DatasetAttributes | null> {
     const dataset = await Dataset.findByPk(id);
@@ -21,8 +34,8 @@ class DatasetDAO implements IDatasetDAO {
     const [updatedRows] = await Dataset.update(updates, { where: { id } });
     return updatedRows > 0;
   }
-  
-  async datasetWithSameName(name: string, userId: number ): Promise<DatasetAttributes[]> {
+
+  async datasetWithSameName(name: string, userId: number): Promise<DatasetAttributes[]> {
     const datasetsWithSameName = await Dataset.findAll({ where: { name: name, userId: userId } });
     return datasetsWithSameName.map(dataset => dataset.toJSON() as DatasetAttributes);
   }
@@ -33,7 +46,7 @@ class DatasetDAO implements IDatasetDAO {
       { where: { id } }
     );
     return updatedRows > 0;
-  }  
+  }
 }
 
 export default DatasetDAO;

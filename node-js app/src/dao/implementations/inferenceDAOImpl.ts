@@ -2,6 +2,18 @@ import Inference, { InferenceAttributes, InferenceCreationAttributes } from '../
 import IInferenceDAO from '../interfaces/iInferenceDAO';
 
 class InferenceDAO implements IInferenceDAO {
+
+  private static instance: InferenceDAO;
+
+  private constructor() { }
+
+  static getInstance(): InferenceDAO {
+    if (!InferenceDAO.instance) {
+      InferenceDAO.instance = new InferenceDAO();
+    }
+    return InferenceDAO.instance;
+  }
+
   async create(inference: InferenceCreationAttributes): Promise<InferenceAttributes> {
     const newInference = await Inference.create(inference);
     return newInference.toJSON() as InferenceAttributes;
@@ -10,7 +22,7 @@ class InferenceDAO implements IInferenceDAO {
   async findAll(): Promise<InferenceAttributes[]> {
     const inferences = await Inference.findAll();
     return inferences.map(inference => inference.toJSON() as InferenceAttributes);
-  }  
+  }
 
   async findById(id: number): Promise<InferenceAttributes | null> {
     const inference = await Inference.findByPk(id);

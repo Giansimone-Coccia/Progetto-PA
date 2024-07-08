@@ -13,20 +13,15 @@ class DatasetController {
   private contentService: ContentService;
 
   private constructor() {
-    const datasetDAO = new DatasetDAO();
-    const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
-    this.datasetService = DatasetService.getInstance(datasetRepository);
-
-    const contentDAO = new ContentDAO();
-    const contentRepository = new ContentRepositoryImpl(contentDAO);
-    this.contentService = ContentService.getInstance(contentRepository);
+    this.datasetService = DatasetService.getInstance();
+    this.contentService = ContentService.getInstance();
   }
 
   public static getInstance(): DatasetController {
-    if (!DatasetController.instance) {
-      DatasetController.instance = new DatasetController();
+    if (!this.instance) {
+      this.instance = new DatasetController();
     }
-    return DatasetController.instance;
+    return this.instance;
   }
 
   public getAllDatasets = async (req: Request, res: Response) => {

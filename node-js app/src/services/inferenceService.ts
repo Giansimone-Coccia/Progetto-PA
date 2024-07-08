@@ -1,19 +1,20 @@
 import Inference, { InferenceAttributes, InferenceCreationAttributes } from '../models/inference';
+import InferenceRepository from '../repositories/implementations/inferenceRepositoryImpl';
 import IInferenceRepository from '../repositories/interfaces/iInferenceRepository';
 
 export class InferenceService {
   private static instance: InferenceService;
   private inferenceRepository: IInferenceRepository;
 
-  private constructor(inferenceRepository: IInferenceRepository) {
-    this.inferenceRepository = inferenceRepository;
+  constructor() {
+    this.inferenceRepository = InferenceRepository.getInstance();
   }
 
-  static getInstance(inferenceRepository: IInferenceRepository): InferenceService {
-    if (!InferenceService.instance) {
-      InferenceService.instance = new InferenceService(inferenceRepository);
+  static getInstance(): InferenceService {
+    if (!this.instance) {
+      this.instance = new InferenceService();
     }
-    return InferenceService.instance;
+    return this.instance;
   }
 
   async getAllInferences(): Promise<InferenceAttributes[]> {

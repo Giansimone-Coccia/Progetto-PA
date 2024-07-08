@@ -2,6 +2,19 @@ import User, { UserAttributes, UserCreationAttributes } from '../../models/user'
 import IUserDAO from '../interfaces/iUserDAO';
 
 class UserDAO implements IUserDAO {
+
+  private static instance: UserDAO;
+
+  private constructor() {
+  }
+
+  public static getInstance(): UserDAO {
+    if (!UserDAO.instance) {
+      UserDAO.instance = new UserDAO();
+    }
+    return UserDAO.instance;
+  }
+
   async create(user: UserCreationAttributes): Promise<UserAttributes> {
     const newUser = await User.create(user);
     return newUser.toJSON() as UserAttributes;

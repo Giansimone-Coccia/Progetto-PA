@@ -2,23 +2,22 @@ import Content, { ContentAttributes, ContentCreationAttributes } from '../models
 import IContentRepository from '../repositories/interfaces/iContentRepository';
 import AdmZip = require('adm-zip');
 import { spawn } from 'child_process';
-import * as path from 'path';
-import * as fs from 'fs';
+import ContentRepository from '../repositories/implementations/contentRepositoryImpl';
 
 
 export class ContentService {
   private static instance: ContentService;
   private contentRepository: IContentRepository;
 
-  private constructor(contentRepository: IContentRepository) {
-    this.contentRepository = contentRepository;
+  constructor() {
+    this.contentRepository = ContentRepository.getInstance();
   }
 
-  static getInstance(contentRepository: IContentRepository): ContentService {
-    if (!ContentService.instance) {
-      ContentService.instance = new ContentService(contentRepository);
+  static getInstance(): ContentService {
+    if (!this.instance) {
+      this.instance = new ContentService();
     }
-    return ContentService.instance;
+    return this.instance;
   }
 
   async getAllContents(): Promise<ContentAttributes[]> {

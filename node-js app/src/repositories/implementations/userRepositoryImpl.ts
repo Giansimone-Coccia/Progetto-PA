@@ -1,13 +1,22 @@
+import UserDAO from '../../dao/implementations/userDAOImpl';
 import IUserDAO from '../../dao/interfaces/iUserDAO';
 import { UserCreationAttributes, UserAttributes } from '../../models/user';
 import IUserRepository from '../interfaces/iUserRepository';
 
 
 class UserRepository implements IUserRepository{
+  private static instance: UserRepository;
   private userDAO: IUserDAO;
 
-  constructor(userDAO: IUserDAO) {
-    this.userDAO = userDAO;
+  private constructor() {
+    this.userDAO = UserDAO.getInstance();
+  }
+
+  static getInstance(){
+    if (!this.instance) {
+      this.instance = new UserRepository();
+    }
+    return this.instance;
   }
 
   async create(user: UserCreationAttributes): Promise<UserAttributes> {

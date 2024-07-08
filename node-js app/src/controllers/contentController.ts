@@ -17,25 +17,19 @@ class ContentController {
   private userService: UserService;
 
   private constructor() {
-    const contentDAO = new ContentDAO();
-    const contentRepository = new ContentRepositoryImpl(contentDAO);
-    this.contentService = ContentService.getInstance(contentRepository);
+    this.contentService = ContentService.getInstance();
 
-    const datasetDAO = new DatasetDAO();
-    const datasetRepository = new DatasetRepositoryImpl(datasetDAO);
-    this.datasetService = DatasetService.getInstance(datasetRepository);
+    this.datasetService = DatasetService.getInstance();
 
-    const userDAO = new UserDAO();
-    const userRepository = new UserRepositoryImpl(userDAO);
-    this.userService = UserService.getInstance(userRepository);
+    this.userService = UserService.getInstance();
 
   }
 
   public static getInstance(): ContentController {
-    if (!ContentController.instance) {
-      ContentController.instance = new ContentController();
+    if (!this.instance) {
+      this.instance = new ContentController();
     }
-    return ContentController.instance;
+    return this.instance;
   }
 
   public getAllContents = async (req: Request, res: Response) => {
