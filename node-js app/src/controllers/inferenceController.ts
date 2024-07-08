@@ -11,7 +11,6 @@ interface ProcessInfo {
 class InferenceController {
   private static instance: InferenceController;
   private inferenceService: InferenceService;
-  private processes: { [key: string]: ProcessInfo } = {};
 
   private constructor() {
     this.inferenceService = InferenceService.getInstance();

@@ -13,11 +13,8 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
   const { datasetId, modelId, userId } = job.data;
 
   const inferenceService = InferenceService.getInstance();
-
   const contentService = ContentService.getInstance();
-
   const datasetService = DatasetService.getInstance();
-
   const userService = UserService.getInstance();
 
   const inferenceUrl = process.env.INFERENCE_URL;
@@ -100,7 +97,8 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
     if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
       jobStatus.state = 'failed';
-      jobStatus.message = `Error: ${response.data.error_code}: ${response.data.error}`;
+      jobStatus.error_code = response.data.error_code;
+      jobStatus.message = `Error ${response.data.error_code}: ${response.data.error}`;
       job.progress(jobStatus);
       return;
     }
