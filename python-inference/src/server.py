@@ -1,14 +1,12 @@
 from io import BytesIO
-import json
 import logging
 from flask import Flask, request, jsonify # type: ignore
-import redis # type: ignore
+import redis 
 import os
-import torch
 from PIL import Image
 from utils.image_processing import predict_image
 from utils.zip_processing import predict_zip_results
-from cluster import clustering
+from utils.model_selection import select_model
 from utils.video_processing import predict_video_results
 
 app = Flask(__name__)
@@ -42,7 +40,7 @@ def predict():
             jsonContents = data.get('jsonContents')
             modelId = data.get('modelId')
 
-            model, class_names = modelType(modelId)
+            model, class_names = select_model(modelId)
 
             if not isinstance(jsonContents, list):
                 return jsonify({'error': "jsonContents deve essere una lista",'error_code': 400})
@@ -85,39 +83,6 @@ def predict():
 
     else:
         return jsonify({'error': 'Metodo non consentito', 'error_code': 405})
-    
-def modelType(modelId):
-    base_path = os.path.dirname(__file__)  
-    
-    if modelId == "1":
-        model_path = 'pyModels/armocromia_12_seasons_resnet50_full.pth'
-        model = torch.load(model_path, map_location=torch.device('cpu'))
-        model.eval()
-
-        class_names_path = os.path.join(base_path, 'classes_json', 'class_names_12.json')
-        with open(class_names_path, 'r') as f:
-            class_names_12 = json.load(f)
-
-        return model, class_names_12
-    
-    elif modelId == "2":
-        model_path = 'pyModels/armocromia_4_seasons_resnet50_full.pth'
-        model = torch.load(model_path, map_location=torch.device('cpu'))
-        model.eval()
-
-        class_names_path = os.path.join(base_path, 'classes_json', 'class_names_4.json')
-        logging.info(class_names_path)
-        with open(class_names_path, 'r') as f:
-            class_names_4 = json.load(f)
-        logging.info(class_names_4)
-
-        return model, class_names_4
-    
-    elif modelId == "3":
-        # clustering - Placeholder for future functionality
-        return None
-    else:
-        raise ValueError(f"modelId not supported: {modelId}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

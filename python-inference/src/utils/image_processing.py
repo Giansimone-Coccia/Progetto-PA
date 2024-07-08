@@ -1,9 +1,5 @@
-import logging
 import torchvision.transforms as transforms
 import torch
-from flask import jsonify # type: ignore
-
-logging.basicConfig(level=logging.INFO)
 
 def predict_image(input_image, model, class_names):
     preprocess = transforms.Compose([
@@ -25,13 +21,10 @@ def predict_image(input_image, model, class_names):
     for i in range(probabilities.size(0)):
         class_name = class_names[str(i)]
 
-        logging.info(class_name)
-
         result_entry = {
             "probability": probabilities[i].item(),
             "class_name": class_name
         }
-        logging.info(result_entry)
 
         results.append(result_entry)
 
