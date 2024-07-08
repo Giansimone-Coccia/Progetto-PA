@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { MulterError } from 'multer';
 import { CustomRequest } from './authMiddleware';
 

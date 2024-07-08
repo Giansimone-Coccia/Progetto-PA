@@ -8,3 +8,4 @@ npx sequelize-cli migration:generate --name create-inferences
 docker-compose build
 docker-compose up 
 docker-compose down
+docker-compose up --build

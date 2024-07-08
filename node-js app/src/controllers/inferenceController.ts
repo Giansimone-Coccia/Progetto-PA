@@ -3,11 +3,6 @@ import { InferenceService } from '../services/inferenceService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import inferenceQueue from '../queue/inferenceQueue';
 
-interface ProcessInfo {
-  status: string;
-  result: JSON | null;
-}
-
 class InferenceController {
   private static instance: InferenceController;
   private inferenceService: InferenceService;
@@ -28,13 +23,12 @@ class InferenceController {
     res.json(inferences);
   };
 
-  public getInferenceById = async (req: Request, res: Response) => {
+  public getInferenceById = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
-    const inference = await this.inferenceService.getInferenceById(id);
     try {
       // Controlla se l'id è un numero valido
-      if (isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
+      if (!id) {
+        return res.status(400).json({ message: 'Invalid ID' });
       }
 
       // Ottieni l'inferenza dal servizio
@@ -42,10 +36,9 @@ class InferenceController {
 
       // Verifica se l'inferenza esiste
       if (!inference) {
-        return res.status(404).json({ message: 'Inference not found' });
+        return res.status(404).json({ message: 'Inference not found or not completed' });
       }
 
-      // Ritorna l'inferenza trovata
       res.json(inference);
     } catch (error) {
       console.error(`Error fetching inference: ${error}`);

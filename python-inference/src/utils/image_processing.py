@@ -1,7 +1,28 @@
-import torchvision.transforms as transforms
+"""
+Module: image_processing.py
+
+This module provides functions for image preprocessing and prediction using a pre-trained model.
+"""
+
+import logging
+from torchvision import transforms
 import torch
 
+logging.basicConfig(level=logging.INFO)
+
 def predict_image(input_image, model, class_names):
+    """
+    Preprocesses the input image, makes predictions using the specified model,
+    and returns the probabilities of each class.
+
+    Args:
+        input_image (PIL.Image): The input image to classify.
+        model (torch.nn.Module): The pre-trained model to use for classification.
+        class_names (dict): A dictionary mapping class indices to class names.
+
+    Returns:
+        list: A list of dictionaries containing probabilities and class names.
+    """
     preprocess = transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),

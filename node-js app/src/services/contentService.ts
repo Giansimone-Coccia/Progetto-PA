@@ -1,4 +1,4 @@
-import Content, { ContentAttributes, ContentCreationAttributes } from '../models/content';
+import { ContentAttributes, ContentCreationAttributes } from '../models/content';
 import IContentRepository from '../repositories/interfaces/iContentRepository';
 import AdmZip = require('adm-zip');
 import { spawn } from 'child_process';
@@ -85,7 +85,7 @@ export class ContentService {
       case 'image':
         return 0.65;
       case 'video':
-        const frames: number = await this.countFramesInVideo(data)
+        const frames: number = await this.countFramesInVideo(data);
         return frames * 0.45;
       case 'zip':
         return (this.countImagesInZip(data) || 0) * 0.7;

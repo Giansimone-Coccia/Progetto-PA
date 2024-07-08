@@ -1,11 +1,7 @@
 import { Request, Response } from 'express';
 import { DatasetService } from '../services/datasetService';
-import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
-import DatasetDAO from '../dao/implementations/datasetDAOImpl';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { ContentService } from '../services/contentService';
-import ContentDAO from '../dao/implementations/contentDAOImpl';
-import ContentRepositoryImpl from '../repositories/implementations/contentRepositoryImpl';
 
 class DatasetController {
   private static instance: DatasetController;
@@ -112,7 +108,7 @@ class DatasetController {
         }
       }
       
-      let datasetUpdated = await this.datasetService.updateDataset(id, req.body);
+      const datasetUpdated = await this.datasetService.updateDataset(id, req.body);
   
       if (datasetUpdated) {
         res.json("Dataset updated");
@@ -121,7 +117,7 @@ class DatasetController {
       }
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
-    };
+    }
   };
 
   public deleteDataset = async (req: CustomRequest, res: Response) => {

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { JwtPayload } from 'jsonwebtoken';
 import { UserAttributes } from '../models/user';
 
 export interface CustomRequest extends Request {

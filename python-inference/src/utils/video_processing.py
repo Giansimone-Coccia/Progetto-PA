@@ -1,3 +1,9 @@
+"""
+Module: video_processing.py
+
+This module provides functions for video processing and prediction using a pre-trained model.
+"""
+
 import tempfile
 from PIL import Image
 import cv2
@@ -5,6 +11,18 @@ from .image_processing import predict_image
 
 def process_video(video_data, model, class_names):
     results = [] if model == 'clustering' else {}
+    """
+    Preprocess video frames, make predictions using the specified model,
+    and return the probabilities of each class for each frame.
+
+    Args:
+        video_data (bytes): Binary video data.
+        model (torch.nn.Module): Pre-trained model to use for classification.
+        class_names (dict): A dictionary mapping class indices to class names.
+
+    Returns:
+        dict: A dictionary containing predictions for each frame of the video.
+    """
 
     with tempfile.NamedTemporaryFile(suffix='.mp4') as video_file:
         video_file.write(video_data)

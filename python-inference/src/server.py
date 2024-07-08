@@ -1,9 +1,13 @@
-from io import BytesIO
+import json
 import logging
-
 from flask import Flask, request, jsonify # type: ignore
 import redis 
 import os
+from io import BytesIO
+
+import redis # type: ignore
+import torch
+from flask import Flask, request, jsonify # type: ignore
 from PIL import Image
 from cluster.clustering import Clustering
 from utils.image_processing import predict_image
@@ -21,6 +25,7 @@ logging.basicConfig(level=logging.INFO)
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    """Endpoint per predire i risultati basati su vari tipi di file."""
     if request.method == 'POST':
         '''try:
             clustering_instance = clustering.Clustering()
@@ -60,7 +65,8 @@ def predict():
 
             for item in jsonContents:
                 if not isinstance(item, list) or len(item) != 3:
-                    return jsonify({'error': "Ogni elemento di jsonContents deve essere una lista con tre elementi",'error_code': 400})
+                    return jsonify({'error': "Ogni elemento di jsonContents deve essere una lista con tre elementi",
+                                    'error_code': 400})
 
                 filename, type, file = item
 
@@ -114,6 +120,7 @@ def predict():
                 return jsonify(all_results)
 
         except Exception as e:
+            logging.error("Exception occurred", exc_info=True)
             return jsonify({'error': str(e), 'error_code': 500})
 
     else:
