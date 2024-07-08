@@ -7,7 +7,6 @@ interface InferenceAttributes {
   id: number;
   datasetId: number;
   model: string;
-  status: string;
   result: any;
   cost: number;
   createdAt: Date;
@@ -20,7 +19,6 @@ class Inference extends Model<InferenceAttributes, InferenceCreationAttributes> 
   public id!: number;
   public datasetId!: number;
   public model!: string;
-  public status!: string;
   public result!: any;
   public cost!: number;
   public readonly createdAt!: Date;
@@ -40,10 +38,6 @@ Inference.init(
       allowNull: false,
     },
     model: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    status: {
       type: DataTypes.STRING,
       allowNull: false,
     },

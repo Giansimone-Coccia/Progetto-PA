@@ -1,5 +1,5 @@
-import { NextFunction, Router } from 'express';
-import multer, { MulterError } from 'multer';
+import { Router } from 'express';
+import multer from 'multer';
 import UserController from '../controllers/userController';
 import InferenceController from '../controllers/inferenceController';
 import DatasetController from '../controllers/datasetController';
@@ -14,17 +14,6 @@ const router = Router();
 const upload = multer({
   storage: multer.memoryStorage(),
 });
-
-// Middleware per gestire gli errori di Multer
-/*const handleMulterError = (err: any, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof MulterError) {
-    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
-      return res.status(400).json({ error: 'Campo del form non previsto per il caricamento del file' });
-    }
-  }
-  next(err); // Passa l'errore agli altri middleware di gestione degli errori
-};*/
-
 
 // Inizializzazione dei controller
 const userController = UserController.getInstance();
@@ -66,7 +55,7 @@ router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset)
 // Rotte contenuti (protette)
 router.get('/contents', authenticateJWT, contentController.getAllContents); //opzionale
 router.get('/contents/:id', authenticateJWT, contentController.getContentById); //opzionale
-router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent);
+router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent); //sicura
 router.put('/contents/:id', authenticateJWT, contentController.updateContent); //opzionale
 router.delete('/contents/:id', authenticateJWT, contentController.deleteContent); //opzionale
 

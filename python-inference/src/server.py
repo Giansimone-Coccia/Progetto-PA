@@ -1,4 +1,5 @@
 from io import BytesIO
+import json
 import logging
 from flask import Flask, request, jsonify # type: ignore
 import redis # type: ignore
@@ -12,35 +13,11 @@ from utils.video_processing import predict_video_results
 
 app = Flask(__name__)
 
-# Redis configuration
 redis_host = os.getenv('REDIS_HOST', 'localhost')
-redis_port = int(os.getenv('REDIS_PORT', 6379))
+redis_port = int(os.getenv('REDIS_INTERNAL_PORT', 6379))
 
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
 
-class_names_12 = {
-    0: "autunno deep",
-    1: "autunno soft",
-    2: "autunno warm",
-    3: "inverno bright",
-    4: "inverno cool",
-    5: "inverno deep",
-    6: "primavera bright",
-    7: "primavera light",
-    8: "primavera warm",
-    9: "summer cool",
-    10: "summer light",
-    11: "summer soft"
-}
-
-class_names_4 = {
-    0: "autunno",
-    1: "estate",
-    2: "inverno",
-    3: "primavera"
-}
-
-# Configure the logger
 logging.basicConfig(level=logging.INFO)
 
 @app.route('/predict', methods=['POST'])
@@ -66,7 +43,7 @@ def predict():
             jsonContents = data.get('jsonContents')
             modelId = data.get('modelId')
 
-            model = modelType(modelId)
+            model, class_names = modelType(modelId)
 
             if not isinstance(jsonContents, list):
                 return jsonify({'error': "jsonContents deve essere una lista",'error_code': 400})
@@ -89,14 +66,14 @@ def predict():
 
                 if type == 'image':
                     input_image = Image.open(BytesIO(file_data))
-                    all_results[filename] = predict_image(input_image, model, class_names_12)
+                    all_results[filename] = predict_image(input_image, model, class_names)
 
                 elif type == 'zip':
-                    zip_results = predict_zip_results(file_data, model, class_names_12)
+                    zip_results = predict_zip_results(file_data, model, class_names)
                     all_results[filename] = zip_results
 
                 elif type == 'video':
-                    video_results = predict_video_results(file_data, model, class_names_12)
+                    video_results = predict_video_results(file_data, model, class_names)
                     all_results[filename] = video_results
 
                 else:
@@ -111,16 +88,32 @@ def predict():
         return jsonify({'error': 'Metodo non consentito', 'error_code': 405})
     
 def modelType(modelId):
+    base_path = os.path.dirname(__file__)  
+    
     if modelId == "1":
         model_path = 'pyModels/armocromia_12_seasons_resnet50_full.pth'
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
-        return model
+
+        class_names_path = os.path.join(base_path, 'classes_json', 'class_names_12.json')
+        with open(class_names_path, 'r') as f:
+            class_names_12 = json.load(f)
+
+        return model, class_names_12
+    
     elif modelId == "2":
         model_path = 'pyModels/armocromia_4_seasons_resnet50_full.pth'
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
-        return model
+
+        class_names_path = os.path.join(base_path, 'classes_json', 'class_names_4.json')
+        logging.info(class_names_path)
+        with open(class_names_path, 'r') as f:
+            class_names_4 = json.load(f)
+        logging.info(class_names_4)
+
+        return model, class_names_4
+    
     elif modelId == "3":
         # clustering - Placeholder for future functionality
         return None

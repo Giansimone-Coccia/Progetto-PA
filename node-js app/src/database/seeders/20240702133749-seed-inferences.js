@@ -6,7 +6,6 @@ module.exports = {
       {
         dataset_id: 1,
         model: 'model1',
-        status: 'COMPLETED',
         result: JSON.stringify({ data: 'some results' }),
         cost: 2.75,
         created_at: new Date(),
@@ -15,7 +14,6 @@ module.exports = {
       {
         dataset_id: 2,
         model: 'model2',
-        status: 'PENDING',
         result: null,
         cost: 2.75,
         created_at: new Date(),

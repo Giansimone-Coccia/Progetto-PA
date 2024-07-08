@@ -105,12 +105,8 @@ class InferenceController {
 
     try {
 
-      console.log("suss")
-
       const job = await inferenceQueue.add({ datasetId, modelId, userId });
       const jobId = job.id;
-
-      console.log(jobId)
 
       return res.json({ "id processamento": jobId })
 
@@ -126,12 +122,11 @@ class InferenceController {
     try {
       const job = await inferenceQueue.getJob(jobId);
       if (job) {
-        const state = await job.getState();
         const progress = job.progress();
         const result = job.returnvalue;
 
-        if (state == "completed") {
-          return res.status(200).json({
+        if (progress["state"] == "completed") {
+          return res.status(progress["error_code"]).json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"],
@@ -139,7 +134,7 @@ class InferenceController {
           });
         }
         else {
-          return res.status(200).json({
+          return res.json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"],

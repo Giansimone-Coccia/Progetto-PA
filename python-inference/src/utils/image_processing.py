@@ -1,6 +1,9 @@
+import logging
 import torchvision.transforms as transforms
 import torch
 from flask import jsonify # type: ignore
+
+logging.basicConfig(level=logging.INFO)
 
 def predict_image(input_image, model, class_names):
     preprocess = transforms.Compose([
@@ -19,16 +22,17 @@ def predict_image(input_image, model, class_names):
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
     results = []
-    if probabilities.size(0) >= 5:
-        top5_prob, top5_catid = torch.topk(probabilities, 5)
-        for i in range(top5_prob.size(0)):
-            class_name = class_names[top5_catid[i].item()]
-            result_entry = {
-                "probability": top5_prob[i].item(),
-                "class_name": class_name
-            }
-            results.append(result_entry)
-    else:
-        return jsonify({'error': 'Less than 5 classes in output, cannot perform top-5','error_code': 400})
+    for i in range(probabilities.size(0)):
+        class_name = class_names[str(i)]
+
+        logging.info(class_name)
+
+        result_entry = {
+            "probability": probabilities[i].item(),
+            "class_name": class_name
+        }
+        logging.info(result_entry)
+
+        results.append(result_entry)
 
     return results

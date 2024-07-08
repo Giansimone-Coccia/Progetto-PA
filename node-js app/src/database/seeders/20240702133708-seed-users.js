@@ -10,7 +10,7 @@ module.exports = {
       {
         email: 'user1@example.com',
         password: hashedPassword1,
-        tokens: 100,
+        tokens: 10000,
         role: 'user',
         created_at: new Date(),
         updated_at: new Date()
@@ -18,7 +18,7 @@ module.exports = {
       {
         email: 'admin@example.com',
         password: hashedPassword2,
-        tokens: 1000,
+        tokens: 10000,
         role: 'admin',
         created_at: new Date(),
         updated_at: new Date()

@@ -24,6 +24,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   const jobStatus = {
     state: 'running',
+    error_code: 0,
     message: 'Job in esecuzione',
   };
 
@@ -31,6 +32,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   if (!userId) {
     jobStatus.state = 'failed';
+    jobStatus.error_code = 401;
     jobStatus.message = 'Error 401: Unauthorized';
     job.progress(jobStatus);
     return;
@@ -38,6 +40,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   if (!datasetId || !modelId) {
     jobStatus.state = 'failed';
+    jobStatus.error_code = 400;
     jobStatus.message = 'Error 400: datasetId e modelId sono richiesti';
     job.progress(jobStatus);
     return;
@@ -47,6 +50,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   if (!dataset) {
     jobStatus.state = 'failed';
+    jobStatus.error_code = 404;
     jobStatus.message = 'Error 404: Dataset not found';
     job.progress(jobStatus);
     return;
@@ -54,6 +58,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   if (dataset.userId !== userId) {
     jobStatus.state = 'failed';
+    jobStatus.error_code = 403;
     jobStatus.message = 'Error 403: Unauthorized access to dataset';
     job.progress(jobStatus);
     return;
@@ -63,6 +68,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   if (contents == null || contents === undefined) {
     jobStatus.state = 'failed';
+    jobStatus.error_code = 404;
     jobStatus.message = 'Error 404: Il servizio getContentByDatasetId ha restituito un valore null o undefined.';
     job.progress(jobStatus);
     return;
@@ -73,6 +79,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   if (!user) {
     jobStatus.state = 'failed';
+    jobStatus.error_code = 401;
     jobStatus.message = 'Error 401: Unauthorized';
     job.progress(jobStatus);
     return;
@@ -80,6 +87,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
   if (cost > user.tokens) {
     jobStatus.state = 'aborted';
+    jobStatus.error_code = 401;
     jobStatus.message = 'Error 401: Unauthorized';
     job.progress(jobStatus);
     return;
@@ -92,15 +100,16 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
 
     if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
       jobStatus.state = 'failed';
-      jobStatus.message = `Error ${response.data.error_code}: ${response.data.error}`;
+      jobStatus.message = `Error: ${response.data.error_code}: ${response.data.error}`;
       job.progress(jobStatus);
+      return;
     }
 
     let tokens = user.tokens - cost
 
     await userService.updateUser(userId, { tokens });
 
-    const inference = await inferenceService.createInference({ ...job.data, cost, status: 'completed', result: response.data, model: modelId });
+    const inference = await inferenceService.createInference({ ...job.data, cost, result: response.data, model: modelId });
 
     jobStatus.state = 'completed';
     jobStatus.message = 'job completato';
@@ -108,7 +117,8 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
     return inference;
   } catch (error) {
     jobStatus.state = 'failed';
-    jobStatus.message = 'error';
+    jobStatus.error_code = 500;
+    jobStatus.message = `Error: ${error}`;
     job.progress(jobStatus);
     return;
   }
