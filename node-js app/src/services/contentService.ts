@@ -62,7 +62,7 @@ export class ContentService {
     return allowedMimeTypes ? allowedMimeTypes.includes(mimetype) : false;
   }
 
-  static calculateContentsCost(contents: ContentAttributes[]): number {
+  calculateInferenceCost(contents: ContentAttributes[]): number {
     return contents.reduce((accumulator, currentContent) => {
       if (currentContent.type == 'image') {
         accumulator += (currentContent.cost / 0.65) * 2.75
@@ -77,11 +77,11 @@ export class ContentService {
     }, 0);
   }
 
-  static reduceContents(contents: ContentAttributes[]): (string | Buffer)[][] {
+  reduceContents(contents: ContentAttributes[]): (string | Buffer)[][] {
     return contents.map(content => [content.name, content.type, content.data]);
   }
 
-  static async calculateCost(type: string, data: Buffer): Promise<number | null> {
+  async calculateCost(type: string, data: Buffer): Promise<number | null> {
     switch (type) {
       case 'image':
         return 0.65;
@@ -95,7 +95,7 @@ export class ContentService {
     }
   }
 
-  private static countImagesInZip(data: Buffer): number | null {
+  private countImagesInZip(data: Buffer): number | null {
     try {
       const zip = new AdmZip(data);
 
@@ -116,7 +116,7 @@ export class ContentService {
   }
 
 
-  private static async countFramesInVideo(data: Buffer): Promise<number> {
+  private async countFramesInVideo(data: Buffer): Promise<number> {
     // Comando per ottenere le informazioni video con ffprobe
     const ffprobeCommand = 'ffprobe';
     const args = [

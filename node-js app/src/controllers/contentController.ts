@@ -105,14 +105,14 @@ class ContentController {
         return res.status(400).json({ message: 'Invalid file type' });
       }
 
-      const cost = await ContentService.calculateCost(type, data);
+      const cost = await this.contentService.calculateCost(type, data);
 
       if (cost === null) {
         return res.status(400).json({ message: 'Invalid file type' });
       }
 
       if (cost > user.tokens) {
-        return res.status(400).json({ message: 'Not enough tokens' });
+        return res.status(401).json({ message: 'Unauthorized' });
       }
 
       await this.userService.updateUser(userId, { tokens: user.tokens - cost });

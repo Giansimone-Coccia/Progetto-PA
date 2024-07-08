@@ -13,7 +13,7 @@ import DatasetRepositoryImpl from '../repositories/implementations/datasetReposi
 import UserDAO from '../dao/implementations/userDAOImpl';
 import { UserService } from '../services/userService';
 import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
-import inferenceQueue from '../que/inferenceQue';
+import inferenceQueue from '../queue/inferenceQueue';
 
 interface ProcessInfo {
   status: string;
@@ -133,55 +133,19 @@ class InferenceController {
     const userId = req.user?.id;
 
     try {
-      if (!userId) {
-        return res.status(401).send('Unauthorized');
-      }
 
-      if (!datasetId || !modelId) {
-        return res.status(400).send('datasetId e modelId sono richiesti');
-      }
+      console.log("suss")
 
-      const dataset = await this.datasetService.getDatasetById(datasetId);
+      const job = await inferenceQueue.add({ datasetId, modelId, userId });
+      const jobId = job.id;
 
-      if (!dataset) {
-        return res.status(404).send('Dataset not found');
-      }
+      console.log(jobId)
 
-      if (dataset.userId !== userId) {
-        return res.status(403).send('Unauthorized access to dataset');
-      }
+      return res.json({ "id processamento": jobId })
 
-      const processId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-      this.processes[processId] = { status: 'running', result: null };
-
-      const contents = await this.contentService.getContentByDatasetId(datasetId);
-
-      if (contents == null || contents === undefined) {
-        return res.status(404).send('Il servizio getContentByDatasetId ha restituito un valore null o undefined.');
-      }
-
-      const cost = ContentService.calculateContentsCost(contents);
-      const user = await this.userService.getUserById(userId);
-
-      if (!user) {
-        this.processes[processId] = { status: 'failed', result: null };
-        return res.status(401).send('Unauthorized');
-      }
-
-      if (cost > user.tokens) {
-        this.processes[processId] = { status: 'aborted', result: null };
-        return res.status(400).send('Not enough tokens');
-      }
-
-      const jsonContents = ContentService.reduceContents(contents);
-
-      // Aggiornamento: aggiungere il job alla coda
-      await inferenceQueue.add({ datasetId, modelId, userId, processId, token: user.tokens });
-
-      res.json({ processId, status: 'queued' });
     } catch (error) {
       console.error(`Errore durante l'esecuzione dell'inferenza: ${error}`);
-      res.status(500).send('Errore durante l esecuzione dell inferenza');
+      res.status(500).send("Errore durante l'esecuzione dell'inferenza");
     }
   };
 
@@ -213,6 +177,40 @@ class InferenceController {
     }
   };
 
+  public getProcess = async (req: CustomRequest, res: Response) => {
+    const jobId = req.params.jobId;
+
+    try {
+      const job = await inferenceQueue.getJob(jobId);
+      if (job) {
+        const state = await job.getState();
+        const progress = job.progress();
+        const result = job.returnvalue;
+
+        if (state == "completed") {
+          return res.status(200).json({
+            jobId: job.id,
+            state,
+            progress,
+            result
+          });
+        }
+        else {
+          return res.status(200).json({
+            jobId: job.id,
+            state,
+            progress,
+          });
+        }
+      } else {
+        res.status(404).json({ message: 'Job not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving job status', error });
+    }
+  }
 }
+
+
 
 export default InferenceController;
