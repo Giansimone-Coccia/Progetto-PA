@@ -27,36 +27,36 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 
 // Rotte utente (protette)
-router.get('/users', authenticateJWT, authorizeAdmin, userController.getAllUsers); //opzionale
-router.get('/users/:id', authenticateJWT, authorizeAdmin, userController.getUserById); //opzionale
-router.post('/users', authenticateJWT, userController.createUser); //opzionale
-router.put('/users/:id', authenticateJWT, userController.updateUser); //opzionale
-router.delete('/users/:id', authenticateJWT, userController.deleteUser); //opzionale
+//router.get('/users', authenticateJWT, authorizeAdmin, userController.getAllUsers);
+//router.get('/users/:id', authenticateJWT, authorizeAdmin, userController.getUserById);
+//router.post('/users', authenticateJWT, userController.createUser);
+//router.put('/users/:id', authenticateJWT, userController.updateUser);
+//router.delete('/users/:id', authenticateJWT, userController.deleteUser);
 router.post('/users/token', authenticateJWT, userController.getToken);
 router.post('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge);
 
 // Rotte di inferenze (protette)
-router.get('/inferences', authenticateJWT, inferenceController.getAllInferences);
+//router.get('/inferences', authenticateJWT, inferenceController.getAllInferences);
 router.get('/inferences/:id', authenticateJWT, inferenceController.getInferenceById);
-router.post('/inferences', authenticateJWT, inferenceController.createInference);
-router.put('/inferences/:id', authenticateJWT, inferenceController.updateInference);
-router.delete('/inferences/:id', authenticateJWT, inferenceController.deleteInference);
-router.post('/start-inference', authenticateJWT, inferenceController.startInference); //sicura
-router.get('/inference/process/:jobId', authenticateJWT, inferenceController.getStatus); //sicura
+//router.post('/inferences', authenticateJWT, inferenceController.createInference);
+//router.put('/inferences/:id', authenticateJWT, inferenceController.updateInference);
+//router.delete('/inferences/:id', authenticateJWT, inferenceController.deleteInference);
+router.post('/inferences', authenticateJWT, inferenceController.startInference);
+router.get('/inferences/status/:jobId', authenticateJWT, inferenceController.getStatus);
 
 // Rotte dataset (protette)
 router.get('/datasets', authenticateJWT, datasetController.getAllDatasets);
-//router.get('/datasets', authenticateJWT, datasetController.getAllDatasetsByUserId); //opzionale
-router.get('/datasets/:id', authenticateJWT, datasetController.getDatasetById); //opzionale
+//router.get('/datasets', authenticateJWT, datasetController.getAllDatasetsByUserId);
+//router.get('/datasets/:id', authenticateJWT, datasetController.getDatasetById);
 router.post('/datasets', authenticateJWT, datasetController.createDataset);
 router.put('/datasets/:id', authenticateJWT, datasetController.updateDataset);
 router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset);
 
 // Rotte contenuti (protette)
-router.get('/contents', authenticateJWT, contentController.getAllContents); //opzionale
-router.get('/contents/:id', authenticateJWT, contentController.getContentById); //opzionale
-router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent); //sicura
-router.put('/contents/:id', authenticateJWT, contentController.updateContent); //opzionale
-router.delete('/contents/:id', authenticateJWT, contentController.deleteContent); //opzionale
+//router.get('/contents', authenticateJWT, contentController.getAllContents);
+//router.get('/contents/:id', authenticateJWT, contentController.getContentById);
+router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent);
+//router.put('/contents/:id', authenticateJWT, contentController.updateContent);
+//router.delete('/contents/:id', authenticateJWT, contentController.deleteContent);
 
 export default router;
