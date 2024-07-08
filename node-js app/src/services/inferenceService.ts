@@ -1,4 +1,4 @@
-import Inference, { InferenceAttributes, InferenceCreationAttributes } from '../models/inference';
+import { InferenceAttributes, InferenceCreationAttributes } from '../models/inference';
 import InferenceRepository from '../repositories/implementations/inferenceRepositoryImpl';
 import IInferenceRepository from '../repositories/interfaces/iInferenceRepository';
 

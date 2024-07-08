@@ -1,5 +1,5 @@
 import { ContentAttributes } from '../models/content';
-import Dataset, { DatasetAttributes, DatasetCreationAttributes } from '../models/dataset';
+import { DatasetAttributes, DatasetCreationAttributes } from '../models/dataset';
 import DatasetRepository from '../repositories/implementations/datasetRepositoryImpl';
 import IDatasetRepository from '../repositories/interfaces/iDatasetRepository';
 
@@ -44,5 +44,5 @@ export class DatasetService {
 
   createContentHash(content: ContentAttributes) {
     return `${content.type}-${content.data}-${content.cost}`;
-  };
+  }
 }
