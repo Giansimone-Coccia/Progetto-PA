@@ -2,10 +2,10 @@ import json
 import os
 import torch
 
-def select_model(modelId):
+def select_model(model_Id):
     base_path = os.path.dirname(__file__)  
     
-    if modelId == "1":
+    if model_Id == "1":
         model_path = os.path.join(base_path, '..', '..', 'pyModels', 'armocromia_12_seasons_resnet50_full.pth')
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
@@ -16,7 +16,7 @@ def select_model(modelId):
 
         return model, class_names_12
     
-    elif modelId == "2":
+    elif model_Id == "2":
         model_path = os.path.join(base_path, '..', '..', 'pyModels', 'armocromia_4_seasons_resnet50_full.pth')
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
@@ -27,8 +27,7 @@ def select_model(modelId):
 
         return model, class_names_4
     
-    elif modelId == "3":
-        # clustering - Placeholder for future functionality
-        return None
+    elif model_Id == "3":
+        return "clustering", None   
     else:
-        raise ValueError(f"modelId not supported: {modelId}")
+        return None, None

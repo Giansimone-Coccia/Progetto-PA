@@ -5,7 +5,7 @@ from .color_clusterer import ColorClusterer
 
 class Clustering:
 
-    def execute(self):
+    def execute(self, images):
         # Directory locale del progetto Waltico
         project_dir = os.getcwd()
 
