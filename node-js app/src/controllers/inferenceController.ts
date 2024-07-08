@@ -3,11 +3,6 @@ import { InferenceService } from '../services/inferenceService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import inferenceQueue from '../queue/inferenceQueue';
 
-interface ProcessInfo {
-  status: string;
-  result: JSON | null;
-}
-
 class InferenceController {
   private static instance: InferenceController;
   private inferenceService: InferenceService;
@@ -30,7 +25,6 @@ class InferenceController {
 
   public getInferenceById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const inference = await this.inferenceService.getInferenceById(id);
     try {
       // Controlla se l'id è un numero valido
       if (isNaN(id)) {

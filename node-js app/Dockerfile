@@ -15,3 +15,5 @@ ENV PORT=3000
 EXPOSE 3000
 
 CMD ["npm", "start"]
+# Run ESLint to lint TypeScript files
+#CMD ["npx", "eslint", "src/**/*.js", "src/**/*.ts"]

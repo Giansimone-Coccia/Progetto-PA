@@ -1,14 +1,8 @@
 import { Request, Response } from 'express';
 import { ContentService } from '../services/contentService';
-import ContentRepositoryImpl from '../repositories/implementations/contentRepositoryImpl';
-import ContentDAO from '../dao/implementations/contentDAOImpl';
 import { CustomRequest } from '../middleware/authMiddleware';
-import DatasetDAO from '../dao/implementations/datasetDAOImpl';
-import DatasetRepositoryImpl from '../repositories/implementations/datasetRepositoryImpl';
 import { DatasetService } from '../services/datasetService';
 import { UserService } from '../services/userService';
-import UserDAO from '../dao/implementations/userDAOImpl';
-import UserRepositoryImpl from '../repositories/implementations/userRepositoryImpl';
 
 class ContentController {
   private static instance: ContentController;

@@ -1,14 +1,15 @@
-from io import BytesIO
 import json
 import logging
-from flask import Flask, request, jsonify # type: ignore
-import redis # type: ignore
 import os
+from io import BytesIO
+
+import redis # type: ignore
 import torch
+from flask import Flask, request, jsonify # type: ignore
 from PIL import Image
+
 from utils.image_processing import predict_image
 from utils.zip_processing import predict_zip_results
-from cluster import clustering
 from utils.video_processing import predict_video_results
 
 app = Flask(__name__)
@@ -21,6 +22,7 @@ logging.basicConfig(level=logging.INFO)
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    """Endpoint per predire i risultati basati su vari tipi di file."""
     if request.method == 'POST':
         '''try:
             clustering_instance = clustering.Clustering()
@@ -49,7 +51,8 @@ def predict():
 
             for item in jsonContents:
                 if not isinstance(item, list) or len(item) != 3:
-                    return jsonify({'error': "Ogni elemento di jsonContents deve essere una lista con tre elementi",'error_code': 400})
+                    return jsonify({'error': "Ogni elemento di jsonContents deve essere una lista con tre elementi",
+                                    'error_code': 400})
 
                 filename = item[0]
                 type = item[1]
@@ -81,15 +84,16 @@ def predict():
             return jsonify(all_results)
 
         except Exception as e:
+            logging.error("Exception occurred", exc_info=True)
             return jsonify({'error': str(e), 'error_code': 500})
 
-    else:
-        return jsonify({'error': 'Metodo non consentito', 'error_code': 405})
+    return jsonify({'error': 'Metodo non consentito', 'error_code': 405})
     
-def modelType(modelId):
+def modelType(model_id):
+    """Carica il modello e i nomi delle classi in base all'ID del modello."""
     base_path = os.path.dirname(__file__)  
     
-    if modelId == "1":
+    if model_id == "1":
         model_path = 'pyModels/armocromia_12_seasons_resnet50_full.pth'
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
@@ -100,24 +104,22 @@ def modelType(modelId):
 
         return model, class_names_12
     
-    elif modelId == "2":
+    if model_id == "2":
         model_path = 'pyModels/armocromia_4_seasons_resnet50_full.pth'
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
 
         class_names_path = os.path.join(base_path, 'classes_json', 'class_names_4.json')
-        logging.info(class_names_path)
         with open(class_names_path, 'r') as f:
             class_names_4 = json.load(f)
-        logging.info(class_names_4)
 
         return model, class_names_4
     
-    elif modelId == "3":
+    if model_id == "3":
         # clustering - Placeholder for future functionality
         return None
-    else:
-        raise ValueError(f"modelId not supported: {modelId}")
+    
+    raise ValueError(f"modelId not supported: {model_id}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
