@@ -126,14 +126,26 @@ Per motivi di semplicità riportiamo solo il caso del caricamento delle immagini
    - *Controllore (Controller):* Gestisce le interazioni degli utenti e le richieste dell'utente, traducendo le azioni dell'utente sui dati in operazioni da eseguire sul Modello. Aggiorna la Vista quando lo stato del Modello cambia.
 
 ## Avvio del Progetto
+Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare correttamente il sistema.
 
 ### Requisiti
 - Docker
 - Docker Compose
 
 ### Istruzioni per l'Avvio
-1. Clonare il repository:
+1. Clonare il repository nella propria directory o scaricare direttamente il file .zip:
    ```bash
-   git clone https://github.com/yourusername/inference-management-system.git
-   cd inference-management-system
-
+   git clone https://github.com/Giansimone-Coccia/Progetto-PA.git
+2. Esegire le migrations (opzionale):
+   ```bash
+   npx sequelize-cli db:migrate
+4. Eseguire i seeders (opzionale):
+   ```bash
+   npx sequelize-cli db:seed:all
+5. Eseguire la build del progetto:
+   ```bash
+   docker-compose build
+6. Eseguire il run del progetto:
+   ```bash
+   docker-compose up OPPURE docker-compose up --build
+7. Eseguire le chiamate su Postman
