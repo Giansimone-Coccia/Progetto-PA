@@ -27,36 +27,21 @@ router.post('/register', authController.register); // Route for user registratio
 router.post('/login', authController.login); // Route for user login
 
 // User routes (protected)
-//router.get('/users', authenticateJWT, authorizeAdmin, userController.getAllUsers);
-//router.get('/users/:id', authenticateJWT, authorizeAdmin, userController.getUserById);
-//router.post('/users', authenticateJWT, userController.createUser);
-//router.put('/users/:id', authenticateJWT, userController.updateUser);
-//router.delete('/users/:id', authenticateJWT, userController.deleteUser);
 router.post('/users/token', authenticateJWT, userController.getToken); // Route to get user token
 router.post('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge); // Route to recharge user tokens (admin only)
 
 // Inference routes (protected)
-//router.get('/inferences', authenticateJWT, inferenceController.getAllInferences);
-//router.post('/inferences', authenticateJWT, inferenceController.createInference);
-//router.put('/inferences/:id', authenticateJWT, inferenceController.updateInference);
-//router.delete('/inferences/:id', authenticateJWT, inferenceController.deleteInference);
 router.get('/inferences/:id', authenticateJWT, inferenceController.getInferenceById); // Route to get inference by ID
 router.post('/inferences', authenticateJWT, inferenceController.startInference); // Route to start a new inference
 router.get('/inferences/status/:jobId', authenticateJWT, inferenceController.getStatus); // Route to get inference job status
 
 // Dataset routes (protected)
-//router.get('/datasets', authenticateJWT, datasetController.getAllDatasetsByUserId);
-//router.get('/datasets/:id', authenticateJWT, datasetController.getDatasetById);
 router.get('/datasets', authenticateJWT, datasetController.getAllDatasets); // Route to get all datasets
 router.post('/datasets', authenticateJWT, datasetController.createDataset); // Route to create a new dataset
 router.put('/datasets/:id', authenticateJWT, datasetController.updateDataset); // Route to update a dataset
 router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset); // Route to delete a dataset
 
 // Content routes (protected)
-//router.get('/contents', authenticateJWT, contentController.getAllContents);
-//router.get('/contents/:id', authenticateJWT, contentController.getContentById);
-//router.put('/contents/:id', authenticateJWT, contentController.updateContent);
-//router.delete('/contents/:id', authenticateJWT, contentController.deleteContent);
 router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent); // Route to upload content
 // Note: 'data' is the field name used in the form for file upload
 

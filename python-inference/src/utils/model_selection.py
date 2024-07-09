@@ -6,7 +6,7 @@ def select_model(model_Id):
     base_path = os.path.dirname(__file__)  
     
     if model_Id == "1":
-        model_path = os.path.join(base_path, '..', '..', 'pyModels', 'armocromia_12_seasons_resnet50_full.pth')
+        model_path = os.path.join(base_path, '..', '..', 'py_models', 'armocromia_12_seasons_resnet50_full.pth')
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
 
@@ -17,7 +17,7 @@ def select_model(model_Id):
         return model, class_names_12
     
     elif model_Id == "2":
-        model_path = os.path.join(base_path, '..', '..', 'pyModels', 'armocromia_4_seasons_resnet50_full.pth')
+        model_path = os.path.join(base_path, '..', '..', 'py_models', 'armocromia_4_seasons_resnet50_full.pth')
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
 
