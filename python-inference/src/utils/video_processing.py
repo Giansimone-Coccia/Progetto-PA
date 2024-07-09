@@ -40,10 +40,10 @@ def process_video(video_data, model, class_names):
             image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
             if model == 'clustering':
-                results.append([f"frame {frame_number}", image])
+                results.append([f"frame_{frame_number}", image])
             else:
                 prediction = predict_image(image, model, class_names)
-                results[f"frame {frame_number}"] = prediction 
+                results[f"frame_{frame_number}"] = prediction 
 
             frame_number += 1
 
