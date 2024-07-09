@@ -4,17 +4,24 @@
 
 Il progetto consiste nella realizzazione di un sistema backend per la gestione dell'inferenza su immagini e file zip contenenti immagini, utilizzando modelli di deep learning pre-addestrati. Il sistema permette agli utenti di creare dataset, caricare contenuti, eseguire inferenze e gestire crediti attraverso un sistema di autenticazione JWT.
 
-## Progettazione
+## Progettazione DB
+![Diagramma E-R](./docs/diagramma_pa.png)
 
-### Analisi dei requisiti
-![Analisi dei requisiti](docs/Analisi dei requisiti.jpg)
+## Analisi dei requisiti
+![Analisi dei requisiti](./docs/Analisi_dei_requisiti.jpg)
 
-### Diagrammi UML
+### Diagramma dei Casi d'Uso
+#### Attori
+![Attori](./docs/Attori.jpg)
+#### Gestione Dataset
+![Analisi dei requisiti](./docs/Gestione_Dataset.jpg)
+#### Gestione Processamento
+![Analisi dei requisiti](./docs/Gestione_Processamento.jpg)
+#### Gestione Utente
+![Analisi dei requisiti](./docs/Gestione_Utente.jpg)
 
-#### Diagramma dei Casi d'Uso
-![Diagramma dei Casi d'Uso](./docs/use_case_diagram.png)
 
-#### Diagramma delle Sequenze
+### Diagramma delle Sequenze
 ![Diagramma delle Sequenze](./docs/sequence_diagram.png)
 
 ### Design Pattern Utilizzati
