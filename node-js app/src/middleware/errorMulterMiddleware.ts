@@ -2,7 +2,13 @@ import { Response, NextFunction } from 'express';
 import { MulterError } from 'multer';
 import { CustomRequest } from './authMiddleware';
 
-// Middleware function to handle Multer errors
+/**
+ * Middleware function to handle Multer errors.
+ * @param {any} err - The error object thrown by Multer or other middleware.
+ * @param {CustomRequest} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @param {NextFunction} next - The next middleware function in the chain.
+ */
 export const errorMulterMiddleware = (err: any, req: CustomRequest, res: Response, next: NextFunction) => {
   // Check if the error is an instance of MulterError
   if (err instanceof MulterError) {

@@ -11,7 +11,12 @@ export interface CustomRequest extends Request {
 // Get JWT secret from environment variable or set a default value
 const secret = process.env.JWT_SECRET || 'your_jwt_secret';
 
-// Middleware function to authenticate JWT tokens
+/**
+ * Middleware function to authenticate JWT tokens.
+ * @param {CustomRequest} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @param {NextFunction} next - The next middleware function in the chain.
+ */
 export const authenticateJWT = (req: CustomRequest, res: Response, next: NextFunction) => {
   // Extract the Authorization header from the request
   const authHeader = req.headers.authorization;
