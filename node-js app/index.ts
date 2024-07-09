@@ -1,5 +1,6 @@
 import express from 'express';
 import routes from './src/routes/routes';
+import errorHandler from './src/middleware/errorMiddleware';
 
 const app = express();
 
@@ -15,6 +16,9 @@ app.get('/', (req, res) => {
     console.log('Received request on /');
     res.json({ message: 'Docker is easy 👍' });
 });
+
+// Middleware di gestione degli errori
+app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 
