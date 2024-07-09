@@ -25,7 +25,6 @@ class FaceSegmentation:
             image = self._images[index]
             
             try:
-                logging.info(image[0])
                 image_tensor = self._load_image(image[1])
                 faces = self._detect_faces(image_tensor)
                 
@@ -67,15 +66,10 @@ class FaceSegmentation:
 
         if image.mode != 'RGB':
             image = image.convert('RGB') 
-
-        logging.info("funge rgb")
     
         np_image = np.array(image)
-        logging.info("funge ARRAY")
         tensor_image = torch.from_numpy(np_image)
-        logging.info("funge image 1")
         tensor_processed = facer.hwc2bchw(tensor_image).to(self._device)
-        logging.info("funge image 2")
 
         return tensor_processed
 
