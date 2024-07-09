@@ -1,8 +1,10 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import SequelizeSingleton from '../utils/sequelizeSingleton';
 
+// Get the singleton instance of Sequelize
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
+// Define interface for ContentAttributes
 interface ContentAttributes {
   id: number;
   datasetId: number;
@@ -14,9 +16,12 @@ interface ContentAttributes {
   updatedAt: Date;
 }
 
+// Define interface for ContentCreationAttributes, allowing optional attributes
 interface ContentCreationAttributes extends Optional<ContentAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
 
+// Define the Content model class, implementing ContentAttributes
 class Content extends Model<ContentAttributes, ContentCreationAttributes> implements ContentAttributes {
+  // Define public properties based on ContentAttributes
   public id!: number;
   public datasetId!: number;
   public type!: string;
@@ -27,8 +32,10 @@ class Content extends Model<ContentAttributes, ContentCreationAttributes> implem
   public readonly updatedAt!: Date;
 }
 
+// Initialize the Content model with Sequelize
 Content.init(
   {
+    // Define Sequelize model attributes
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -65,13 +72,15 @@ Content.init(
     },
   },
   {
-    sequelize: sequelizeInstance,
-    tableName: 'Contents',
-    modelName: 'Content',
-    timestamps: true,
-    underscored: true,
+    // Define Sequelize model options
+    sequelize: sequelizeInstance, // Link to the singleton Sequelize instance
+    tableName: 'Contents', // Name of the database table for Contents
+    modelName: 'Content', // Model name
+    timestamps: true, // Enable timestamps (createdAt, updatedAt)
+    underscored: true, // Use underscored naming for attributes (e.g., createdAt instead of created_at)
   }
 );
 
+// Export the Content model and its interfaces
 export default Content;
 export { ContentAttributes, ContentCreationAttributes };

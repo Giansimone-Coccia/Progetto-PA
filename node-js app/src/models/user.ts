@@ -1,8 +1,10 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import SequelizeSingleton from '../utils/sequelizeSingleton';
 
+// Get the singleton instance of Sequelize
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
+// Define interface for UserAttributes
 interface UserAttributes {
   id: number;
   email: string;
@@ -13,9 +15,12 @@ interface UserAttributes {
   updatedAt: Date;
 }
 
+// Define interface for UserCreationAttributes, allowing optional attributes
 interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'tokens' | 'createdAt' | 'updatedAt'> { }
 
+// Define the User model class, implementing UserAttributes
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+  // Define public properties based on UserAttributes
   public id!: number;
   public email!: string;
   public password!: string;
@@ -25,8 +30,10 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public readonly updatedAt!: Date;
 }
 
+// Initialize the User model with Sequelize
 User.init(
   {
+    // Define Sequelize model attributes
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -62,13 +69,15 @@ User.init(
     },
   },
   {
-    sequelize: sequelizeInstance,
-    tableName: 'Users',
-    modelName: 'User',
-    timestamps: true,
-    underscored: true,
+    // Define Sequelize model options
+    sequelize: sequelizeInstance, // Link to the singleton Sequelize instance
+    tableName: 'Users', // Name of the database table for Users
+    modelName: 'User', // Model name
+    timestamps: true, // Enable timestamps (createdAt, updatedAt)
+    underscored: true, // Use underscored naming for attributes (e.g., createdAt instead of created_at)
   }
 );
 
+// Export the User model and its interfaces
 export default User;
 export { UserAttributes, UserCreationAttributes };
