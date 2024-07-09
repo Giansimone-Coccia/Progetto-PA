@@ -51,27 +51,68 @@ Riportiamo di seguito i principali attori che interagiscono con il nostro sistem
 
 
 ### Diagramma delle Sequenze
+I diagrammi delle sequenze sono strumenti di modellazione utilizzati nell'ambito dell'ingegneria del software per rappresentare l'interazione tra oggetti in un sistema in un determinato scenario di utilizzo. Questi diagrammi sono particolarmente utili per comprendere come gli oggetti collaborano in una sequenza specifica di azioni, evidenziando l'ordine temporale delle operazioni e le comunicazioni tra gli oggetti coinvolti.
+
 #### Caricamento immagine
-Il funzionameneto è simile per il caricamento dello zip o dei video.
-![Diagramma delle Sequenze](./docs/Caricamento_Immagine.jpg)
+Per motivi di semplicità riportiamo solo il caso del caricamento delle immagini (per il caricamento di zip o video il funzionamento è pressoché analogo).
+
+<p align="center">
+  <img src="./docs/Caricamento_Immagine.jpg" alt="Caricamento Immagine">
+</p>
+
 #### Credito residuo
-![Diagramma delle Sequenze](./docs/Credito_residuo.jpg)
+
+<p align="center">
+  <img src="./docs/Credito_residuo.jpg" alt="Credito Residuo">
+</p>
+
 #### CRUD Dataset
-![Diagramma delle Sequenze](./docs/CRUDDataset.jpg)
+
+<p align="center">
+  <img src="./docs/CRUDDataset.jpg" alt="CRUD Dataset">
+</p>
+
 #### Ignorare formati non corretti
-![Diagramma delle Sequenze](./docs/Ignorare_formati_non_corretti.jpg)
+
+<p align="center">
+  <img src="./docs/Ignorare_formati_non_corretti.jpg" alt="Ignorare Formati Non Corretti">
+</p>
+
 #### Restituzione ID processamento
-![Diagramma delle Sequenze](./docs/Restituzione_ID_processamento.jpg)
+
+<p align="center">
+  <img src="./docs/Restituzione_ID_processamento.jpg" alt="Restituzione ID Processamento">
+</p>
+
 #### Ricarica crediti
-![Diagramma delle Sequenze](./docs/Ricarica_crediti.jpg)
+
+<p align="center">
+  <img src="./docs/Ricarica_crediti.jpg" alt="ricarica Crediti">
+</p>
+
 #### Richiesta inferenza
-![Diagramma delle Sequenze](./docs/Richiesta_inferenza.jpg)
+
+<p align="center">
+  <img src="./docs/Richiesta_inferenza.jpg" alt="Richiesta Inferenza">
+</p>
+
 #### Risultato inferenza
-![Diagramma delle Sequenze](./docs/Risultato_inferenza.jpg)
+
+<p align="center">
+  <img src="./docs/Risultato_inferenza.jpg" alt="risultato Inferenza">
+</p>
+
 #### Stato di avanzamento
-![Diagramma delle Sequenze](./docs/Stato_avanzamento.jpg)
+
+<p align="center">
+  <img src="./docs/Stato_avanzamento.jpg" alt="Stato Avanzamento">
+</p>
+
 #### Validazione crediti
-![Diagramma delle Sequenze](./docs/Validazione_crediti.jpg)
+
+<p align="center">
+  <img src="./docs/Validazione_crediti.jpg" alt="Validazione Crediti">
+</p>
 
 ### Design Pattern Utilizzati
 
