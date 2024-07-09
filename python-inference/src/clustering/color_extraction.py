@@ -1,12 +1,7 @@
-import csv
 import logging
-import os
-import tempfile
 import PIL
-from matplotlib import pyplot as plt
 import numpy as np
 import torch
-import facer
 from sklearn.cluster import KMeans
 
 logging.basicConfig(level=logging.INFO)

@@ -1,5 +1,5 @@
 import logging
-from PIL import Image
+from operator import index
 import PIL
 import numpy as np
 import torch
@@ -19,24 +19,48 @@ class FaceSegmentation:
 
     def process_images(self):
         all_segments = {}
-        #directory = os.path.join(self._project_dir, "results/faces_facer")
-        #self._clear_directory(directory)
-        # Processa ciascuna immagine nella directory dei risultati
-        for image in self._images:
+        index = 0  # Inizializza l'indice
+        
+        while index < len(self._images):
+            image = self._images[index]
+            
             try:
                 logging.info(image[0])
                 image_tensor = self._load_image(image[1])
                 faces = self._detect_faces(image_tensor)
+                
+                if len(faces['rects']) > 1:
+                    self._extract_faces(image, faces)
+                    continue
+                
                 faces = self._parse_faces(image_tensor, faces)
                 seg_probs = faces['seg']['logits'].softmax(dim=1)
-                all_segments[image[0]] = [image[1], self._segment_faces(image_tensor, seg_probs, faces)]
+                all_segments[image[0]] = [image[1], self._segment_faces(seg_probs, faces)]
+            
             except Exception as e:
                 logging.info(f"Errore durante l'elaborazione di {image[0]}: {e}")
-                continue
-                
+            
+            index += 1  # Passa all'elemento successivo in ogni caso
 
         return all_segments
-    
+
+    def _extract_faces(self, image, faces):
+        if not isinstance(image[1], PIL.Image.Image):
+            raise TypeError("L'input deve essere un oggetto immagine di Pillow (Image)")
+
+        np_image = np.array(image[1])
+        faces_array = []
+        for i, rect in enumerate(faces['rects']):
+            x1, y1, x2, y2 = map(int, rect)
+            face_image = np_image[y1:y2, x1:x2]
+            face_pil = PIL.Image.fromarray(face_image)
+            faces_array.append([f'{image[0]}/face_{i}', face_pil])
+        try:
+            index = self._images.index(image)
+            self._images = self._images[:index] + faces_array + self._images[index+1:]
+        except ValueError:
+            logging.info(f"Immagine {image[0]} non trovata nella lista.")
+        
     def _load_image(self, image):
         if not isinstance(image, PIL.Image.Image):
             raise TypeError("L'input deve essere un oggetto immagine di Pillow (Image)")
@@ -68,7 +92,7 @@ class FaceSegmentation:
             faces = self._face_parser(image, faces)
         return faces
 
-    def _segment_faces(self, image, seg_probs, faces):
+    def _segment_faces(self,seg_probs, faces):
         # Segmenta i volti e i relativi componenti
         n_classes = seg_probs.size(1)
         segments = {}
@@ -90,3 +114,4 @@ class FaceSegmentation:
                     segments[face_id].append([mask, class_name])
 
         return segments
+
