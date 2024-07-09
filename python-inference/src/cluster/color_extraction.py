@@ -38,22 +38,14 @@ class ColorExtractor:
         if image.mode != 'RGB':
             image = image.convert('RGB')  
 
-        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
-            temp_path = temp_file.name
-            image.save(temp_path)
+        np_image = np.array(image)
+        logging.info("funge ARRAY")
+        image = torch.from_numpy(np_image)
 
-        try:
-            image = facer.read_hwc(temp_path)
+        if not isinstance(image, np.ndarray):
+            image = image.numpy()
 
-            if not isinstance(image, np.ndarray):
-                image = image.numpy()
-
-            image = torch.from_numpy(image).permute(2, 0, 1).unsqueeze(0).to(self._device)
-
-        finally:
-            temp_file.close()
-            
-        os.remove(temp_path)
+        image = torch.from_numpy(image).permute(2, 0, 1).unsqueeze(0).to(self._device)
             
         return image
 

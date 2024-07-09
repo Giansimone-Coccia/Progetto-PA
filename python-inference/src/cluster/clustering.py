@@ -1,5 +1,5 @@
 import logging
-import os
+from flask import Flask, request, jsonify # type: ignore
 from .segmentation import FaceSegmentation
 from .color_extraction import ColorExtractor
 from .color_clusterer import ColorClusterer
@@ -18,7 +18,7 @@ class Clustering:
         face_segmentation =  FaceSegmentation(images)
         segments = face_segmentation.process_images()
 
-        logging.info("sgmenti sviluppati")
+        logging.info("segmenti sviluppati")
 
         # Inizializza e estrai i colori dominanti dai segmenti facciali
         color_extractor = ColorExtractor(images)
@@ -28,6 +28,8 @@ class Clustering:
 
         # Inizializza e estrai i colori dominanti dai segmenti facciali
         color_clusterer = ColorClusterer()
+        logging.info(dominant_colors)
+    
         logger.info(f'Clustering dominant colors: {len(dominant_colors.keys())}')
         result = color_clusterer.cluster(dominant_colors)
         logger.info(f'Clustering result: {result}')

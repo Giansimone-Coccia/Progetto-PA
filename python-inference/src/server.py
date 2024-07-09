@@ -76,15 +76,15 @@ def predict():
                 elif type == 'zip':
                     zip_data = process_zip(file_data, model, class_names)
                     if model == 'clustering' :
-                        all_images.extend(zip_data)
-                        #all_images.extend(list(map(lambda x: [f"{filename} {x[0]}", x[1]], zip_data)))
+                        #all_images.extend(zip_data)
+                        all_images.extend(list(map(lambda x: [f"{filename}/{x[0]}", x[1]], zip_data)))
                     else: 
                         all_results[filename] = zip_data
 
                 elif type == 'video':
                     video_data = process_video(file_data, model, class_names)
                     if model == 'clustering' :
-                        all_images.extend(list(map(lambda x: [f"{filename} {x[0]}", x[1]], video_data)))
+                        all_images.extend(list(map(lambda x: [f"{filename}/{x[0]}", x[1]], video_data)))
                     else:
                         all_results[filename] = video_data
 

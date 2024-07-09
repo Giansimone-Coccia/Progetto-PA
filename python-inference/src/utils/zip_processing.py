@@ -37,7 +37,7 @@ def process_zip(zip_data, model, class_names):
                     input_image = Image.open(image_stream)
                     
                     if model == 'clustering':
-                        results.append([filename_zip, input_image])
+                        results.append([filename_zip.split('/', 1)[-1], input_image])
                     else:
                         results[filename_zip] = predict_image(input_image, model, class_names)
 

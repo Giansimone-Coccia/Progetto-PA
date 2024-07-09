@@ -19,47 +19,41 @@ class ColorClusterer:
             for parte, colori_parte in volti.items():
                 image_colors.append(colori_parte)
 
+            # Sostituisci i dati mancanti con la media dei valori presenti per quella dimensione RGB
             mean_color = np.mean(image_colors, axis=0)
             image_colors = [mean_color if np.any(np.isnan(color)) else color for color in image_colors]
 
-            colori_with_jpg.append({
-            "image_name": image_name,
-            "colors": image_colors
-        })
-        colori.append(image_colors)
+            # Tronca o padda image_colors per raggiungere max_length
+            image_colors = image_colors[:max_length]
+            while len(image_colors) < max_length:
+                image_colors.append(mean_color)
+
+            colori_with_jpg.append([image_name,image_colors])
+            colori.append(image_colors)
 
         return np.array(colori), colori_with_jpg
 
     def cluster(self, colors=None):
         colori, colori_with_jpg = self._extract_colors(colors)
-        
-        # Verifica il numero di campioni e la struttura dei dati
-        if len(colori) == 0:
-            raise ValueError("Nessun dato di colore disponibile per il clustering.")
-        
-        # Verifica che ci siano almeno 12 campioni, altrimenti k-means non può creare 12 cluster
-        if len(colori) < 12:
-            raise ValueError(f"Numero di campioni ({len(colori)}) inferiore al numero di cluster richiesti (12).")
 
-        # Esegui il reshape
-        try:
-            flattened_faces = colori.reshape(colori.shape[0], -1)
-        except ValueError as e:
-            print(f"Errore durante il reshape: {e}")
-            raise
-        
-        print("ciao2")
-        print(f"Color_clusterer: {flattened_faces}")
-        print(f"Dimensioni di flattened_faces: {flattened_faces.shape}")
+        flattened_faces = colori.reshape(colori.shape[0], -1)
+        df = pd.DataFrame(flattened_faces)
 
-        kmeans = KMeans(n_clusters=1, random_state=42)
-        labels = kmeans.fit_predict(flattened_faces)
+        kmeans = KMeans(n_clusters=12, random_state=42)
+        labels = kmeans.fit_predict(df)
 
-        result = {
-            "clusters": labels.tolist(),
-            "colors_with_images": colori_with_jpg
-        }
+        # Inizializza un dizionario vuoto per i cluster
+        cluster_dict = {}
 
-        return result
+        # Itera sui cluster e assegna le immagini corrispondenti
+        for label in range(kmeans.n_clusters):
+            cluster_dict[label] = []
+
+        # Aggiungi le immagini ai cluster corrispondenti
+        for i, label in enumerate(labels):
+            image_name = colori_with_jpg[i][0]
+            cluster_dict[label].append(image_name)
+
+        return cluster_dict
 
     
