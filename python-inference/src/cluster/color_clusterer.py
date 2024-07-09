@@ -6,8 +6,7 @@ import torch
 from sklearn.cluster import KMeans
 
 class ColorClusterer:
-    def __init__(self, project_dir):
-        self._project_dir = project_dir
+    def __init__(self):
         self._device = print(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
 
     def _extract_colors(self, colors):
@@ -34,13 +33,6 @@ class ColorClusterer:
 
     def cluster(self, colors=None):
         colori, colori_with_jpg = self._extract_colors(colors)
-        print(f"Color_clusterer colori: {colori}")
-        print(f"Color clusterer colori_with: {colori_with_jpg}")
-        
-        # Stampa le dimensioni originali dell'array
-        print(f"Dimensioni originali di colori: {colori.shape}")
-        print("ciao1")
-        logger.info("ciao3")
         
         # Verifica il numero di campioni e la struttura dei dati
         if len(colori) == 0:

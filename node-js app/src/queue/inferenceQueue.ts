@@ -93,8 +93,11 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
   const jsonContents = contentService.reduceContents(contents);
 
   try {
-    const response = await axios.post(`${inferenceUrl}/predict`, { jsonContents, modelId });
-
+    const response = await axios.post(`${process.env.INFERENCE_URL}/predict`, { jsonContents, modelId }, {
+      maxContentLength: 100*1024*1024,
+      maxBodyLength: 100*1024*1024
+    });
+    
     if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
       jobStatus.state = 'failed';
       jobStatus.error_code = response.data.error_code;

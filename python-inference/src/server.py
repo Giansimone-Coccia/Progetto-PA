@@ -6,7 +6,6 @@ import os
 from io import BytesIO
 
 import redis # type: ignore
-import torch
 from flask import Flask, request, jsonify # type: ignore
 from PIL import Image
 from cluster.clustering import Clustering
@@ -16,6 +15,8 @@ from utils.model_selection import select_model
 from utils.video_processing import process_video
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 100*1024*1024*2
+
 
 redis_host = os.getenv('REDIS_HOST', 'localhost')
 redis_port = int(os.getenv('REDIS_PORT', 6379))
@@ -25,18 +26,8 @@ logging.basicConfig(level=logging.INFO)
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """Endpoint per predire i risultati basati su vari tipi di file."""
+    logging.info("Inizio codice python")
     if request.method == 'POST':
-        '''try:
-            clustering_instance = clustering.Clustering()
-            result = clustering_instance.execute()
-            return jsonify(result)
-        except ValueError as ve:
-            logging.error("ValueError occurred", exc_info=True)
-            return jsonify({'error': str(ve)})
-        except Exception as e:
-            logging.error("Exception occurred", exc_info=True)
-            return jsonify({'error': str(e)})'''
         try:
             data = request.json
 
@@ -85,14 +76,14 @@ def predict():
                 elif type == 'zip':
                     zip_data = process_zip(file_data, model, class_names)
                     if model == 'clustering' :
-                        all_images.extend(zip_data)
+                        all_images.extend(list(map(lambda x: [f"{filename} {x[0]}", x[1]], zip_data)))
                     else: 
                         all_results[filename] = zip_data
 
                 elif type == 'video':
                     video_data = process_video(file_data, model, class_names)
-                    if model == 'clustering' : 
-                        all_images.extend(video_data)
+                    if model == 'clustering' :
+                        all_images.extend(list(map(lambda x: [f"{filename} {x[0]}", x[1]], video_data)))
                     else:
                         all_results[filename] = video_data
 
@@ -100,11 +91,11 @@ def predict():
                     return jsonify({'error': f"Tipo non supportato: {type}", 'error_code': 400})
                     
             if model == 'clustering' :
-                array = []
-                for coppia in all_images:
-                    return
-
-                #return Clustering.execute(all_images)
+                if(len(all_images)>=12):
+                    clustering_instance = Clustering()
+                    return jsonify(clustering_instance.execute(all_images))
+                else:
+                    return jsonify({'error': f"Il dataset deve contenere almeno 12 immagini: il numero attuale di immagini è {len(all_images)}", 'error_code': 400})
             else:
                 return jsonify(all_results)
 

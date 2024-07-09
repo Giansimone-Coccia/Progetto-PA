@@ -1,40 +1,58 @@
 import csv
+import logging
 import os
+import tempfile
+import PIL
 from matplotlib import pyplot as plt
 import numpy as np
 import torch
 import facer
 from sklearn.cluster import KMeans
 
+logging.basicConfig(level=logging.INFO)
 
 class ColorExtractor:
-    def __init__(self, project_dir):
+    def __init__(self, images):
         # Imposta directory di progetto e dispositivo
-        self._project_dir = project_dir
+        self._images = images
         #self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self._device = torch.device('cpu')
 
     def extract_dominant_colors(self, all_segments, normalize = True):
         dominant_colors = {}
-        # Estrae i colori dominanti per ciascun segmento
+
         for filename, segments in all_segments.items():
-            image_tensor = self._load_image(os.path.join(self._project_dir, 'images', filename))
-            for face_id, segment_list in segments.items():
+            image_tensor = self._load_image(segments[0])
+            for face_id, segment_list in segments[1].items():
                 for mask, label_name in segment_list:
                     colors = self._get_segmented_colors(image_tensor, mask)
                     dominant_colors = self._update_dominant_colors(dominant_colors, filename, face_id, label_name, colors)
 
         return dominant_colors
 
-    def _load_image(self, image_path):
-        # Carica l'immagine direttamente nella forma necessaria e sposta il dispositivo
-        image = facer.read_hwc(image_path)
+    def _load_image(self, image):
+        if not isinstance(image, PIL.Image.Image):
+            raise TypeError("L'input deve essere un oggetto immagine di Pillow (Image)")
 
-        # Verifichiamo che image sia un numPy array
-        if not isinstance(image, np.ndarray):
-            image = image.numpy()
+        image = image.convert('RGB')  
 
-        image = torch.from_numpy(image).permute(2, 0, 1).unsqueeze(0).to(self._device)
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
+            temp_path = temp_file.name
+            image.save(temp_path)
+
+        try:
+            image = facer.read_hwc(temp_path)
+
+            if not isinstance(image, np.ndarray):
+                image = image.numpy()
+
+            image = torch.from_numpy(image).permute(2, 0, 1).unsqueeze(0).to(self._device)
+
+        finally:
+            temp_file.close()
+            
+        os.remove(temp_path)
+            
         return image
 
     def _get_segmented_colors(self, image_tensor, mask):
