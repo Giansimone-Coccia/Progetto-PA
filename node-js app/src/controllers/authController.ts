@@ -3,19 +3,28 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserService } from '../services/userService';
 
-// Definition of the AuthController class for managing authentication
+/**
+ * Controller class for handling authentication operations.
+ * Provides methods for user registration and login.
+ */
 class AuthController {
   private static instance: AuthController;  // Singleton instance of the class
   private userService: UserService;         // Service for managing users
   private secret: string;                   // Secret for signing JWT tokens
 
-  // Private constructor to implement the Singleton pattern
+  /**
+   * Private constructor to implement the Singleton pattern.
+   * Initializes UserService instance and JWT secret.
+   */
   private constructor() {
     this.userService = UserService.getInstance();  // Get the singleton instance of UserService
     this.secret = process.env.JWT_SECRET || 'your_jwt_secret';  // Retrieve the secret from the configuration file
   }
 
-  // Static method to get the singleton instance of AuthController
+  /**
+   * Static method to get the singleton instance of AuthController.
+   * @returns The singleton instance of AuthController.
+   */
   public static getInstance(): AuthController {
     if (!this.instance) {
       this.instance = new AuthController();
@@ -23,7 +32,12 @@ class AuthController {
     return this.instance;
   }
 
-  // Method for registering a new user
+  /**
+   * Controller method for registering a new user.
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   * @returns A JSON response with the newly created user or an error message.
+   */
   public register = async (req: Request, res: Response) => {
     const { email, password, role } = req.body;  // Extract data from the request
 
@@ -44,7 +58,12 @@ class AuthController {
     }
   };
 
-  // Method for user login
+  /**
+   * Controller method for user login.
+   * @param req - The Express request object containing user credentials.
+   * @param res - The Express response object.
+   * @returns A JSON response with a JWT token upon successful login or an error message.
+   */
   public login = async (req: Request, res: Response) => {
     const { email, password } = req.body;  // Extract data from the request
 
@@ -61,7 +80,7 @@ class AuthController {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Verify the entered password with the stored password
+    // Verify the entered password with the stored password using bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     // Check if the password is valid
@@ -79,5 +98,5 @@ class AuthController {
   };
 }
 
-// Export the AuthController class
+// Export the AuthController class as the default export
 export default AuthController;

@@ -4,21 +4,30 @@ import { CustomRequest } from '../middleware/authMiddleware';
 import { DatasetService } from '../services/datasetService';
 import { UserService } from '../services/userService';
 
-// Definition of the ContentController class for managing content
+/**
+ * Controller class for managing content operations.
+ * Provides methods for CRUD operations on content.
+ */
 class ContentController {
   private static instance: ContentController;  // Singleton instance of the class
   private contentService: ContentService;      // Service for managing content
   private datasetService: DatasetService;      // Service for managing datasets
   private userService: UserService;            // Service for managing users
 
-  // Private constructor to implement the Singleton pattern
+  /**
+   * Private constructor to implement the Singleton pattern.
+   * Initializes ContentService, DatasetService, and UserService instances.
+   */
   private constructor() {
     this.contentService = ContentService.getInstance();  // Get the singleton instance of ContentService
     this.datasetService = DatasetService.getInstance();  // Get the singleton instance of DatasetService
     this.userService = UserService.getInstance();        // Get the singleton instance of UserService
   }
 
-  // Static method to get the singleton instance of ContentController
+  /**
+   * Static method to get the singleton instance of ContentController.
+   * @returns The singleton instance of ContentController.
+   */
   public static getInstance(): ContentController {
     if (!this.instance) {
       this.instance = new ContentController();
@@ -26,13 +35,23 @@ class ContentController {
     return this.instance;
   }
 
-  // Method to get all contents
+  /**
+   * Controller method to get all contents.
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   * @returns A JSON response with all contents retrieved from the database.
+   */
   public getAllContents = async (req: Request, res: Response) => {
     const contents = await this.contentService.getAllContents();
     res.json(contents);
   };
 
-  // Method to get content by ID
+  /**
+   * Controller method to get content by ID.
+   * @param req - The Express request object containing the content ID.
+   * @param res - The Express response object.
+   * @returns A JSON response with the content retrieved by its ID or an error message if not found.
+   */
   public getContentById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
@@ -55,7 +74,12 @@ class ContentController {
     }
   };
 
-  // Method to create new content
+  /**
+   * Controller method to create new content.
+   * @param req - The Express request object containing content data.
+   * @param res - The Express response object.
+   * @returns A JSON response indicating success or failure of content creation.
+   */
   public createContent = async (req: CustomRequest, res: Response) => {
     const { datasetId, type } = req.body;
     let { name } = req.body;
@@ -133,7 +157,12 @@ class ContentController {
     }
   };
 
-  // Method to update content
+  /**
+   * Controller method to update content.
+   * @param req - The Express request object containing content data.
+   * @param res - The Express response object.
+   * @returns A JSON response with the updated content or an error message if not found.
+   */
   public updateContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
@@ -156,7 +185,12 @@ class ContentController {
     }
   };
 
-  // Method to delete content
+  /**
+   * Controller method to delete content.
+   * @param req - The Express request object containing content ID.
+   * @param res - The Express response object.
+   * @returns A JSON response indicating success or failure of content deletion.
+   */
   public deleteContent = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 

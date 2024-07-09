@@ -1,62 +1,63 @@
 import { Router } from 'express';
-import multer from 'multer';
-import UserController from '../controllers/userController';
-import InferenceController from '../controllers/inferenceController';
-import DatasetController from '../controllers/datasetController';
-import ContentController from '../controllers/contentController';
-import AuthController from '../controllers/authController';
-import { authenticateJWT } from '../middleware/authMiddleware';
-import { authorizeAdmin } from '../middleware/isAdminMiddleware';
-import { errorMulterMiddleware } from '../middleware/errorMulterMiddleware';
+import multer from 'multer'; // Multer for handling file uploads
+import UserController from '../controllers/userController'; // Importing user controller
+import InferenceController from '../controllers/inferenceController'; // Importing inference controller
+import DatasetController from '../controllers/datasetController'; // Importing dataset controller
+import ContentController from '../controllers/contentController'; // Importing content controller
+import AuthController from '../controllers/authController'; // Importing authentication controller
+import { authenticateJWT } from '../middleware/authMiddleware'; // Middleware for JWT authentication
+import { authorizeAdmin } from '../middleware/isAdminMiddleware'; // Middleware to authorize admin actions
+import { errorMulterMiddleware } from '../middleware/errorMulterMiddleware'; // Middleware for handling Multer errors
 
-const router = Router();
+const router = Router(); // Create an instance of Express router
 
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: multer.memoryStorage(), // Multer configured to store uploads in memory
 });
 
-// Inizializzazione dei controller
+// Initialize controllers
 const userController = UserController.getInstance();
 const inferenceController = InferenceController.getInstance();
 const datasetController = DatasetController.getInstance();
 const contentController = ContentController.getInstance();
 const authController = AuthController.getInstance();
 
-// Rotte di autenticazione
-router.post('/register', authController.register);
-router.post('/login', authController.login);
+// Authentication routes
+router.post('/register', authController.register); // Route for user registration
+router.post('/login', authController.login); // Route for user login
 
-// Rotte utente (protette)
+// User routes (protected)
 //router.get('/users', authenticateJWT, authorizeAdmin, userController.getAllUsers);
 //router.get('/users/:id', authenticateJWT, authorizeAdmin, userController.getUserById);
 //router.post('/users', authenticateJWT, userController.createUser);
 //router.put('/users/:id', authenticateJWT, userController.updateUser);
 //router.delete('/users/:id', authenticateJWT, userController.deleteUser);
-router.post('/users/token', authenticateJWT, userController.getToken);
-router.post('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge);
+router.post('/users/token', authenticateJWT, userController.getToken); // Route to get user token
+router.post('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge); // Route to recharge user tokens (admin only)
 
-// Rotte di inferenze (protette)
+// Inference routes (protected)
 //router.get('/inferences', authenticateJWT, inferenceController.getAllInferences);
-router.get('/inferences/:id', authenticateJWT, inferenceController.getInferenceById);
 //router.post('/inferences', authenticateJWT, inferenceController.createInference);
 //router.put('/inferences/:id', authenticateJWT, inferenceController.updateInference);
 //router.delete('/inferences/:id', authenticateJWT, inferenceController.deleteInference);
-router.post('/inferences', authenticateJWT, inferenceController.startInference);
-router.get('/inferences/status/:jobId', authenticateJWT, inferenceController.getStatus);
+router.get('/inferences/:id', authenticateJWT, inferenceController.getInferenceById); // Route to get inference by ID
+router.post('/inferences', authenticateJWT, inferenceController.startInference); // Route to start a new inference
+router.get('/inferences/status/:jobId', authenticateJWT, inferenceController.getStatus); // Route to get inference job status
 
-// Rotte dataset (protette)
-router.get('/datasets', authenticateJWT, datasetController.getAllDatasets);
+// Dataset routes (protected)
 //router.get('/datasets', authenticateJWT, datasetController.getAllDatasetsByUserId);
 //router.get('/datasets/:id', authenticateJWT, datasetController.getDatasetById);
-router.post('/datasets', authenticateJWT, datasetController.createDataset);
-router.put('/datasets/:id', authenticateJWT, datasetController.updateDataset);
-router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset);
+router.get('/datasets', authenticateJWT, datasetController.getAllDatasets); // Route to get all datasets
+router.post('/datasets', authenticateJWT, datasetController.createDataset); // Route to create a new dataset
+router.put('/datasets/:id', authenticateJWT, datasetController.updateDataset); // Route to update a dataset
+router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset); // Route to delete a dataset
 
-// Rotte contenuti (protette)
+// Content routes (protected)
 //router.get('/contents', authenticateJWT, contentController.getAllContents);
 //router.get('/contents/:id', authenticateJWT, contentController.getContentById);
-router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent);
 //router.put('/contents/:id', authenticateJWT, contentController.updateContent);
 //router.delete('/contents/:id', authenticateJWT, contentController.deleteContent);
+router.post('/contents', authenticateJWT, upload.single('data'), errorMulterMiddleware, contentController.createContent); // Route to upload content
+// Note: 'data' is the field name used in the form for file upload
 
 export default router;

@@ -3,17 +3,26 @@ import { InferenceService } from '../services/inferenceService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import inferenceQueue from '../queue/inferenceQueue';
 
-// Definition of the InferenceController class for managing inferences
+/**
+ * Controller class for managing inference operations.
+ * Provides methods for CRUD operations on inferences and job handling.
+ */
 class InferenceController {
   private static instance: InferenceController;  // Singleton instance of the class
   private inferenceService: InferenceService;    // Service for managing inferences
 
-  // Private constructor to implement the Singleton pattern
+  /**
+   * Private constructor to implement the Singleton pattern.
+   * Initializes InferenceService instance.
+   */
   private constructor() {
     this.inferenceService = InferenceService.getInstance();  // Get the singleton instance of InferenceService
   }
 
-  // Static method to get the singleton instance of InferenceController
+  /**
+   * Static method to get the singleton instance of InferenceController.
+   * @returns The singleton instance of InferenceController.
+   */
   public static getInstance(): InferenceController {
     if (!InferenceController.instance) {
       InferenceController.instance = new InferenceController();
@@ -21,13 +30,23 @@ class InferenceController {
     return InferenceController.instance;
   }
 
-  // Method to get all inferences
+  /**
+   * Controller method to get all inferences.
+   * @param req - The Express request object.
+   * @param res - The Express response object.
+   * @returns A JSON response with all inferences retrieved from the database.
+   */
   public getAllInferences = async (req: Request, res: Response) => {
     const inferences = await this.inferenceService.getAllInferences();
     res.json(inferences);
   };
 
-  // Method to get an inference by ID
+  /**
+   * Controller method to get an inference by ID.
+   * @param req - The Express request object containing the inference ID.
+   * @param res - The Express response object.
+   * @returns A JSON response with the inference retrieved by its ID or an error message if not found or not completed.
+   */
   public getInferenceById = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     try {
@@ -51,13 +70,23 @@ class InferenceController {
     }
   };
 
-  // Method to create a new inference
+  /**
+   * Controller method to create a new inference.
+   * @param req - The Express request object containing inference data.
+   * @param res - The Express response object.
+   * @returns A JSON response with the newly created inference or an error message if creation fails.
+   */
   public createInference = async (req: Request, res: Response) => {
     const inference = await this.inferenceService.createInference(req.body);
     res.status(201).json(inference);
   };
 
-  // Method to update an inference
+  /**
+   * Controller method to update an inference.
+   * @param req - The Express request object containing inference data.
+   * @param res - The Express response object.
+   * @returns A JSON response with the updated inference or an error message if update fails.
+   */
   public updateInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
@@ -79,7 +108,12 @@ class InferenceController {
     }
   };
 
-  // Method to delete an inference
+  /**
+   * Controller method to delete an inference.
+   * @param req - The Express request object containing inference ID.
+   * @param res - The Express response object.
+   * @returns A JSON response indicating success or failure of inference deletion.
+   */
   public deleteInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
@@ -101,7 +135,12 @@ class InferenceController {
     }
   };
 
-  // Method to start an inference process
+  /**
+   * Controller method to start an inference process.
+   * @param req - The Express request object containing datasetId and modelId.
+   * @param res - The Express response object.
+   * @returns A JSON response with the job ID of the inference process or an error message if execution fails.
+   */
   public startInference = async (req: CustomRequest, res: Response) => {
     const { datasetId, modelId } = req.body;
     const userId = req.user?.id;
@@ -111,14 +150,19 @@ class InferenceController {
       const job = await inferenceQueue.add({ datasetId, modelId, userId });
       const jobId = job.id;
 
-      return res.json({ "id processamento": jobId })
+      return res.json({ "inference_job_id": jobId });
     } catch (error) {
       console.error(`Error during inference execution: ${error}`);
       res.status(500).send("Error during inference execution");
     }
   };
 
-  // Method to get the status of an inference job
+  /**
+   * Controller method to get the status of an inference job.
+   * @param req - The Express request object containing job ID.
+   * @param res - The Express response object.
+   * @returns A JSON response with the status of the inference job or an error message if retrieval fails.
+   */
   public getStatus = async (req: CustomRequest, res: Response) => {
     const jobId = req.params.jobId;
 
