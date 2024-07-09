@@ -6,6 +6,9 @@ Il progetto consiste nella realizzazione di un sistema backend per la gestione d
 
 ## Progettazione
 
+### Analisi dei requisiti
+![Analisi dei requisiti](docs/Analisi dei requisiti.jpg)
+
 ### Diagrammi UML
 
 #### Diagramma dei Casi d'Uso
