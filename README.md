@@ -131,6 +131,8 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 ### Requisiti
 - Docker
 - Docker Compose
+- Node.js
+- Express
 
 ### Istruzioni per l'Avvio
 1. Clonare il repository nella propria directory o scaricare direttamente il file .zip:
