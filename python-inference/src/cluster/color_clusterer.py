@@ -19,7 +19,6 @@ class ColorClusterer:
             for parte, colori_parte in volti.items():
                 image_colors.append(colori_parte)
 
-            # Sostituisci i dati mancanti con la media dei valori presenti per quella dimensione RGB
             mean_color = np.mean(image_colors, axis=0)
             image_colors = [mean_color if np.any(np.isnan(color)) else color for color in image_colors]
 

@@ -22,6 +22,7 @@ class ColorExtractor:
         dominant_colors = {}
 
         for filename, segments in all_segments.items():
+            logging.info(filename)
             image_tensor = self._load_image(segments[0])
             for face_id, segment_list in segments[1].items():
                 for mask, label_name in segment_list:
@@ -34,7 +35,8 @@ class ColorExtractor:
         if not isinstance(image, PIL.Image.Image):
             raise TypeError("L'input deve essere un oggetto immagine di Pillow (Image)")
 
-        image = image.convert('RGB')  
+        if image.mode != 'RGB':
+            image = image.convert('RGB')  
 
         with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
             temp_path = temp_file.name

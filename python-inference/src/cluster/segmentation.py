@@ -1,9 +1,7 @@
 import logging
-import os
-import shutil
-import tempfile
 from PIL import Image
 import PIL
+import numpy as np
 import torch
 import facer
 
@@ -26,14 +24,16 @@ class FaceSegmentation:
         # Processa ciascuna immagine nella directory dei risultati
         for image in self._images:
             try:
+                logging.info(image[0])
                 image_tensor = self._load_image(image[1])
                 faces = self._detect_faces(image_tensor)
                 faces = self._parse_faces(image_tensor, faces)
                 seg_probs = faces['seg']['logits'].softmax(dim=1)
                 all_segments[image[0]] = [image[1], self._segment_faces(image_tensor, seg_probs, faces)]
             except Exception as e:
-                print(f"Errore durante l'elaborazione di {image[0]}: {e}")
+                logging.info(f"Errore durante l'elaborazione di {image[0]}: {e}")
                 continue
+                
 
         return all_segments
     
@@ -41,20 +41,17 @@ class FaceSegmentation:
         if not isinstance(image, PIL.Image.Image):
             raise TypeError("L'input deve essere un oggetto immagine di Pillow (Image)")
 
-        image = image.convert('RGB')  
+        if image.mode != 'RGB':
+            image = image.convert('RGB') 
 
-        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp_file:
-            temp_path = temp_file.name
-            image.save(temp_path)
-            logging.info(temp_path)
-
-        try:
-            tensor_image = facer.read_hwc(temp_path)
-            tensor_processed = facer.hwc2bchw(tensor_image).to(self._device)
-        finally:
-            temp_file.close()
-
-        os.remove(temp_path)
+        logging.info("funge rgb")
+    
+        np_image = np.array(image)
+        logging.info("funge ARRAY")
+        tensor_image = torch.from_numpy(np_image)
+        logging.info("funge image 1")
+        tensor_processed = facer.hwc2bchw(tensor_image).to(self._device)
+        logging.info("funge image 2")
 
         return tensor_processed
 
