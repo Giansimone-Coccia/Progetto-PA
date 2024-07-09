@@ -116,10 +116,14 @@ Per motivi di semplicità riportiamo solo il caso del caricamento delle immagini
 
 ### Design Pattern Utilizzati
 
-1. **Factory Pattern**: Utilizzato per creare istanze dei modelli di inferenza in base all'ID fornito dall'utente.
-2. **Singleton Pattern**: Utilizzato per la gestione della connessione al database.
-3. **Strategy Pattern**: Utilizzato per differenziare la logica di caricamento di immagini, zip e video.
-4. **Middleware Pattern**: Utilizzato per la gestione delle autenticazioni e validazioni delle richieste.
+1. **Pattern repository**: Il pattern Repository è utilizzato per separare la logica di business dalla logica di accesso ai dati nel sistema. Fornisce un'astrazione della persistenza dei dati, permettendo agli altri moduli dell'applicazione di accedere ai dati attraverso interfacce ben definite, senza doversi preoccupare dei dettagli di come i dati sono memorizzati o recuperati. Definisce i metodi di alto livello per l'accesso ai dati, come ad esempio **findById**, **save**, **delete**, ecc con relativa implementazione.
+2. **Singleton Pattern**: Il pattern Singleton assicura che una classe abbia una sola istanza e fornisce un punto globale di accesso a quella istanza.
+3. **Pattern DAO (Data Access Object)**: Il pattern DAO è simile al pattern Repository e si concentra sull'astrazione dell'accesso ai dati, fornendo metodi CRUD (Create, Read, Update, Delete) per interagire con la persistenza dei dati lavorando a più basso livello ed a contatto con il database. Definisce i metodi per l'accesso ai dati, come **create**, **read**, **update**, **delete**, specifici per un'entità o una tabella del database.
+4. **Middleware Pattern**: Il termine Middleware si riferisce a un'infrastruttura software che fornisce funzionalità comuni tra diverse applicazioni, componenti di sistema o servizi. Agisce come uno strato intermedio tra l'applicazione e altre componenti o risorse esterne.
+5. **Pattern MVC**: Il pattern MVC è un'architettura del software che divide l'applicazione in tre componenti principali: Modello (Model), Vista (View) e Controllore (Controller), ciascuno con responsabilità specifiche.
+   - *Modello (Model):* Rappresenta i dati e la logica di business dell'applicazione. Gestisce l'accesso ai dati e fornisce metodi per aggiornare lo stato dell'applicazione.
+   - *Vista (View):* Rappresenta l'interfaccia utente dell'applicazione. Si occupa della presentazione dei dati al cliente e delle interazioni dell'utente con l'applicazione.
+   - *Controllore (Controller):* Gestisce le interazioni degli utenti e le richieste dell'utente, traducendo le azioni dell'utente sui dati in operazioni da eseguire sul Modello. Aggiorna la Vista quando lo stato del Modello cambia.
 
 ## Avvio del Progetto
 
