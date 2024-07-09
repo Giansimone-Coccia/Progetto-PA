@@ -15,17 +15,39 @@ Di seguito riportiamo il diagramma E-R (Entity-relationship) utilizzato per la p
 </p>
 
 ## Analisi dei requisiti
+Di seguito vengono riportati i requisiti analizzati, correttamente suddivisi in requisiti funzionali (a sinistra) e non funzionali (a destra).
+- *Requisiti funzionali:* descrivono le funzionalità specifiche che il sistema deve fornire per soddisfare le esigenze degli utenti.
+- *Requisiti non funzionali:* definiscono le qualità di sistema che non sono direttamente legate alle funzionalità specifiche, ma sono cruciali per garantire il corretto funzionamento e le prestazioni del sistema, in poche parole quelli che possono essere definiti come i vincoli che il sistema deve rispettare.
+
 ![Analisi dei requisiti](./docs/Analisi_dei_requisiti.jpg)
 
 ### Diagramma dei Casi d'Uso
+I diagrammi dei casi d'uso sono utilizzati principalmente per modellare e rappresentare le interazioni tra gli attori (utenti o altri sistemi esterni) e il sistema che si sta progettando o analizzando. Servono a fornire una visione chiara e comprensibile delle funzionalità che il sistema deve supportare, concentrandosi sulle azioni che gli utenti possono compiere e sui risultati che il sistema produce in risposta a queste azioni.
+
 #### Attori
-![Attori](./docs/Attori.jpg)
+Riportiamo di seguito i principali attori che interagiscono con il nostro sistema.
+
+<p align="center">
+  <img src="./docs/Attori.jpg" alt="Attori">
+</p>
+
 #### Gestione Dataset
-![Analisi dei requisiti](./docs/Gestione_Dataset.jpg)
+
+<p align="center">
+  <img src="./docs/Gestione_Dataset.jpg" alt="Gestione Dataset">
+</p>
+
 #### Gestione Processamento
-![Analisi dei requisiti](./docs/Gestione_Processamento.jpg)
+
+<p align="center">
+  <img src="./docs/Gestione_Processamento.jpg" alt="Gestione Processamento">
+</p>
+
 #### Gestione Utente
-![Analisi dei requisiti](./docs/Gestione_Utente.jpg)
+
+<p align="center">
+  <img src="./docs/Gestione_Utente.jpg" alt="Gestione Utente">
+</p>
 
 
 ### Diagramma delle Sequenze
