@@ -22,7 +22,27 @@ Il progetto consiste nella realizzazione di un sistema backend per la gestione d
 
 
 ### Diagramma delle Sequenze
-![Diagramma delle Sequenze](./docs/sequence_diagram.png)
+#### Caricamento immagine
+Il funzionameneto è simile per il caricamento dello zip o dei video.
+![Diagramma delle Sequenze](./docs/Caricamento_Immagine.jpg)
+#### Credito residuo
+![Diagramma delle Sequenze](./docs/Credito_residuo.jpg)
+#### CRUD Dataset
+![Diagramma delle Sequenze](./docs/CRUDDataset.jpg)
+#### Ignorare formati non corretti
+![Diagramma delle Sequenze](./docs/Ignorare_formati_non_corretti.jpg)
+#### Restituzione ID processamento
+![Diagramma delle Sequenze](./docs/Restituzione_ID_processamento.jpg)
+#### Ricarica crediti
+![Diagramma delle Sequenze](./docs/Ricarica_crediti.jpg)
+#### Richiesta inferenza
+![Diagramma delle Sequenze](./docs/Richiesta_inferenza.jpg)
+#### Risultato inferenza
+![Diagramma delle Sequenze](./docs/Risultato_inferenza.jpg)
+#### Stato di avanzamento
+![Diagramma delle Sequenze](./docs/Stato_avanzamento.jpg)
+#### Validazione crediti
+![Diagramma delle Sequenze](./docs/Validazione_crediti.jpg)
 
 ### Design Pattern Utilizzati
 
