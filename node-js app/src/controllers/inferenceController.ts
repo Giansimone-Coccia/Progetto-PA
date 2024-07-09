@@ -3,14 +3,17 @@ import { InferenceService } from '../services/inferenceService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import inferenceQueue from '../queue/inferenceQueue';
 
+// Definition of the InferenceController class for managing inferences
 class InferenceController {
-  private static instance: InferenceController;
-  private inferenceService: InferenceService;
+  private static instance: InferenceController;  // Singleton instance of the class
+  private inferenceService: InferenceService;    // Service for managing inferences
 
+  // Private constructor to implement the Singleton pattern
   private constructor() {
-    this.inferenceService = InferenceService.getInstance();
+    this.inferenceService = InferenceService.getInstance();  // Get the singleton instance of InferenceService
   }
 
+  // Static method to get the singleton instance of InferenceController
   public static getInstance(): InferenceController {
     if (!InferenceController.instance) {
       InferenceController.instance = new InferenceController();
@@ -18,23 +21,25 @@ class InferenceController {
     return InferenceController.instance;
   }
 
+  // Method to get all inferences
   public getAllInferences = async (req: Request, res: Response) => {
     const inferences = await this.inferenceService.getAllInferences();
     res.json(inferences);
   };
 
+  // Method to get an inference by ID
   public getInferenceById = async (req: CustomRequest, res: Response) => {
     const id = Number(req.params.id);
     try {
-      // Controlla se l'id è un numero valido
+      // Check if the ID is valid
       if (!id) {
         return res.status(400).json({ message: 'Invalid ID' });
       }
 
-      // Ottieni l'inferenza dal servizio
+      // Get the inference from the service
       const inference = await this.inferenceService.getInferenceById(id);
 
-      // Verifica se l'inferenza esiste
+      // Check if the inference exists
       if (!inference) {
         return res.status(404).json({ message: 'Inference not found or not completed' });
       }
@@ -46,14 +51,17 @@ class InferenceController {
     }
   };
 
+  // Method to create a new inference
   public createInference = async (req: Request, res: Response) => {
     const inference = await this.inferenceService.createInference(req.body);
     res.status(201).json(inference);
   };
 
+  // Method to update an inference
   public updateInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
+    // Check if the ID is valid
     if (isNaN(id)) {
       return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
     }
@@ -71,9 +79,11 @@ class InferenceController {
     }
   };
 
+  // Method to delete an inference
   public deleteInference = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
+    // Check if the ID is valid
     if (isNaN(id)) {
       return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
     }
@@ -81,33 +91,34 @@ class InferenceController {
     try {
       const success = await this.inferenceService.deleteInference(id);
       if (success) {
-        res.status(204).end();
+        res.status(204).end();  // Successfully deleted, no content to return
       } else {
         res.status(404).json({ message: 'Inference not found' });
       }
     } catch (error) {
-      console.error(`Error updating inference: ${error}`);
+      console.error(`Error deleting inference: ${error}`);
       res.status(500).json({ message: 'Internal server error' });
     }
   };
 
+  // Method to start an inference process
   public startInference = async (req: CustomRequest, res: Response) => {
     const { datasetId, modelId } = req.body;
     const userId = req.user?.id;
 
     try {
-
+      // Add the inference job to the queue
       const job = await inferenceQueue.add({ datasetId, modelId, userId });
       const jobId = job.id;
 
       return res.json({ "id processamento": jobId })
-
     } catch (error) {
-      console.error(`Errore durante l'esecuzione dell'inferenza: ${error}`);
-      res.status(500).send("Errore durante l'esecuzione dell'inferenza");
+      console.error(`Error during inference execution: ${error}`);
+      res.status(500).send("Error during inference execution");
     }
   };
 
+  // Method to get the status of an inference job
   public getStatus = async (req: CustomRequest, res: Response) => {
     const jobId = req.params.jobId;
 
@@ -117,6 +128,7 @@ class InferenceController {
         const progress = job.progress();
         const result = job.returnvalue;
 
+        // Check the state of the job
         if (!progress["state"]) {
           return res.json({
             jobId: job.id,
@@ -146,4 +158,5 @@ class InferenceController {
   };
 }
 
+// Export the InferenceController class
 export default InferenceController;
