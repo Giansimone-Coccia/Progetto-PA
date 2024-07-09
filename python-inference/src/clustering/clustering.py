@@ -1,5 +1,4 @@
 import logging
-from flask import Flask, request, jsonify # type: ignore
 from .segmentation import FaceSegmentation
 from .color_extraction import ColorExtractor
 from .color_clusterer import ColorClusterer

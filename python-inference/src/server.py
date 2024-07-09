@@ -8,7 +8,7 @@ from io import BytesIO
 import redis # type: ignore
 from flask import Flask, request, jsonify # type: ignore
 from PIL import Image
-from cluster.clustering import Clustering
+from clustering.clustering import Clustering
 from utils.image_processing import predict_image
 from utils.zip_processing import process_zip
 from utils.model_selection import select_model
