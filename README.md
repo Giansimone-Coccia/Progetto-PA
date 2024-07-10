@@ -221,7 +221,7 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 ##### Risposta
 ```json
 {
-  "token":eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzIwNjAwMzEyLCJleHAiOjE3MjA2MDM5MTJ9.TVDOUzpwdoYi08yKUZ_Q4Xf5PHwBme21PPUBMUuZ6tM
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzIwNjAwMzEyLCJleHAiOjE3MjA2MDM5MTJ9.TVDOUzpwdoYi08yKUZ_Q4Xf5PHwBme21PPUBMUuZ6tM"
 }
 ```
 
