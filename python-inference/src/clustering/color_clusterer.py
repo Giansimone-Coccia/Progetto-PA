@@ -47,9 +47,10 @@ class ColorClusterer:
 
            # Itera sui cluster e assegna il centroide e le immagini corrispondenti
         for label in range(kmeans.n_clusters):
+            centroid = np.round(kmeans.cluster_centers_[label], 3).tolist()
             cluster_dict[f"cluster_{label}"] = {
-                f"centroid": kmeans.cluster_centers_[label].tolist(),
-                f"images": []
+                "centroid": centroid,
+                "images": []
             }
 
         # Aggiungi le immagini ai cluster corrispondenti
