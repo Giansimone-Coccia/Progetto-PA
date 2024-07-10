@@ -116,7 +116,7 @@ Per motivi di semplicità riportiamo solo il caso del caricamento delle immagini
 
 ### Design Pattern Utilizzati
 
-1. **Pattern repository**: Il pattern Repository è utilizzato per separare la logica di business dalla logica di accesso ai dati nel sistema. Fornisce un'astrazione della persistenza dei dati, permettendo agli altri moduli dell'applicazione di accedere ai dati attraverso interfacce ben definite, senza doversi preoccupare dei dettagli di come i dati sono memorizzati o recuperati. Definisce i metodi di alto livello per l'accesso ai dati, come ad esempio **findById**, **save**, **delete**, ecc con relativa implementazione.
+1. **Pattern repository**: Il pattern Repository è utilizzato per separare la logica di business dalla logica di accesso ai dati nel sistema. Fornisce un'astrazione della persistenza dei dati, permettendo agli altri moduli dell'applicazione di accedere ai dati attraverso interfacce ben definite, senza doversi preoccupare dei dettagli di come i dati sono memorizzati o recuperati. Definisce i metodi di alto livello per l'accesso ai dati, come ad esempio **findById**, **findAll**, **delete**, ecc con relativa implementazione.
 2. **Singleton Pattern**: Il pattern Singleton assicura che una classe abbia una sola istanza e fornisce un punto globale di accesso a quella istanza.
 3. **Pattern DAO (Data Access Object)**: Il pattern DAO è simile al pattern Repository e si concentra sull'astrazione dell'accesso ai dati, fornendo metodi CRUD (Create, Read, Update, Delete) per interagire con la persistenza dei dati lavorando a più basso livello ed a contatto con il database. Definisce i metodi per l'accesso ai dati, come **create**, **read**, **update**, **delete**, specifici per un'entità o una tabella del database.
 4. **Middleware Pattern**: Il termine Middleware si riferisce a un'infrastruttura software che fornisce funzionalità comuni tra diverse applicazioni, componenti di sistema o servizi. Agisce come uno strato intermedio tra l'applicazione e altre componenti o risorse esterne.
@@ -154,6 +154,7 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 7. Eseguire le chiamate su Postman
 
 ## Rotte Disponibili
+E' possibile utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API seguenti.
 
 ### Registrazione Utente/Admin
 **POST** http://localhost:3000/auth/register
@@ -224,16 +225,144 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 }
 ```
 
+### Get user token
+**GET** http://localhost:3000/api/users/token
+
+### Descrizione
+Restituisce i token dell'utente.
+
+#### Authorization
+Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Risposta
+- `tokens`: token JWT
+
+#### Esempio
+
+##### Risposta
+```json
+{
+    "tokens": 9018.85
+}
+```
+
+### Credt recharge
+**POST** http://localhost:3000/api/users/recharge
+
+### Descrizione
+Consente all'admin di ricaricare i roken per uno specifico utente.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `emailUser`: Email dell'utente scelto.
+- `tokenUser`: Password da aggiungere.
+
+#### Parametri della Risposta
+- `message`: messaggio di avvenuta modifica
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+    "emailUser": "user1@example.com",
+    "tokenUser": "150"
+}
+```
+##### Risposta
+```json
+{
+    "message": "Tokens updated successfully. New token value: 9168.85"
+}
+```
+
+### Inferenza
+**POST** http://localhost:3000/api/inferences
+
+### Descrizione
+Consente all'utente di eseguire un'inferenza su un dataset specificato.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `datasetId`: Id del dataset su cui effettuare l'inferenza.
+- `modelId`: Id del modello da utilizzare, che può essere scelto tra tre tipologie:
+  1. Scegliere `1` se si vuole scegliere di effettuare l'inferenza con il modello a 12 classi
+  2. Scegliere `2` se si vuole scegliere di effettuare l'inferenza con il modello a 4 classi
+  3. Scegliere `3` se si vuole eseguire il clustering
+
+#### Parametri della Risposta
+- `inference_job_id`: Id del job.
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+  "datasetId": "1",
+  "modelId": "2"
+}
+```
+##### Risposta
+```json
+{
+    "inference_job_id": "14"
+}
+```
+
+### Get status
+**GET** http://localhost:3000/api/inferences/status/:jobId
+
+### Descrizione
+Consente all'utente di ottenere, mediante l'id dell'inferenza, lo stato del processo.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta
+- `jobId`: Id del job restituito dalla chiamata precedente.
+
+#### Parametri della Risposta
+- `jobId`: Id del job.
+- `state`: Stato del processamento.
+- `message`: Messaggio.
+- `result`: Risultato ottenuto dal processamento.
+- `model`: Id del modello utilizzato.
+- `updatedAt`: Data e ora dell'ultimo aggiornamento avvenuto.
+- `createdAt`: Data e ora della creazione.
+
+##### Rotta
+**GET** http://localhost:3000/api/inferences/status/13
+
+##### Risposta
+Solo nel caso in cui lo stato sia *completed* viene visualizzato anche il risultato.
+```json
+{
+    "jobId": "15",
+    "state": "running",
+    "message": "Job in progress"
+}
+```
+
 ### Get Inferenza tramite Id
 **GET** http://localhost:3000/auth/inferences/:id
 
 ### Descrizione
-Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
+Restituisce il risultato dell'inferenza dato l'Id.
 
 #### Authorization
 Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
--`Auth Type`: Bearer Token.
--`Token`: Token JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: Token JWT.
 
 #### Parametri della Richiesta
 - `id`: Id dell'inferenza.
@@ -246,7 +375,7 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 
 #### Esempio
 ##### Rotta
-**POST** http://localhost:3000/auth/inferences/123
+**GET** http://localhost:3000/auth/inferences/123
 
 ##### Risposta per il modello 2
 ```json
@@ -317,4 +446,202 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 }
 ```
 
-Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
+### Creazione dataset
+**POST** http://localhost:3000/api/datasets
+
+### Descrizione
+Consente all'utente di creare un nuovo dataset inizialmente vuoto.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `name`: Nome del dataset.
+- `tags`: Serie di tags correlati al dataset.
+
+#### Parametri della Risposta
+- `isDeleted`: Può restituire *true* o *false* in relazione al fatto se il dataset sia stato eliminato o meno
+- `id`: Id assegnato al dataset
+- `name`: Nome del dataset
+- `tags`: Tags del dataset
+- `userId`: Id dell'utente
+- `updatedAt`: Quando è stato aggiornato
+- `createdAt`: Quando è stato creato
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+  "name": "Dataset Example 12",
+  "tags": ["data science", "AI", "deep learning"]
+}
+```
+##### Risposta
+```json
+{
+    "isDeleted": false,
+    "id": 3,
+    "name": "Dataset Example 12",
+    "tags": [
+        "data science",
+        "AI",
+        "deep learning"
+    ],
+    "userId": 1,
+    "updatedAt": "2024-07-10T13:45:24.763Z",
+    "createdAt": "2024-07-10T13:45:24.763Z"
+}
+```
+
+### Get all datasets
+**GET** http://localhost:3000/api/datasets
+
+### Descrizione
+Consente all'utente di ottenere tutti i suoi datasets.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Risposta
+Può essere un JSONArray contenente informazioni su tutti datasets.
+- `id`: Id assegnato al dataset
+- `userId`: Id dell'utente
+- `name`: Nome del dataset
+- `tags`: Tags del dataset
+- `isDeleted`: Può restituire *true* o *false* in relazione al fatto se il dataset sia stato eliminato o meno
+- `createdAt`: Quando è stato creato
+- `updatedAt`: Quando è stato aggiornato
+
+#### Esempio
+##### Rotta
+**GET** http://localhost:3000/api/datasets
+
+##### Risposta
+```json
+[
+    {
+        "id": 1,
+        "userId": 1,
+        "name": "Dataset figo",
+        "tags": [
+            "ML"
+        ],
+        "isDeleted": false,
+        "createdAt": "2024-07-08T13:37:24.000Z",
+        "updatedAt": "2024-07-10T08:04:18.000Z"
+    },
+    {
+        "id": 2,
+        "userId": 1,
+        "name": "Dataset nuovo",
+        "tags": [
+            "ML",
+            "Prova"
+        ],
+        "isDeleted": false,
+        "createdAt": "2024-07-08T13:37:24.000Z",
+        "updatedAt": "2024-07-09T16:03:28.000Z"
+    }
+]
+```
+
+### Update dataset
+**PUT** http://localhost:3000/api/datasets/:id
+
+### Descrizione
+Consente all'utente di aggiornare uno dei suoi datasets, con verifica di non sovrapposizione sui contenuti di dataset uguali.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `name`: Nome del nuovo dataset.
+- `tags`: Serie di nuovi tags correlati al dataset.
+
+#### Parametri della Risposta
+- `message`: Messaggio di andata a buon fine o meno
+
+#### Esempio
+##### Rotta
+**PUT** http://localhost:3000/api/datasets/1
+##### Body della Richiesta
+```json
+{
+  "name": "Dataset nuovo",
+  "tags": ["ML", "Prova"]
+}
+```
+##### Risposta
+```json
+{
+    "message": "Dataset updated"
+}
+```
+
+### Eliminazione logica dataset
+**DELETE** http://localhost:3000/api/datasets/:id
+
+### Descrizione
+Consente all'utente di eliminare logicamente uno dei suoi datasets.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta
+- `id`: Id del dataset da eliminare.
+
+#### Parametri della Risposta
+- `message`: Messaggio di andata a buon fine o meno
+
+#### Esempio
+##### Rotta
+**DELETE** http://localhost:3000/api/datasets/2
+
+##### Risposta
+```json
+{
+    "message": "Dataset eliminated correctly"
+}
+```
+
+### Create content
+**POST** http://localhost:3000/api/contents
+
+### Descrizione
+Consente all'utente di creare un nuovo contenuto all'interno del dataset specificato.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+Per questa rotta è necessario impostare *form-data* per il caricamento dei dati.
+- `data`: Di tipo *File* consente di caricare un file a scelta tra *zip, jpg, png, mp4, webp*.
+- `datasetId`: Id del dataset in cui inserire il contenuto.
+- `type`: Tipologia di file a scleta tra *zip, video, image*.
+- `name`: Nome del nuovo contenuto.
+
+#### Parametri della Risposta
+- `message`: Messaggio di andata a buon fine o meno
+
+#### Esempio
+##### Body della Richiesta
+<p align="center">
+  <img src="./docs/create_content.png" alt="Rotta Create content">
+</p>
+
+##### Risposta
+```json
+{
+    "message": "Content created successfully"
+}
+```
