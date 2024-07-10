@@ -336,6 +336,9 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 - `state`: Stato del processamento.
 - `message`: Messaggio.
 - `result`: Risultato ottenuto dal processamento.
+- `model`: Id del modello utilizzato.
+- `updatedAt`: Data e ora dell'ultimo aggiornamento avvenuto.
+- `createdAt`: Data e ora della creazione.
 
 ##### Rotta
 **GET** http://localhost:3000/api/inferences/status/13
