@@ -196,4 +196,33 @@ Registra un nuovo utente o un amministratore nel sistema.
 }
 ```
 
+### Login Utente/Admin
+**POST** http://localhost:3000/auth/login
+
+### Descrizione
+Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
+
+#### Parametri della Richiesta
+- `email`: Email dell'utente/admin.
+- `password`: Password dell'utente/admin.
+- `role`: Può essere `user` o `admin`.
+
+#### Parametri della Risposta
+- `token`: token JWT
+
+#### Esempio
+##### Richiesta
+```json
+{
+  "email": "esempio@email.com",
+  "password": "Password123!",
+}
+```
+##### Risposta
+```json
+{
+  "token":eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzIwNjAwMzEyLCJleHAiOjE3MjA2MDM5MTJ9.TVDOUzpwdoYi08yKUZ_Q4Xf5PHwBme21PPUBMUuZ6tM
+}
+```
+
 Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
