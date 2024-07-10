@@ -54,7 +54,7 @@ class FaceSegmentation:
                 all_faces[image[0]] = (image[1], faces)
 
             except Exception as e:
-                logging.info("Error during detection in %s: %s", image[0], e)
+                logging.error("Error during detection in %s: %s", image[0], e)
 
             index += 1
 
@@ -70,7 +70,7 @@ class FaceSegmentation:
                 all_segments[key] = [image_path, self._segment_faces(seg_probs, faces)]
 
             except Exception as e:
-                logging.info("Error during segmentation of %s: %s", key, e)
+                logging.error("Error during segmentation of %s: %s", key, e)
 
         return all_segments
 
@@ -96,7 +96,7 @@ class FaceSegmentation:
             index = self._images.index(image)
             self._images = self._images[:index] + faces_array + self._images[index + 1:]
         except ValueError:
-            logging.info("Image %s not found in the list.", image[0])
+            logging.error("Image %s not found in the list.", image[0])
 
     def _load_image(self, image):
         """

@@ -6,6 +6,8 @@ from .image_processing import predict_image
 from utils.video_processing import process_video
 import mimetypes
 
+logging.basicConfig(level=logging.INFO)
+
 def process_zip(zip_data, model, class_names):
     """
     Extracts images from a binary ZIP file and makes predictions using the specified model.

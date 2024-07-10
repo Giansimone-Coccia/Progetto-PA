@@ -2,7 +2,6 @@
 Module implementing a Flask server for predicting based on JSON data.
 """
 
-import logging
 import os
 from io import BytesIO
 from http import HTTPStatus
@@ -22,6 +21,7 @@ app = Flask(__name__)
 
 # Load environment variables
 load_dotenv()
+
 
 # Configure max content length
 max_content_length_str = os.getenv('MAX_CONTENT_LENGTH', '16')
@@ -104,8 +104,6 @@ def predict():
                 else:
                     raise CustomError(f"Unsupported type: {file_type}", HTTPStatus.BAD_REQUEST)
             
-            logging.info("sturolo")
-
             if model == 'clustering':
                 clustering_instance = Clustering()
                 result = clustering_instance.execute(all_images)
