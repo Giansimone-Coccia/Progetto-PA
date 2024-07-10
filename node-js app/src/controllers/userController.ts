@@ -170,7 +170,7 @@ class UserController {
 
     try {
       // Find the user by email
-      const user = await this.userService.findUserByEmail(emailUser);
+      const user = await this.userService.getUserByEmail(emailUser);
 
       if (!user) {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));

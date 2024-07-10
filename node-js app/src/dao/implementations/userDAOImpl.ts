@@ -44,7 +44,7 @@ class UserDAO implements IUserDAO {
   async findAll(): Promise<UserAttributes[]> {
     const users = await User.findAll(); // Find all users
     return users.map(user => user.toJSON() as UserAttributes); // Map and return the users as JSON
-  }  
+  }
 
   /**
    * Finds a user record by its ID in the database.
@@ -64,6 +64,16 @@ class UserDAO implements IUserDAO {
   async findByEmail(email: string): Promise<UserAttributes | null> {
     const user = await User.findOne({ where: { email } }); // Find user by email
     return user ? user.toJSON() as UserAttributes : null; // Return the user as JSON or null if not found
+  }
+
+  /**
+   * Retrieves user records based on the specified role from the database.
+   * @param role - The role to search for.
+   * @returns A promise that resolves with an array of user attributes or null if none are found.
+   */
+  async findByRole(role: string): Promise<UserAttributes[] | null> {
+    const users = await User.findAll({ where: { role } }); // Find users by role
+    return users.map(user => user.toJSON() as UserAttributes); // Map and return the users as JSON
   }
 
   /**

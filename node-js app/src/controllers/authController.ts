@@ -48,10 +48,32 @@ class AuthController {
       return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Email, password, and role are required'));
     }
 
+    // Validate email format using regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid email format'));
+    }
+
+    // Validate password format using regex
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character.'));
+    }
+
+    // Check if role is either "user" or "admin"
+    if (role !== "user" && role !== "admin") {
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Role must be either user or admin'));
+    }
+
     // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
+      // Check if an admin already exists when registering as admin
+      if (await this.userService.getAdmin() && role === "admin") {
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Admin already exists'));
+      }
+
       // Create a new user through the UserService
       const newUser = await this.userService.createUser({ email, password: hashedPassword, role });
       res.status(StatusCodes.CREATED).json(newUser);  // Respond with the newly created user
@@ -76,7 +98,7 @@ class AuthController {
 
     try {
       // Find the user through the UserService
-      const user = await this.userService.findUserByEmail(email);
+      const user = await this.userService.getUserByEmail(email);
 
       // Check if the user exists
       if (!user) {
