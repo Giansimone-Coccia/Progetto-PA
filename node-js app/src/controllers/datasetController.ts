@@ -147,7 +147,7 @@ class DatasetController {
       const datasetUpdated = await this.datasetService.updateDataset(id, datasetData);
 
       if (datasetUpdated) {
-        res.status(StatusCodes.OK).json("Dataset updated");
+        res.status(StatusCodes.OK).json({ message: "Dataset updated" });
       } else {
         return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Failed to update dataset'));
       }
@@ -183,7 +183,7 @@ class DatasetController {
       const success = await this.datasetService.deleteDataset(id);
 
       if (success) {
-        res.status(StatusCodes.NO_CONTENT).end();
+        res.status(StatusCodes.OK).send({ message: "Dataset eliminated correctly" });
       } else {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
       }
