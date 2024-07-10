@@ -85,7 +85,7 @@ class DatasetDAO implements IDatasetDAO {
    */
   async delete(id: number): Promise<boolean> {
     const [updatedRows] = await Dataset.update(
-      { isDeleted: true }, // Mark the dataset as deleted
+      { isDeleted: true, updatedAt: new Date() }, // Mark the dataset as deleted and updates updatedAt
       { where: { id } } // Find the dataset by ID
     );
     return updatedRows > 0; // Return true if rows were updated, false otherwise

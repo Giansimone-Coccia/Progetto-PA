@@ -144,7 +144,7 @@ class DatasetController {
         }
       }
 
-      const datasetUpdated = await this.datasetService.updateDataset(id, req.body);
+      const datasetUpdated = await this.datasetService.updateDataset(id, datasetData);
 
       if (datasetUpdated) {
         res.status(StatusCodes.OK).json("Dataset updated");
