@@ -1,7 +1,9 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { InferenceService } from '../services/inferenceService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import inferenceQueue from '../queue/inferenceQueue';
+import { StatusCodes } from 'http-status-codes';
+import ErrorFactory from '../error/errorFactory';
 
 /**
  * Controller class for managing inference operations.
@@ -36,9 +38,13 @@ class InferenceController {
    * @param res - The Express response object.
    * @returns A JSON response with all inferences retrieved from the database.
    */
-  public getAllInferences = async (req: Request, res: Response) => {
-    const inferences = await this.inferenceService.getAllInferences();
-    res.json(inferences);
+  public getAllInferences = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const inferences = await this.inferenceService.getAllInferences();
+      res.json(inferences);
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to retrieve inferences'));
+    }
   };
 
   /**
@@ -47,12 +53,12 @@ class InferenceController {
    * @param res - The Express response object.
    * @returns A JSON response with the inference retrieved by its ID or an error message if not found or not completed.
    */
-  public getInferenceById = async (req: CustomRequest, res: Response) => {
+  public getInferenceById = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
     try {
       // Check if the ID is valid
       if (!id) {
-        return res.status(400).json({ message: 'Invalid ID' });
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID'));
       }
 
       // Get the inference from the service
@@ -60,13 +66,12 @@ class InferenceController {
 
       // Check if the inference exists
       if (!inference) {
-        return res.status(404).json({ message: 'Inference not found or not completed' });
+        return res.status(StatusCodes.NOT_FOUND).json({ message: 'Inference not found or not completed' });
       }
 
       res.json(inference);
     } catch (error) {
-      console.error(`Error fetching inference: ${error}`);
-      res.status(500).json({ message: 'Internal server error' });
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to fetch inference'));
     }
   };
 
@@ -76,9 +81,13 @@ class InferenceController {
    * @param res - The Express response object.
    * @returns A JSON response with the newly created inference or an error message if creation fails.
    */
-  public createInference = async (req: Request, res: Response) => {
-    const inference = await this.inferenceService.createInference(req.body);
-    res.status(201).json(inference);
+  public createInference = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const inference = await this.inferenceService.createInference(req.body);
+      res.status(StatusCodes.CREATED).json(inference);
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to create inference'));
+    }
   };
 
   /**
@@ -87,12 +96,12 @@ class InferenceController {
    * @param res - The Express response object.
    * @returns A JSON response with the updated inference or an error message if update fails.
    */
-  public updateInference = async (req: Request, res: Response) => {
+  public updateInference = async (req: Request, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
 
     // Check if the ID is valid
     if (isNaN(id)) {
-      return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
     }
 
     try {
@@ -100,11 +109,10 @@ class InferenceController {
       if (inference) {
         res.json(inference);
       } else {
-        res.status(404).json({ message: 'Inference not found' });
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Inference not found'));
       }
     } catch (error) {
-      console.error(`Error updating inference: ${error}`);
-      res.status(500).json({ message: 'Internal server error' });
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to update inference'));
     }
   };
 
@@ -114,24 +122,23 @@ class InferenceController {
    * @param res - The Express response object.
    * @returns A JSON response indicating success or failure of inference deletion.
    */
-  public deleteInference = async (req: Request, res: Response) => {
+  public deleteInference = async (req: Request, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
 
     // Check if the ID is valid
     if (isNaN(id)) {
-      return res.status(400).json({ message: 'Invalid ID. ID must be a number' });
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
     }
 
     try {
       const success = await this.inferenceService.deleteInference(id);
       if (success) {
-        res.status(204).end();  // Successfully deleted, no content to return
+        res.status(StatusCodes.NO_CONTENT).end();  // Successfully deleted, no content to return
       } else {
-        res.status(404).json({ message: 'Inference not found' });
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Inference not found'));
       }
     } catch (error) {
-      console.error(`Error deleting inference: ${error}`);
-      res.status(500).json({ message: 'Internal server error' });
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to delete inference'));
     }
   };
 
@@ -141,7 +148,7 @@ class InferenceController {
    * @param res - The Express response object.
    * @returns A JSON response with the job ID of the inference process or an error message if execution fails.
    */
-  public startInference = async (req: CustomRequest, res: Response) => {
+  public startInference = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const { datasetId, modelId } = req.body;
     const userId = req.user?.id;
 
@@ -152,8 +159,7 @@ class InferenceController {
 
       return res.json({ "inference_job_id": jobId });
     } catch (error) {
-      console.error(`Error during inference execution: ${error}`);
-      res.status(500).send("Error during inference execution");
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Error during inference execution'));
     }
   };
 
@@ -163,7 +169,7 @@ class InferenceController {
    * @param res - The Express response object.
    * @returns A JSON response with the status of the inference job or an error message if retrieval fails.
    */
-  public getStatus = async (req: CustomRequest, res: Response) => {
+  public getStatus = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const jobId = req.params.jobId;
 
     try {
@@ -187,17 +193,17 @@ class InferenceController {
             result
           });
         } else {
-          return res.status(200).json({
+          return res.status(StatusCodes.OK).json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"]
           });
         }
       } else {
-        return res.status(404).json({ message: 'Job not found' });
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Job not found'));
       }
     } catch (error) {
-      return res.status(500).json({ message: 'Error retrieving job status', error });
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Error retrieving job status'));
     }
   };
 }

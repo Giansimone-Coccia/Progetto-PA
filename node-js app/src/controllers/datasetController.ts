@@ -1,12 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { DatasetService } from '../services/datasetService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { ContentService } from '../services/contentService';
-
-interface Error {
-  status?: number;
-  message?: string;
-}
+import ErrorFactory from '../error/errorFactory';
 
 /**
  * Controller class for managing dataset operations.
@@ -64,22 +61,18 @@ class DatasetController {
 
     // Check if the ID is valid
     if (isNaN(id)) {
-      const error: Error = { message: 'Invalid ID. ID must be a number', status: 400 };
-      return next(error);
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
     }
 
     try {
       const dataset = await this.datasetService.getDatasetById(id);
 
       if (!dataset) {
-        const error: Error = { message: 'Dataset not found', status: 404 };
-        return next(error);
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
       }
 
-      // Verify if the user is authorized to access the dataset
       if (dataset.userId !== userId) {
-        const error: Error = { message: 'Unauthorized', status: 401 };
-        return next(error);
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
       }
 
       res.json(dataset);
@@ -100,9 +93,9 @@ class DatasetController {
 
     try {
       const dataset = await this.datasetService.createDataset(datasetData);
-      res.status(201).json(dataset);
+      res.status(StatusCodes.CREATED).json(dataset);
     } catch (error) {
-      next(error)
+      next(error);
     }
   };
 
@@ -122,14 +115,11 @@ class DatasetController {
     // Find the existing dataset
     const existingDataset = await this.datasetService.getDatasetById(id);
     if (!existingDataset) {
-      const error: Error = { message: 'Dataset not found', status: 404 };
-      return next(error);
+      return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
     }
 
-    // Check if user is authorized to update the dataset
     if (existingDataset.userId !== userId) {
-      const error: Error = { message: 'Unauthorized', status: 401 };
-      return next(error);
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
     }
 
     try {
@@ -149,8 +139,7 @@ class DatasetController {
           const intersection = [...existingContentHashes].filter(hash => currentContentHashes.has(hash));
 
           if (intersection.length > 0) {
-            const error: Error = { message: 'Duplicate content detected in datasets with the same name for the user', status: 401 };
-            return next(error);
+            return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Duplicate content detected in datasets with the same name for the user'));
           }
         }
       }
@@ -158,9 +147,9 @@ class DatasetController {
       const datasetUpdated = await this.datasetService.updateDataset(id, req.body);
 
       if (datasetUpdated) {
-        res.json("Dataset updated");
+        res.status(StatusCodes.OK).json("Dataset updated");
       } else {
-        res.status(400).json({ message: 'Failed to update dataset' });
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Failed to update dataset'));
       }
     } catch (error) {
       next(error);
@@ -180,26 +169,23 @@ class DatasetController {
     try {
       // Check if the ID is valid
       if (isNaN(id)) {
-        const error: Error = { message: 'Invalid ID. ID must be a number', status: 400 };
-        return next(error);
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
       }
 
       const dataset = await this.datasetService.getDatasetById(id);
 
       if (!dataset) {
-        const error: Error = { message: 'Dataset not found', status: 404 };
-        return next(error);
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
       } else if (dataset.userId !== userId) {
-        const error: Error = { message: 'Unauthorized', status: 401 };
-        return next(error);
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
       }
 
       const success = await this.datasetService.deleteDataset(id);
 
       if (success) {
-        res.status(204).end();  // Successfully deleted, no content to return
+        res.status(StatusCodes.NO_CONTENT).end();
       } else {
-        res.status(404).json({ message: 'Dataset not found' });
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
       }
     } catch (error) {
       next(error);

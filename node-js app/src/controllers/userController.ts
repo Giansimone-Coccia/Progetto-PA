@@ -1,6 +1,8 @@
-import { Response } from 'express';
+import { Response, NextFunction } from 'express';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { UserService } from '../services/userService';
+import { StatusCodes } from 'http-status-codes';
+import ErrorFactory from '../error/errorFactory';
 
 /**
  * Controller class for managing user operations.
@@ -35,9 +37,13 @@ class UserController {
    * @param res - The Express response object.
    * @returns A JSON response with all users retrieved from the database.
    */
-  public getAllUsers = async (req: CustomRequest, res: Response) => {
-    const users = await this.userService.getAllUsers();
-    res.json(users);
+  public getAllUsers = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+      const users = await this.userService.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to retrieve users'));
+    }
   };
 
   /**
@@ -46,13 +52,17 @@ class UserController {
    * @param res - The Express response object.
    * @returns A JSON response with the user retrieved by their ID or an error message if not found.
    */
-  public getUserById = async (req: CustomRequest, res: Response) => {
+  public getUserById = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
-    const user = await this.userService.getUserById(id);
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    try {
+      const user = await this.userService.getUserById(id);
+      if (user) {
+        res.json(user);
+      } else {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+      }
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to fetch user'));
     }
   };
 
@@ -62,9 +72,13 @@ class UserController {
    * @param res - The Express response object.
    * @returns A JSON response with the newly created user or an error message if creation fails.
    */
-  public createUser = async (req: CustomRequest, res: Response) => {
-    const user = await this.userService.createUser(req.body);
-    res.status(201).json(user);
+  public createUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+      const user = await this.userService.createUser(req.body);
+      res.status(StatusCodes.CREATED).json(user);
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to create user'));
+    }
   };
 
   /**
@@ -73,13 +87,17 @@ class UserController {
    * @param res - The Express response object.
    * @returns A JSON response with the updated user or an error message if update fails.
    */
-  public updateUser = async (req: CustomRequest, res: Response) => {
+  public updateUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
-    const user = await this.userService.updateUser(id, req.body);
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    try {
+      const user = await this.userService.updateUser(id, req.body);
+      if (user) {
+        res.json(user);
+      } else {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+      }
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to update user'));
     }
   };
 
@@ -89,13 +107,17 @@ class UserController {
    * @param res - The Express response object.
    * @returns A JSON response indicating success or failure of user deletion.
    */
-  public deleteUser = async (req: CustomRequest, res: Response) => {
+  public deleteUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
-    const success = await this.userService.deleteUser(id);
-    if (success) {
-      res.status(204).end(); // Successfully deleted, no content to return
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    try {
+      const success = await this.userService.deleteUser(id);
+      if (success) {
+        res.status(StatusCodes.NO_CONTENT).end(); // Successfully deleted, no content to return
+      } else {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+      }
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to delete user'));
     }
   };
 
@@ -105,11 +127,11 @@ class UserController {
    * @param res - The Express response object.
    * @returns A JSON response with the tokens of the current user or an error message if retrieval fails.
    */
-  public getToken = async (req: CustomRequest, res: Response) => {
+  public getToken = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const userId = req.user?.id;
 
     if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
     }
 
     try {
@@ -117,13 +139,12 @@ class UserController {
       const tokens = user?.tokens;
 
       if (tokens !== undefined) {
-        res.status(200).json({ tokens });
+        res.status(StatusCodes.OK).json({ tokens });
       } else {
-        res.status(404).json({ message: 'User not found' });
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
       }
     } catch (error) {
-      console.error(`Error fetching user tokens: ${error}`);
-      res.status(500).json({ message: 'Internal server error' });
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to fetch user tokens'));
     }
   };
 
@@ -133,18 +154,18 @@ class UserController {
    * @param res - The Express response object.
    * @returns A JSON response indicating success or failure of token recharge operation.
    */
-  public creditRecharge = async (req: CustomRequest, res: Response) => {
+  public creditRecharge = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const emailUser = req.body.emailUser;
     const tokenUser = req.body.tokenUser;
 
     // Check if the email is provided
     if (!emailUser) {
-      return res.status(400).json({ message: 'Email is required' });
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Email is required'));
     }
 
     // Check if the token value is provided
-    if (tokenUser == null) {
-      return res.status(400).json({ message: 'Token value is required' });
+    if (tokenUser === null || tokenUser === undefined) {
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Token value is required'));
     }
 
     try {
@@ -152,13 +173,13 @@ class UserController {
       const user = await this.userService.findUserByEmail(emailUser);
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
       }
 
       const userId = user.id;
 
       if (!Number.isInteger(userId)) {
-        return res.status(500).json({ message: 'Invalid user ID' });
+        return next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Invalid user ID'));
       }
 
       // Calculate the new token value
@@ -168,13 +189,12 @@ class UserController {
       const updateSuccessful = await this.userService.updateUser(userId, { tokens: newTokensValue });
 
       if (updateSuccessful) {
-        return res.status(200).json({ message: `Operation completed. New token value: ${newTokensValue}` });
+        res.status(StatusCodes.OK).json({ message: `Tokens updated successfully. New token value: ${newTokensValue}` });
       } else {
-        return res.status(500).json({ message: 'Failed to update user tokens' });
+        return next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to update user tokens'));
       }
     } catch (error) {
-      console.error(`Error updating user tokens: ${error}`);
-      return res.status(500).json({ message: 'Internal server error' });
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Error updating user tokens'));
     }
   };
 }
