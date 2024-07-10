@@ -226,7 +226,7 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 ```
 
 ### Get user token
-**POST** http://localhost:3000/api/users/token
+**GET** http://localhost:3000/api/users/token
 
 ### Descrizione
 Restituisce i token dell'utente.
