@@ -344,59 +344,12 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 **GET** http://localhost:3000/api/inferences/status/13
 
 ##### Risposta
+Solo nel caso in cui lo stato sia *completed* viene visualizzato anche il risultato.
 ```json
 {
-    "jobId": "13",
-    "state": "completed",
-    "message": "Job completed",
-    "result": {
-        "id": 20,
-        "datasetId": "1",
-        "cost": 176,
-        "result": {
-            "1 second faces.mp4": {
-                "frame_0": [
-                    {
-                        "class_name": "autunno",
-                        "probability": 0.274
-                    },
-                    {
-                        "class_name": "estate",
-                        "probability": 0.173
-                    },
-                    {
-                        "class_name": "inverno",
-                        "probability": 0.462
-                    },
-                    {
-                        "class_name": "primavera",
-                        "probability": 0.091
-                    }
-                ]
-            },
-            "image 1.jpg": [
-                {
-                    "class_name": "autunno",
-                    "probability": 0.397
-                },
-                {
-                    "class_name": "estate",
-                    "probability": 0.136
-                },
-                {
-                    "class_name": "inverno",
-                    "probability": 0.215
-                },
-                {
-                    "class_name": "primavera",
-                    "probability": 0.251
-                }
-            ]
-        },
-        "model": "2",
-        "updatedAt": "2024-07-10T10:53:18.772Z",
-        "createdAt": "2024-07-10T10:53:18.772Z"
-    }
+    "jobId": "15",
+    "state": "running",
+    "message": "Job in progress"
 }
 ```
 
