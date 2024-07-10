@@ -33,6 +33,13 @@ interface IUserDAO {
   findByEmail(email: string): Promise<UserAttributes | null>;
 
   /**
+   * Retrieves user records based on the specified role from the database.
+   * @param role - The role to search for.
+   * @returns A promise that resolves with an array of user attributes or null if none are found.
+   */
+  findByRole(role: string): Promise<UserAttributes[] | null>;
+
+  /**
    * Updates a user record by its ID in the database with partial updates.
    * @param id - The ID of the user to update.
    * @param updates - The partial user attributes to update.

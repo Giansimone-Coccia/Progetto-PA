@@ -52,7 +52,7 @@ User.init(
     tokens: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      defaultValue: 100,
+      defaultValue: 1000,
     },
     role: {
       type: DataTypes.STRING,

@@ -47,10 +47,19 @@ export class UserService {
   /**
    * Finds a user by email using Sequelize findOne method.
    * @param email - The email of the user to find.
-   * @returns A promise that resolves to User if found, otherwise null.
+   * @returns A promise that resolves to UserAttributes if found, otherwise null.
    */
-  async findUserByEmail(email: string): Promise<User | null> {
-    return User.findOne({ where: { email } });
+  async getUserByEmail(email: string): Promise<UserAttributes | null> {
+    return this.userRepository.findByEmail(email);
+  }
+
+  /**
+ * Retrieves user records based on the specified role from the database.
+ * @param role - The role to search for.
+ * @returns A promise that resolves with an array of user attributes or null if none are found.
+ */
+  async findByRole(role: string): Promise<UserAttributes[] | null> {
+    return this.userRepository.findByRole(role); // Call DAO method to find users by role
   }
 
   /**
@@ -79,5 +88,21 @@ export class UserService {
    */
   async deleteUser(id: number): Promise<boolean> {
     return this.userRepository.delete(id);
+  }
+
+  /**
+   * Retrieves the first user with the role "admin" from the repository.
+   * @returns A promise that resolves to UserAttributes if an admin user is found, otherwise null.
+   */
+  async getAdmin(): Promise<UserAttributes | null> {
+    // Call the repository method to find users with the role "admin"
+    const users = await this.findByRole("admin");
+
+    // Check if users array is not null and contains at least one user
+    if (users && users.length > 0) {
+      return users[0]; // Return the first admin user found
+    }
+
+    return null; // Return null if no admin user is found
   }
 }

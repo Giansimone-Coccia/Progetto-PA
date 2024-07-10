@@ -17,7 +17,7 @@ class UserRepository implements IUserRepository {
    * Singleton pattern: Get instance of UserRepository.
    * @returns The singleton instance of UserRepository.
    */
-  static getInstance(){
+  static getInstance() {
     if (!this.instance) {
       this.instance = new UserRepository(); // Create new instance if not exists
     }
@@ -57,6 +57,16 @@ class UserRepository implements IUserRepository {
    */
   async findByEmail(email: string): Promise<UserAttributes | null> {
     return this.userDAO.findByEmail(email); // Call DAO method to find user by email
+  }
+
+
+  /**
+   * Retrieves user records based on the specified role from the database.
+   * @param role - The role to search for.
+   * @returns A promise that resolves with an array of user attributes or null if none are found.
+   */
+  async findByRole(role: string): Promise<UserAttributes[] | null> {
+    return this.userDAO.findByRole(role); // Call DAO method to find users by role
   }
 
   /**
