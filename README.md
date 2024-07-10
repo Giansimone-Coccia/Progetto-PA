@@ -153,13 +153,7 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
    docker-compose up OPPURE docker-compose up --build
 7. Eseguire le chiamate su Postman
 
-## Rotte API
-
-### Descrizione
-
-Questo progetto espone le seguenti rotte per gestire le operazioni CRUD su [entità specifiche / risorse].
-
-### Rotte Disponibili
+# Rotte Disponibili
 
 ## Registrazione Utente/Admin
 
@@ -183,7 +177,7 @@ Registra un nuovo utente o un amministratore nel sistema.
 - `createdAt`: Data di creazione dell'utente.
 
 ### Esempio
-## Richiesta
+#### Richiesta
 ```json
 {
   "email": "esempio@email.com",
@@ -191,7 +185,7 @@ Registra un nuovo utente o un amministratore nel sistema.
   "role": "user"
 }
 ```
-## Risposta
+#### Risposta
 ```json
 {
   "tokens": 1000,
