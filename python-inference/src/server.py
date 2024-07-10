@@ -2,10 +2,11 @@
 Module implementing a Flask server for predicting based on JSON data.
 """
 
+import logging
 import os
 from io import BytesIO
 from http import HTTPStatus
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify # type: ignore
 import redis
 from dotenv import load_dotenv
 from PIL import Image
@@ -102,6 +103,8 @@ def predict():
 
                 else:
                     raise CustomError(f"Unsupported type: {file_type}", HTTPStatus.BAD_REQUEST)
+            
+            logging.info("sturolo")
 
             if model == 'clustering':
                 clustering_instance = Clustering()

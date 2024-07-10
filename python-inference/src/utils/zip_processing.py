@@ -1,17 +1,14 @@
-"""
-Module: zip_processing.py
-
-This module provides functions for extracting and predicting images from a binary ZIP file.
-"""
-
+import logging
 import zipfile
 from io import BytesIO
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from .image_processing import predict_image
+from utils.video_processing import process_video
+import mimetypes
 
 def process_zip(zip_data, model, class_names):
     """
-    Extract images from a binary ZIP file and make predictions using the specified model.
+    Extracts images from a binary ZIP file and makes predictions using the specified model.
 
     Args:
         zip_data (bytes): Binary ZIP file data.
@@ -27,18 +24,31 @@ def process_zip(zip_data, model, class_names):
     with zipfile.ZipFile(BytesIO(zip_data), 'r') as zip_file:
         for filename_zip in zip_file.namelist():
             with zip_file.open(filename_zip) as file_in_zip:
-                # Read the image data explicitly
-                image_data = file_in_zip.read()
+                # Explicitly read file data
+                file_data = file_in_zip.read()
 
-                # Use BytesIO to create a stream-like object for PIL
-                image_stream = BytesIO(image_data)
+                # Determine file type based on extension
+                mime_type, _ = mimetypes.guess_type(filename_zip)
 
-                # Open the image from the stream
-                input_image = Image.open(image_stream)
-
-                if model == 'clustering':
-                    results.append([filename_zip.split('/', 1)[-1], input_image])
-                else:
-                    results[filename_zip] = predict_image(input_image, model, class_names)
+                if mime_type and mime_type.startswith('video'):
+                    # Use BytesIO to create a stream-like object
+                    file_stream = bytes(file_data)
+                    if model == 'clustering':
+                        video_results = process_video(file_stream, model, class_names)
+                        results.extend([[f"{filename_zip.split('/', 1)[-1]}/{name}", img] for name, img in video_results])
+                    else:
+                        results[filename_zip.split('/', 1)[-1]] = process_video(file_stream, model, class_names)
+                elif mime_type and mime_type.startswith('image'):
+                    # Use BytesIO to create a stream-like object
+                    file_stream = BytesIO(file_data)
+                    # Try to open the file as an image
+                    try:
+                        input_image = Image.open(file_stream)
+                        if model == 'clustering':
+                            results.append([filename_zip.split('/', 1)[-1], input_image])
+                        else:
+                            results[filename_zip] = predict_image(input_image, model, class_names)
+                    except UnidentifiedImageError:
+                        logging.error(f"Unable to identify the image: {filename_zip}")
 
     return results
