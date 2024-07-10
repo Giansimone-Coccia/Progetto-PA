@@ -124,6 +124,7 @@ Per motivi di semplicità riportiamo solo il caso del caricamento delle immagini
    - *Modello (Model):* Rappresenta i dati e la logica di business dell'applicazione. Gestisce l'accesso ai dati e fornisce metodi per aggiornare lo stato dell'applicazione.
    - *Vista (View):* Rappresenta l'interfaccia utente dell'applicazione. Si occupa della presentazione dei dati al cliente e delle interazioni dell'utente con l'applicazione.
    - *Controllore (Controller):* Gestisce le interazioni degli utenti e le richieste dell'utente, traducendo le azioni dell'utente sui dati in operazioni da eseguire sul Modello. Aggiorna la Vista quando lo stato del Modello cambia.
+6. **Factory Method:** Il factory method è un design pattern creazionale che mira a fornire un'interfaccia per la creazione di oggetti in modo controllato, lasciando la logica di creazione agli oggetti concreti che implementano l'interfaccia. Questo pattern è utile quando si desidera delegare la responsabilità di creazione di oggetti ad una classe specifica anziché farlo direttamente all'interno del codice client.
 
 ## Avvio del Progetto
 Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare correttamente il sistema.
