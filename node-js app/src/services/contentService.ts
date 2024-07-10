@@ -110,10 +110,10 @@ export class ContentService {
    */
   calculateInferenceCost(contents: ContentAttributes[]): number {
     return contents.reduce((accumulator, currentContent) => {
-      if (currentContent.type == 'image') {
+      if (currentContent.type === 'image') {
         accumulator += (currentContent.cost / 0.65) * 2.75
       }
-      else if (currentContent.type == 'zip') {
+      else if (currentContent.type === 'zip') {
         accumulator += (currentContent.cost / 0.7) * 2.75
       }
       else {

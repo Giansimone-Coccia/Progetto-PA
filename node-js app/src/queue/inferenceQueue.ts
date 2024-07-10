@@ -74,7 +74,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
   const contents = await contentService.getContentByDatasetId(datasetId);
 
   // Contents validation: Ensure contents are not null or undefined
-  if (contents == null || contents === undefined) {
+  if (contents === null || contents === undefined) {
     jobStatus.state = 'failed';
     jobStatus.error_code = 404;
     jobStatus.message = 'Error 404: getContentByDatasetId service returned null or undefined';

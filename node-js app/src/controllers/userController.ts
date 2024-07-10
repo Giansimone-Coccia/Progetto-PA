@@ -143,7 +143,7 @@ class UserController {
     }
 
     // Check if the token value is provided
-    if (tokenUser == null) {
+    if (tokenUser === null || tokenUser === undefined) {
       return res.status(400).json({ message: 'Token value is required' });
     }
 

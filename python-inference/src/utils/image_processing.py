@@ -43,7 +43,7 @@ def predict_image(input_image, model, class_names):
         class_name = class_names[str(i)]
 
         result_entry = {
-            "probability": probabilities[i].item(),
+            "probability": round(probabilities[i].item(), 3),
             "class_name": class_name
         }
 
