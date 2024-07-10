@@ -655,5 +655,37 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 }
 ```
 
+### Create content
+**POST** http://localhost:3000/api/contents
+
+### Descrizione
+Consente all'utente di creare un nuovo contenuto all'interno del dataset specificato.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+Per questa rotta è necessario impostare *form-data* per il caricamento dei dati.
+- `data`: Di tipo *File* consente di caricare un file a scelta tra *zip, jpg, png, mp4, webp*.
+- `datasetId`: Id del dataset in cui inserire il contenuto.
+- `type`: Tipologia di file a scleta tra *zip, video, image*.
+- `name`: Nome del nuovo contenuto.
+
+#### Parametri della Risposta
+- `message`: Messaggio di andata a buon fine o meno
+
+#### Esempio
+##### Body della Richiesta
+<p align="center">
+  <img src="./docs/create_content" alt="Rotta Create content">
+</p>
+##### Risposta
+```json
+{
+    "message": "Content created successfully"
+}
+```
 
 Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
