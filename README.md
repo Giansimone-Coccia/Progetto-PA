@@ -255,8 +255,8 @@ Consente all'admin di ricaricare i roken per uno specifico utente.
 
 #### Authorization
 Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
-`Auth Type`: Bearer Token.
-`Token`: token JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
 
 #### Parametri della Richiesta nel Body
 - `emailUser`: Email dell'utente scelto.
@@ -294,9 +294,9 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 #### Parametri della Richiesta nel Body
 - `datasetId`: Id del dataset su cui effettuare l'inferenza.
 - `modelId`: Id del modello da utilizzare, che può essere scelto tra tre tipologie:
-  1. Se si vuole scegliere di effettuare l'inferenza con il modello a 12 classi
-  2. Se si vuole scegliere di effettuare l'inferenza con il modello a 4 classi
-  3. Se si vuole eseguire il clustering
+  1. Scegliere `1` se si vuole scegliere di effettuare l'inferenza con il modello a 12 classi
+  2. Scegliere `2` se si vuole scegliere di effettuare l'inferenza con il modello a 4 classi
+  3. Scegliere `3` se si vuole eseguire il clustering
 
 #### Parametri della Risposta
 - `inference_job_id`: Id del job.
@@ -324,8 +324,8 @@ Consente all'utente di ottenere, mediante l'id dell'inferenza, lo stato del proc
 
 #### Authorization
 Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
-`Auth Type`: Bearer Token.
-`Token`: token JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
 
 #### Parametri della Richiesta
 - `jobId`: Id del job restituito dalla chiamata precedente.
@@ -486,6 +486,144 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
          ]
       }
    }
+}
+```
+
+### Creazione dataset
+**POST** http://localhost:3000/api/datasets
+
+### Descrizione
+Consente all'utente di creare un nuovo dataset inizialmente vuoto.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `name`: Nome del dataset.
+- `tags`: Serie di tags correlati al dataset.
+
+#### Parametri della Risposta
+- `isDeleted`: Può restituire *true* o *false* in relazione al fatto se il dataset sia stato eliminato o meno
+- `id`: Id assegnato al dataset
+- `name`: Nome del dataset
+- `tags`: Tags del dataset
+- `userId`: Id dell'utente
+- `updatedAt`: Quando è stato aggiornato
+- `createdAt`: Quando è stato creato
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+  "name": "Dataset Example 12",
+  "tags": ["data science", "AI", "deep learning"]
+}
+```
+##### Risposta
+```json
+{
+    "isDeleted": false,
+    "id": 3,
+    "name": "Dataset Example 12",
+    "tags": [
+        "data science",
+        "AI",
+        "deep learning"
+    ],
+    "userId": 1,
+    "updatedAt": "2024-07-10T13:45:24.763Z",
+    "createdAt": "2024-07-10T13:45:24.763Z"
+}
+```
+
+### Get all datasets
+**GET** http://localhost:3000/api/datasets
+
+### Descrizione
+Consente all'utente di ottenere tutti i suoi datasets.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Risposta
+Può essere un JSONArray contenente informazioni su tutti datasets.
+- `id`: Id assegnato al dataset
+- `userId`: Id dell'utente
+- `name`: Nome del dataset
+- `tags`: Tags del dataset
+- `isDeleted`: Può restituire *true* o *false* in relazione al fatto se il dataset sia stato eliminato o meno
+- `createdAt`: Quando è stato creato
+- `updatedAt`: Quando è stato aggiornato
+
+#### Esempio
+##### Rotta
+**GET** http://localhost:3000/api/datasets
+
+##### Risposta
+```json
+[
+    {
+        "id": 1,
+        "userId": 1,
+        "name": "Dataset figo",
+        "tags": [
+            "ML"
+        ],
+        "isDeleted": false,
+        "createdAt": "2024-07-08T13:37:24.000Z",
+        "updatedAt": "2024-07-10T08:04:18.000Z"
+    },
+    {
+        "id": 2,
+        "userId": 1,
+        "name": "Dataset nuovo",
+        "tags": [
+            "ML",
+            "Prova"
+        ],
+        "isDeleted": false,
+        "createdAt": "2024-07-08T13:37:24.000Z",
+        "updatedAt": "2024-07-09T16:03:28.000Z"
+    }
+]
+```
+
+### Update dataset
+**PUT** http://localhost:3000/api/datasets/:id
+
+### Descrizione
+Consente all'utente di aggiornare uno dei suoi datasets.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `name`: Nome del nuovo dataset.
+- `tags`: Serie di nuovi tags correlati al dataset.
+
+#### Parametri della Risposta
+- `message`: Messaggio di andata a buon fine o meno
+
+#### Esempio
+##### Rotta
+**PUT** http://localhost:3000/api/datasets/1
+##### Body della Richiesta
+```json
+{
+  "name": "Dataset nuovo",
+  "tags": ["ML", "Prova"]
+}
+```
+##### Risposta
+```json
+{
+    "message": "Dataset updated"
 }
 ```
 
