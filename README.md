@@ -189,6 +189,7 @@ Registra un nuovo utente o un amministratore nel sistema.
   "tokens": 1000,
   "id": "1234567890",
   "email": "esempio@email.com",
+  "password": "$2a$10$YPAjwI79f4ft4zm8L9Av4eBKXKT682R1Ff.vQx2ObnYNewzhakPWK",
   "role": "user",
   "updatedAt": "2024-07-10T12:00:00Z",
   "createdAt": "2024-07-10T11:59:00Z"
