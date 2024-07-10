@@ -166,7 +166,7 @@ Registra un nuovo utente o un amministratore nel sistema.
 - `password`: Deve essere lunga almeno 8 caratteri e includere almeno una cifra, una lettera minuscola, una lettera maiuscola e un carattere speciale.
 - `role`: Può essere `user` o `admin`.
 
-#### Parametri della Risposta
+#### Parametri della Richiesta nel Body
 - `tokens`: I gettoni disponibili per l'utente, di default impostati a 1000.
 - `id`: L'identificativo dell'utente generato dal database.
 - `email`: L'email dell'utente.
@@ -175,7 +175,7 @@ Registra un nuovo utente o un amministratore nel sistema.
 - `createdAt`: Data di creazione dell'utente.
 
 #### Esempio
-##### Richiesta
+##### Body della Richiesta
 ```json
 {
   "email": "esempio@email.com",
@@ -202,7 +202,7 @@ Registra un nuovo utente o un amministratore nel sistema.
 ### Descrizione
 Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 
-#### Parametri della Richiesta
+#### Parametri della Richiesta nel Body
 - `email`: Email dell'utente/admin.
 - `password`: Password dell'utente/admin.
 
@@ -210,7 +210,42 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 - `token`: token JWT
 
 #### Esempio
-##### Richiesta
+##### Body della Richiesta
+```json
+{
+  "email": "esempio@email.com",
+  "password": "Password123!"
+}
+```
+##### Risposta
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzIwNjAwMzEyLCJleHAiOjE3MjA2MDM5MTJ9.TVDOUzpwdoYi08yKUZ_Q4Xf5PHwBme21PPUBMUuZ6tM"
+}
+```
+
+### Get Inferenza tramite Id
+**POST** http://localhost:3000/auth/inferences/:id
+
+### Descrizione
+Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
+
+#### Authorization
+Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
+-`Auth Type`: Bearer Token.
+-`Token`: token JWT.
+
+#### Parametri della Richiesta
+- `id`: Id dell'inferenza.
+
+#### Parametri della Risposta
+- `id`: Id dell'inferenza.
+- `datasetId`: Id del database di cui si è fatta l'infernza.
+- `model`: L'email dell'utente.
+- `result`: Ruolo dell'utente.
+
+#### Esempio
+##### Body della Richiesta
 ```json
 {
   "email": "esempio@email.com",
