@@ -408,8 +408,8 @@ Restituisce il risultato dell'inferenza dato l'Id.
 
 #### Authorization
 Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
--`Auth Type`: Bearer Token.
--`Token`: Token JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: Token JWT.
 
 #### Parametri della Richiesta
 - `id`: Id dell'inferenza.
