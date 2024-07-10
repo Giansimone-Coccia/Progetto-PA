@@ -224,4 +224,37 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 }
 ```
 
+### Get user token
+**POST** http://localhost:3000/api/users/token
+
+### Descrizione
+Questa rotta ritorna i token dell'utente.
+
+#### Authorization
+Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta
+- `email`: Email dell'utente/admin.
+- `password`: Password dell'utente/admin.
+
+#### Parametri della Risposta
+- `token`: token JWT
+
+#### Esempio
+##### Richiesta
+```json
+{
+  "email": "esempio@email.com",
+  "password": "Password123!",
+}
+```
+##### Risposta
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzIwNjAwMzEyLCJleHAiOjE3MjA2MDM5MTJ9.TVDOUzpwdoYi08yKUZ_Q4Xf5PHwBme21PPUBMUuZ6tM"
+}
+```
+
 Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
