@@ -1,5 +1,10 @@
+"""
+Module implementing a Flask server for predicting based on JSON data.
+"""
+
 import os
 from io import BytesIO
+from http import HTTPStatus
 from flask import Flask, request, jsonify
 import redis
 from dotenv import load_dotenv
@@ -9,7 +14,6 @@ from utils.image_processing import predict_image
 from utils.zip_processing import process_zip
 from utils.model_selection import select_model
 from utils.video_processing import process_video
-from http import HTTPStatus
 from utils.error import CustomError
 
 # Initialize Flask app
