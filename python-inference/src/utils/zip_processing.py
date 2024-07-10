@@ -49,7 +49,7 @@ def process_zip(zip_data, model, class_names):
                         if model == 'clustering':
                             results.append([filename_zip.split('/', 1)[-1], input_image])
                         else:
-                            results[filename_zip] = predict_image(input_image, model, class_names)
+                            results[filename_zip.split('/', 1)[-1]] = predict_image(input_image, model, class_names)
                     except UnidentifiedImageError:
                         logging.error(f"Unable to identify the image: {filename_zip}")
 

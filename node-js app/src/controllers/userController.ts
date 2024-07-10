@@ -186,7 +186,7 @@ class UserController {
       const newTokensValue = user.tokens + Number(tokenUser);
 
       // Update the user's tokens
-      const updateSuccessful = await this.userService.updateUser(userId, { tokens: newTokensValue, updatedAt: new Date()});
+      const updateSuccessful = await this.userService.updateUser(userId, { tokens: newTokensValue, updatedAt: new Date() });
 
       if (updateSuccessful) {
         res.status(StatusCodes.OK).json({ message: `Tokens updated successfully. New token value: ${newTokensValue}` });
