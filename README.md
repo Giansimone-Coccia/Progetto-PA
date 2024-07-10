@@ -161,20 +161,46 @@ Questo progetto espone le seguenti rotte per gestire le operazioni CRUD su [enti
 
 ### Rotte Disponibili
 
-- **POST http://localhost:3000/auth/register**
-  - Descrizione: Registrazione dell'utente o Admin
-  - Parametri Request:
-    - `email`: deve rispettare il formato email.
-    - `password`: must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character.
-    - `role`: può essere user o admin.
-  - Parametri Response:
-    - `tokens`: i gettoni disponibili er l'utente che di default sono impostati a 1000.
-    - `id`: l'identificativo dell'utente generato dal DB.
-    - `email`: l'email dell'utente.
-    - `password`: la password criptata.
-    - `role`: ruolo.
-    - `updatedAt`: l'ultima data di aggiornamento dell'user.
-    - `createdAt`: data di creazione dell'utente.
+## Registrazione Utente/Admin
+
+### Endpoint
+
+**POST http://localhost:3000/auth/register**
+
+### Descrizione
+Registra un nuovo utente o un amministratore nel sistema.
+
+### Parametri della Richiesta
+- `email`: Deve rispettare il formato email.
+- `password`: Deve essere lunga almeno 8 caratteri e includere almeno una cifra, una lettera minuscola, una lettera maiuscola e un carattere speciale.
+- `role`: Può essere `user` o `admin`.
+
+### Parametri della Risposta
+- `tokens`: I gettoni disponibili per l'utente, di default impostati a 1000.
+- `id`: L'identificativo dell'utente generato dal database.
+- `email`: L'email dell'utente.
+- `role`: Ruolo dell'utente.
+- `updatedAt`: Data dell'ultimo aggiornamento dell'utente.
+- `createdAt`: Data di creazione dell'utente.
+
+### Esempio
+```json
+// Richiesta
+{
+  "email": "esempio@email.com",
+  "password": "Password123!",
+  "role": "user"
+}
+
+// Risposta
+{
+  "tokens": 1000,
+  "id": "1234567890",
+  "email": "esempio@email.com",
+  "role": "user",
+  "updatedAt": "2024-07-10T12:00:00Z",
+  "createdAt": "2024-07-10T11:59:00Z"
+}
 
     
 
