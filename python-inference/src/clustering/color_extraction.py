@@ -1,10 +1,7 @@
-import logging
 import PIL
 import numpy as np
 import torch
 from sklearn.cluster import KMeans
-
-logging.basicConfig(level=logging.INFO)
 
 class ColorExtractor:
     def __init__(self, images):
@@ -17,7 +14,6 @@ class ColorExtractor:
         dominant_colors = {}
 
         for filename, segments in all_segments.items():
-            logging.info(filename)
             image_tensor = self._load_image(segments[0])
             for face_id, segment_list in segments[1].items():
                 for mask, label_name in segment_list:
@@ -34,7 +30,6 @@ class ColorExtractor:
             image = image.convert('RGB')  
 
         np_image = np.array(image)
-        logging.info("funge ARRAY")
         image = torch.from_numpy(np_image)
 
         if not isinstance(image, np.ndarray):
@@ -46,7 +41,7 @@ class ColorExtractor:
 
     def _get_segmented_colors(self, image_tensor, mask):
         # Estrae i colori dai segmenti in modo vettoriale
-        mask = mask.to(self._device)  # Assicurarsi che la maschera sia sullo stesso dispositivo dell'immagine
+        mask = mask.to(self._device)
         pixel_coords = torch.nonzero(mask, as_tuple=True)
         segmented_colors = image_tensor[0, :, pixel_coords[0], pixel_coords[1]].permute(1, 0).cpu().numpy()
         return segmented_colors if segmented_colors.size > 0 else np.array([])

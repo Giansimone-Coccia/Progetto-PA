@@ -3,7 +3,11 @@ import axios from 'axios';
 import { ContentService } from '../services/contentService';
 import { DatasetService } from '../services/datasetService';
 import { UserService } from '../services/userService';
+import dotenv from 'dotenv';
+
 const Queue = require('bull');
+
+dotenv.config();  // Carica le variabili dal file .env
 
 // Create a new Bull queue named 'inference' using the provided Redis URI
 const inferenceQueue = new Queue('inference', process.env.REDIS_URI);
@@ -110,10 +114,12 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
   const jsonContents = contentService.reduceContents(contents);
 
   try {
-    // Perform inference: Send a POST request to the inference service
+    const maxContentLengthStr = process.env.MAX_CONTENT_LENGTH || "100 * 1024 * 1024";
+    const maxContentLength = eval(maxContentLengthStr);
+
     const response = await axios.post(`${process.env.INFERENCE_URL}/predict`, { jsonContents, modelId }, {
-      maxContentLength: 100 * 1024 * 1024, // Max content length allowed in the request
-      maxBodyLength: 100 * 1024 * 1024 // Max body length allowed in the request
+      maxContentLength: maxContentLength, // Max content length allowed in the request
+      maxBodyLength: maxContentLength // Max body length allowed in the request
     });
 
     // Handle response from the inference service

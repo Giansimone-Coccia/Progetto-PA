@@ -45,14 +45,17 @@ class ColorClusterer:
         # Inizializza un dizionario vuoto per i cluster
         cluster_dict = {}
 
-        # Itera sui cluster e assegna le immagini corrispondenti
+           # Itera sui cluster e assegna il centroide e le immagini corrispondenti
         for label in range(kmeans.n_clusters):
-            cluster_dict[label] = []
+            cluster_dict[f"cluster_{label}"] = {
+                f"centroid": kmeans.cluster_centers_[label].tolist(),
+                f"images": []
+            }
 
         # Aggiungi le immagini ai cluster corrispondenti
         for i, label in enumerate(labels):
             image_name = colori_with_jpg[i][0]
-            cluster_dict[label].append(image_name)
+            cluster_dict[f"cluster_{label}"][f"images"].append(image_name)
 
         return cluster_dict
 

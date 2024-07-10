@@ -1,10 +1,9 @@
-import json
 import logging
 from flask import Flask, request, jsonify # type: ignore
 import redis 
 import os
+from dotenv import load_dotenv
 from io import BytesIO
-
 import redis # type: ignore
 from flask import Flask, request, jsonify # type: ignore
 from PIL import Image
@@ -15,18 +14,19 @@ from utils.model_selection import select_model
 from utils.video_processing import process_video
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 100*1024*1024*2
+
+load_dotenv()
+
+max_content_length_str = os.getenv('MAX_CONTENT_LENGTH')
+app.config['MAX_CONTENT_LENGTH'] = eval(max_content_length_str) * 2
 
 
 redis_host = os.getenv('REDIS_HOST', 'localhost')
 redis_port = int(os.getenv('REDIS_PORT', 6379))
 r = redis.Redis(host=redis_host, port=redis_port, db=0)
 
-logging.basicConfig(level=logging.INFO)
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    logging.info("Inizio codice python")
     if request.method == 'POST':
         try:
             data = request.json
@@ -92,11 +92,13 @@ def predict():
                     return jsonify({'error': f"Tipo non supportato: {type}", 'error_code': 400})
                     
             if model == 'clustering' :
-                if(len(all_images)>=12):
-                    clustering_instance = Clustering()
-                    return jsonify(clustering_instance.execute(all_images))
-                else:
-                    return jsonify({'error': f"Il dataset deve contenere almeno 12 immagini: il numero attuale di immagini è {len(all_images)}", 'error_code': 400})
+                clustering_instance = Clustering()
+                result = clustering_instance.execute(all_images)
+
+                if not result:
+                    return jsonify({'error': f"Il dataset deve contenere immagini con almeno 12 volti", 'error_code': 400})
+
+                return jsonify(result)
             else:
                 return jsonify(all_results)
 

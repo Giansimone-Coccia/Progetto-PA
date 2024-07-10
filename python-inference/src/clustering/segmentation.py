@@ -18,32 +18,46 @@ class FaceSegmentation:
         self._face_parser = facer.face_parser('farl/lapa/448', device=self._device)
 
     def process_images(self):
-        all_segments = {}
-        index = 0  # Inizializza l'indice
-        
-        while index < len(self._images):
-            image = self._images[index]
+            all_faces = {}
+            all_segments = {}
+            index = 0  # Inizializza l'indice
             
-            try:
-                image_tensor = self._load_image(image[1])
-                faces = self._detect_faces(image_tensor)
+            # Phase 1: Detection
+            while index < len(self._images):
+                image = self._images[index]
                 
-                if len(faces['rects']) > 1:
-                    self._extract_faces(image, faces)
-                    continue
+                try:
+                    image_tensor = self._load_image(image[1])
+                    faces = self._detect_faces(image_tensor)
+                    
+                    if len(faces['rects']) > 1:
+                        self._extract_multiple_faces(image, faces)
+                        continue
+                    
+                    all_faces[image[0]] = (image[1], faces)
                 
-                faces = self._parse_faces(image_tensor, faces)
-                seg_probs = faces['seg']['logits'].softmax(dim=1)
-                all_segments[image[0]] = [image[1], self._segment_faces(seg_probs, faces)]
+                except Exception as e:
+                    logging.info(f"Errore durante la rilevazione in {image[0]}: {e}")
+                
+                index += 1  
             
-            except Exception as e:
-                logging.info(f"Errore durante l'elaborazione di {image[0]}: {e}")
-            
-            index += 1  # Passa all'elemento successivo in ogni caso
+            if len(all_faces) < 12:
+                return False
 
-        return all_segments
+            # Phase 2: Segmentation
+            for key, (image_path, faces) in all_faces.items():
+                try:
+                    image_tensor = self._load_image(image_path)
+                    faces = self._parse_faces(image_tensor, faces)
+                    seg_probs = faces['seg']['logits'].softmax(dim=1)
+                    all_segments[key] = [image_path, self._segment_faces(seg_probs, faces)]
+                
+                except Exception as e:
+                    logging.info(f"Errore durante la segmentazione di {key}: {e}")
 
-    def _extract_faces(self, image, faces):
+            return all_segments
+
+    def _extract_multiple_faces(self, image, faces):
         if not isinstance(image[1], PIL.Image.Image):
             raise TypeError("L'input deve essere un oggetto immagine di Pillow (Image)")
 
