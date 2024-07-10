@@ -36,7 +36,8 @@ class ColorExtractor:
             for face_id, segment_list in segments[1].items():
                 for mask, label_name in segment_list:
                     colors = self._get_segmented_colors(image_tensor, mask)
-                    dominant_colors = self._update_dominant_colors(dominant_colors, filename, face_id, label_name, colors)
+                    dominant_colors = self._update_dominant_colors(dominant_colors, filename,
+                                                                   face_id, label_name, colors)
 
         if normalize:
             self._normalize_colors(dominant_colors)
@@ -82,10 +83,12 @@ class ColorExtractor:
         """
         mask = mask.to(self._device)
         pixel_coords = torch.nonzero(mask, as_tuple=True)
-        segmented_colors = image_tensor[0, :, pixel_coords[0], pixel_coords[1]].permute(1, 0).cpu().numpy()
+        segmented_colors = image_tensor[0, :, pixel_coords[0],
+                                        pixel_coords[1]].permute(1, 0).cpu().numpy()
         return segmented_colors if segmented_colors.size > 0 else np.array([])
 
-    def _update_dominant_colors(self, dominant_colors, filename, face_id, label_name, segmented_colors):
+    def _update_dominant_colors(self, dominant_colors, filename,
+                                face_id, label_name, segmented_colors):
         """
         Updates the dictionary of dominant colors.
 

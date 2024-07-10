@@ -47,7 +47,7 @@ def predict():
 
             if not isinstance(json_contents, list):
                 return jsonify({'error': "jsonContents must be a list", 'error_code': 400})
-            
+
             model, class_names = select_model(model_id)
 
             if not model:
@@ -60,14 +60,16 @@ def predict():
 
             for item in json_contents:
                 if not isinstance(item, list) or len(item) != 3:
-                    return jsonify({'error': "Each element in jsonContents must be a list with three elements", 'error_code': 400})
-
+                    return jsonify({'error': "Each element in jsonContents must be a list "
+                        "with three elements", 'error_code': 400})
                 filename, file_type, file = item
 
                 if not isinstance(file_type, str):
                     return jsonify({'error': "The file type must be a string", 'error_code': 400})
 
-                if not isinstance(file, dict) or file.get('type') != 'Buffer' or not isinstance(file.get('data'), list):
+                if not isinstance(file, dict) \
+                        or file.get('type') != 'Buffer' \
+                        or not isinstance(file.get('data'), list):
                     return jsonify({'error': "The file must be a valid Buffer", 'error_code': 400})
 
                 file_data = bytes(file.get('data'))
@@ -78,7 +80,7 @@ def predict():
                         all_images.append([filename, input_image])
                     else:
                         all_results[filename] = predict_image(input_image, model, class_names)
-                
+
                 elif file_type == 'zip':
                     zip_data = process_zip(file_data, model, class_names)
                     if model == 'clustering':
@@ -95,13 +97,14 @@ def predict():
 
                 else:
                     return jsonify({'error': f"Unsupported type: {file_type}", 'error_code': 400})
-                    
+
             if model == 'clustering':
                 clustering_instance = Clustering()
                 result = clustering_instance.execute(all_images)
 
                 if not result:
-                    return jsonify({'error': "The dataset must contain images with at least 12 faces", 'error_code': 400})
+                    return jsonify({'error': "The dataset must contain images with "
+                                    "at least 12 faces", 'error_code': 400})
 
                 return jsonify(result)
             else:

@@ -23,10 +23,11 @@ def select_model(model_id):
                If the model is 'clustering', returns ('clustering', None).
                If the model_id is invalid, returns (None, None).
     """
-    base_path = os.path.dirname(__file__)  
+    base_path = os.path.dirname(__file__)
 
     if model_id == "1":
-        model_path = os.path.join(base_path, '..', '..', 'py_models', 'armocromia_12_seasons_resnet50_full.pth')
+        model_path = os.path.join(base_path, '..', '..',
+                                  'py_models', 'armocromia_12_seasons_resnet50_full.pth')
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
 
@@ -37,7 +38,8 @@ def select_model(model_id):
         return model, class_names_12
 
     if model_id == "2":
-        model_path = os.path.join(base_path, '..', '..', 'py_models', 'armocromia_4_seasons_resnet50_full.pth')
+        model_path = os.path.join(base_path, '..', '..',
+                                  'py_models', 'armocromia_4_seasons_resnet50_full.pth')
         model = torch.load(model_path, map_location=torch.device('cpu'))
         model.eval()
 

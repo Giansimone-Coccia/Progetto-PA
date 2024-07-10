@@ -23,19 +23,19 @@ def process_zip(zip_data, model, class_names):
                       if model is not 'clustering', otherwise a list of image data for clustering.
     """
     results = [] if model == 'clustering' else {}
-    
+
     with zipfile.ZipFile(BytesIO(zip_data), 'r') as zip_file:
         for filename_zip in zip_file.namelist():
             with zip_file.open(filename_zip) as file_in_zip:
                 # Read the image data explicitly
                 image_data = file_in_zip.read()
-                
+
                 # Use BytesIO to create a stream-like object for PIL
                 image_stream = BytesIO(image_data)
-                
+
                 # Open the image from the stream
                 input_image = Image.open(image_stream)
-                
+
                 if model == 'clustering':
                     results.append([filename_zip.split('/', 1)[-1], input_image])
                 else:

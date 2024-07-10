@@ -38,5 +38,4 @@ class Clustering:
         # Initialize and cluster the dominant colors
         color_clusterer = ColorClusterer()
         result = color_clusterer.cluster(dominant_colors)
-        
         return result

@@ -43,7 +43,7 @@ def process_video(video_data, model, class_names):
                 results.append([f"frame_{frame_number}", image])
             else:
                 prediction = predict_image(image, model, class_names)
-                results[f"frame_{frame_number}"] = prediction 
+                results[f"frame_{frame_number}"] = prediction
 
             frame_number += 1
 

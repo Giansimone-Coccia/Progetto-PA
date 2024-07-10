@@ -25,7 +25,8 @@ class ColorClusterer:
             colors (dict): A dictionary of image names and their corresponding facial colors.
 
         Returns:
-            tuple: A tuple containing an array of processed colors and a list of image names with colors.
+            tuple: A tuple containing an array of processed colors 
+            and a list of image names with colors.
         """
         processed_colors = []
         colors_with_images = []
@@ -38,7 +39,8 @@ class ColorClusterer:
 
             # Replace missing data with the mean RGB values
             mean_color = np.mean(image_colors, axis=0)
-            image_colors = [mean_color if np.any(np.isnan(color)) else color for color in image_colors]
+            image_colors = [mean_color if np.any(np.isnan(color)) else color \
+                for color in image_colors]
 
             # Truncate or pad image_colors to reach max_length
             image_colors = image_colors[:max_length]
