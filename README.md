@@ -679,8 +679,9 @@ Per questa rotta è necessario impostare *form-data* per il caricamento dei dati
 #### Esempio
 ##### Body della Richiesta
 <p align="center">
-  <img src="./docs/create_content" alt="Rotta Create content">
+  <img src="./docs/create_content.png" alt="Rotta Create content">
 </p>
+
 ##### Risposta
 ```json
 {
