@@ -37,9 +37,11 @@ def process_zip(zip_data, model, class_names):
                     file_stream = bytes(file_data)
                     if model == 'clustering':
                         video_results = process_video(file_stream, model, class_names)
-                        results.extend([[f"{filename_zip.split('/', 1)[-1]}/{name}", img] for name, img in video_results])
+                        results.extend([[f"{filename_zip.split('/', 1)[-1]}/{name}", img] for name,
+                                        img in video_results])
                     else:
-                        results[filename_zip.split('/', 1)[-1]] = process_video(file_stream, model, class_names)
+                        results[filename_zip.split('/', 1)[-1]] = process_video(file_stream,
+                                                                                model, class_names)
                 elif mime_type and mime_type.startswith('image'):
                     # Use BytesIO to create a stream-like object
                     file_stream = BytesIO(file_data)
