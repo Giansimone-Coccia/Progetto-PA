@@ -232,8 +232,8 @@ Restituisce i token dell'utente.
 
 #### Authorization
 Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
-`Auth Type`: Bearer Token.
-`Token`: token JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
 
 #### Parametri della Risposta
 - `tokens`: token JWT
@@ -596,7 +596,7 @@ Può essere un JSONArray contenente informazioni su tutti datasets.
 **PUT** http://localhost:3000/api/datasets/:id
 
 ### Descrizione
-Consente all'utente di aggiornare uno dei suoi datasets.
+Consente all'utente di aggiornare uno dei suoi datasets, con verifica di non sovrapposizione sui contenuti di dataset uguali.
 
 #### Authorization
 Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
@@ -624,6 +624,34 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 ```json
 {
     "message": "Dataset updated"
+}
+```
+
+### Eliminazione logica dataset
+**DELETE** http://localhost:3000/api/datasets/:id
+
+### Descrizione
+Consente all'utente di eliminare logicamente uno dei suoi datasets.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Richiesta
+- `id`: Id del dataset da eliminare.
+
+#### Parametri della Risposta
+- `message`: Messaggio di andata a buon fine o meno
+
+#### Esempio
+##### Rotta
+**DELETE** http://localhost:3000/api/datasets/2
+
+##### Risposta
+```json
+{
+    "message": "Dataset eliminated correctly"
 }
 ```
 
