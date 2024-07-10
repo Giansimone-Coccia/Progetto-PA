@@ -161,12 +161,12 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 ### Descrizione
 Registra un nuovo utente o un amministratore nel sistema.
 
-#### Parametri della Richiesta
+#### Parametri della Richiesta nel Body
 - `email`: Deve rispettare il formato email.
 - `password`: Deve essere lunga almeno 8 caratteri e includere almeno una cifra, una lettera minuscola, una lettera maiuscola e un carattere speciale.
 - `role`: Può essere `user` o `admin`.
 
-#### Parametri della Richiesta nel Body
+#### Parametri della Risposta
 - `tokens`: I gettoni disponibili per l'utente, di default impostati a 1000.
 - `id`: L'identificativo dell'utente generato dal database.
 - `email`: L'email dell'utente.
@@ -241,8 +241,8 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 #### Parametri della Risposta
 - `id`: Id dell'inferenza.
 - `datasetId`: Id del database di cui si è fatta l'infernza.
-- `model`: L'email dell'utente.
-- `result`: Ruolo dell'utente.
+- `model`: Modello di cui si è effettuata l'inferenza.
+- `result`: Risultato dell'inferenza, questo varia tra i modelli.
 
 #### Esempio
 ##### Body della Richiesta
