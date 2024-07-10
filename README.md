@@ -205,7 +205,6 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 #### Parametri della Richiesta
 - `email`: Email dell'utente/admin.
 - `password`: Password dell'utente/admin.
-- `role`: Può essere `user` o `admin`.
 
 #### Parametri della Risposta
 - `token`: token JWT
