@@ -87,7 +87,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
   }
 
   // Calculate the cost of inference based on contents
-  const cost = contentService.calculateInferenceCost(contents);
+  const cost = await contentService.calculateInferenceCost(contents);
 
   // Fetch user by userId
   const user = await userService.getUserById(userId);

@@ -116,7 +116,7 @@ Per motivi di semplicità riportiamo solo il caso del caricamento delle immagini
 
 ### Design Pattern Utilizzati
 
-1. **Pattern repository**: Il pattern Repository è utilizzato per separare la logica di business dalla logica di accesso ai dati nel sistema. Fornisce un'astrazione della persistenza dei dati, permettendo agli altri moduli dell'applicazione di accedere ai dati attraverso interfacce ben definite, senza doversi preoccupare dei dettagli di come i dati sono memorizzati o recuperati. Definisce i metodi di alto livello per l'accesso ai dati, come ad esempio **findById**, **save**, **delete**, ecc con relativa implementazione.
+1. **Pattern repository**: Il pattern Repository è utilizzato per separare la logica di business dalla logica di accesso ai dati nel sistema. Fornisce un'astrazione della persistenza dei dati, permettendo agli altri moduli dell'applicazione di accedere ai dati attraverso interfacce ben definite, senza doversi preoccupare dei dettagli di come i dati sono memorizzati o recuperati. Definisce i metodi di alto livello per l'accesso ai dati, come ad esempio **findById**, **findAll**, **delete**, ecc con relativa implementazione.
 2. **Singleton Pattern**: Il pattern Singleton assicura che una classe abbia una sola istanza e fornisce un punto globale di accesso a quella istanza.
 3. **Pattern DAO (Data Access Object)**: Il pattern DAO è simile al pattern Repository e si concentra sull'astrazione dell'accesso ai dati, fornendo metodi CRUD (Create, Read, Update, Delete) per interagire con la persistenza dei dati lavorando a più basso livello ed a contatto con il database. Definisce i metodi per l'accesso ai dati, come **create**, **read**, **update**, **delete**, specifici per un'entità o una tabella del database.
 4. **Middleware Pattern**: Il termine Middleware si riferisce a un'infrastruttura software che fornisce funzionalità comuni tra diverse applicazioni, componenti di sistema o servizi. Agisce come uno strato intermedio tra l'applicazione e altre componenti o risorse esterne.
@@ -154,6 +154,7 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 7. Eseguire le chiamate su Postman
 
 ## Rotte Disponibili
+E' possibile utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API seguenti.
 
 ### Registrazione Utente/Admin
 **POST** http://localhost:3000/auth/register
@@ -225,7 +226,7 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 ```
 
 ### Get user token
-**POST** http://localhost:3000/api/users/token
+**GET** http://localhost:3000/api/users/token
 
 ### Descrizione
 Restituisce i token dell'utente.
@@ -335,64 +336,20 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 - `state`: Stato del processamento.
 - `message`: Messaggio.
 - `result`: Risultato ottenuto dal processamento.
+- `model`: Id del modello utilizzato.
+- `updatedAt`: Data e ora dell'ultimo aggiornamento avvenuto.
+- `createdAt`: Data e ora della creazione.
 
 ##### Rotta
 **GET** http://localhost:3000/api/inferences/status/13
 
 ##### Risposta
+Solo nel caso in cui lo stato sia *completed* viene visualizzato anche il risultato.
 ```json
 {
-    "jobId": "13",
-    "state": "completed",
-    "message": "Job completed",
-    "result": {
-        "id": 20,
-        "datasetId": "1",
-        "cost": 176,
-        "result": {
-            "1 second faces.mp4": {
-                "frame_0": [
-                    {
-                        "class_name": "autunno",
-                        "probability": 0.274
-                    },
-                    {
-                        "class_name": "estate",
-                        "probability": 0.173
-                    },
-                    {
-                        "class_name": "inverno",
-                        "probability": 0.462
-                    },
-                    {
-                        "class_name": "primavera",
-                        "probability": 0.091
-                    }
-                ]
-            },
-            "image 1.jpg": [
-                {
-                    "class_name": "autunno",
-                    "probability": 0.397
-                },
-                {
-                    "class_name": "estate",
-                    "probability": 0.136
-                },
-                {
-                    "class_name": "inverno",
-                    "probability": 0.215
-                },
-                {
-                    "class_name": "primavera",
-                    "probability": 0.251
-                }
-            ]
-        },
-        "model": "2",
-        "updatedAt": "2024-07-10T10:53:18.772Z",
-        "createdAt": "2024-07-10T10:53:18.772Z"
-    }
+    "jobId": "15",
+    "state": "running",
+    "message": "Job in progress"
 }
 ```
 
@@ -404,8 +361,8 @@ Restituisce il risultato dell'inferenza dato l'Id.
 
 #### Authorization
 Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
--`Auth Type`: Bearer Token.
--`Token`: Token JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: Token JWT.
 
 #### Parametri della Richiesta
 - `id`: Id dell'inferenza.
@@ -679,13 +636,12 @@ Per questa rotta è necessario impostare *form-data* per il caricamento dei dati
 #### Esempio
 ##### Body della Richiesta
 <p align="center">
-  <img src="./docs/create_content" alt="Rotta Create content">
+  <img src="./docs/create_content.png" alt="Rotta Create content">
 </p>
+
 ##### Risposta
 ```json
 {
     "message": "Content created successfully"
 }
 ```
-
-Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.

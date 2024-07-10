@@ -106,21 +106,34 @@ export class ContentService {
   /**
    * Calculates the total cost of inference for a set of contents.
    * @param contents - An array of ContentAttributes for which to calculate the cost.
-   * @returns The total cost of inference for the contents.
+   * @returns A promise of the total cost of inference for the contents.
    */
-  calculateInferenceCost(contents: ContentAttributes[]): number {
-    return contents.reduce((accumulator, currentContent) => {
-      if (currentContent.type === 'image') {
-        accumulator += (currentContent.cost / 0.65) * 2.75
+  async calculateInferenceCost(contents: ContentAttributes[]): Promise<number> {
+    let totalCost = 0;
+
+    for (const currentContent of contents) {
+      try {
+        switch (currentContent.type) {
+          case 'image':
+            totalCost += (currentContent.cost / 0.65) * 2.75; // Calculate cost for images
+            break;
+          case 'zip':
+            const mediaCount = await this.countMediaInZip(currentContent.data) || [0, 0]; // Calculate media count in zip
+            totalCost += (mediaCount[0] + mediaCount[1]) * 2.75; // Calculate cost for zip files based on image and frame count
+            break;
+          case 'video':
+            totalCost += (currentContent.cost / 0.45) * 2.75; // Calculate cost for videos
+            break;
+          default:
+            console.warn('Unknown content type:', currentContent.type);
+            break;
+        }
+      } catch (error) {
+        console.error('Error calculating inference cost for type:', currentContent.type, ' Error:', error);
       }
-      else if (currentContent.type === 'zip') {
-        accumulator += (currentContent.cost / 0.7) * 2.75
-      }
-      else {
-        accumulator += (currentContent.cost / 0.45) * 2.75
-      }
-      return accumulator;
-    }, 0);
+    }
+
+    return totalCost;
   }
 
   /**
@@ -139,41 +152,54 @@ export class ContentService {
    * @returns A promise that resolves to the calculated cost of the content, or null if type is unknown.
    */
   async calculateCost(type: string, data: Buffer): Promise<number | null> {
-    switch (type) {
-      case 'image':
-        return 0.65; // Cost calculation for images
-      case 'video':
-        const frames: number = await this.countFramesInVideo(data);
-        return frames * 0.45; // Cost calculation for videos based on frame count
-      case 'zip':
-        return (this.countImagesInZip(data) || 0) * 0.7; // Cost calculation for zip files based on image count
-      default:
-        return null;
+    try {
+      switch (type) {
+        case 'image':
+          return 0.65; // Cost calculation for images
+        case 'video':
+          const frames: number = await this.countFramesInVideo(data);
+          return frames * 0.45; // Cost calculation for videos based on frame count
+        case 'zip':
+          const zipMediaCount = await this.countMediaInZip(data) || [0, 0]; // Calculate media count in zip
+          return zipMediaCount[0] * 0.7 + zipMediaCount[1] * 0.5; // Cost calculation for zip files based on image and frame count
+        default:
+          return null; // Return null if type is unknown
+      }
+    } catch (error) {
+      console.error('Error calculating cost for type:', type, ' Error:', error);
+      return null; // Return null in case of any errors
     }
   }
 
+
   /**
-   * Counts the number of images in a zip file.
+   * Counts the number of images and video frames in a zip file.
    * @param data - The Buffer containing zip file data.
-   * @returns The number of images found in the zip file, or null if an error occurs.
+   * @returns An array containing the number of images and video frames found in the zip file, or null if an error occurs.
    */
-  private countImagesInZip(data: Buffer): number | null {
+  private async countMediaInZip(data: Buffer): Promise<number[] | null> {
     try {
       const zip = new AdmZip(data); // Initialize AdmZip with provided data
-
       const zipEntries = zip.getEntries(); // Retrieve entries from the zip file
 
-      let imageCount = 0;
-      zipEntries.forEach(entry => {
-        if (entry.name.match(/\.(jpg|jpeg|png)$/i)) { // Check if entry is an image file
-          imageCount++;
-        }
-      });
+      let imageCount = [0, 0]; // Initialize array to store counts of images and video frames
 
-      return imageCount;
+      for (const entry of zipEntries) {
+        if (entry.name.match(/\.(jpg|jpeg|png|webp)$/i)) {
+          // Check if entry is an image file
+          imageCount[0]++;
+        } else if (entry.name.match(/\.(mp4)$/i)) {
+          // Check if entry is a video file
+          const videoData = entry.getData(); // Extract video data from the entry
+          const frameCount = await this.countFramesInVideo(videoData); // Count frames in the extracted video
+          imageCount[1] += frameCount; // Accumulate frame count
+        }
+      }
+
+      return imageCount; // Return array with counts of images and video frames
     } catch (error) {
-      console.error('Error counting images in zip file:', error);
-      return null;
+      console.error('Error counting images and video frames in zip file:', error);
+      return null; // Return null in case of error
     }
   }
 
