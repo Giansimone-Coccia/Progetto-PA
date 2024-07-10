@@ -153,22 +153,20 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
    docker-compose up OPPURE docker-compose up --build
 7. Eseguire le chiamate su Postman
 
-# Rotte Disponibili
+## Rotte Disponibili
 
-## Registrazione Utente/Admin
-
-### Endpoint
-**POST http://localhost:3000/auth/register**
+### Registrazione Utente/Admin
+**POST** http://localhost:3000/auth/register
 
 ### Descrizione
 Registra un nuovo utente o un amministratore nel sistema.
 
-### Parametri della Richiesta
+#### Parametri della Richiesta
 - `email`: Deve rispettare il formato email.
 - `password`: Deve essere lunga almeno 8 caratteri e includere almeno una cifra, una lettera minuscola, una lettera maiuscola e un carattere speciale.
 - `role`: Può essere `user` o `admin`.
 
-### Parametri della Risposta
+#### Parametri della Risposta
 - `tokens`: I gettoni disponibili per l'utente, di default impostati a 1000.
 - `id`: L'identificativo dell'utente generato dal database.
 - `email`: L'email dell'utente.
@@ -176,8 +174,8 @@ Registra un nuovo utente o un amministratore nel sistema.
 - `updatedAt`: Data dell'ultimo aggiornamento dell'utente.
 - `createdAt`: Data di creazione dell'utente.
 
-### Esempio
-#### Richiesta
+#### Esempio
+##### Richiesta
 ```json
 {
   "email": "esempio@email.com",
@@ -185,7 +183,7 @@ Registra un nuovo utente o un amministratore nel sistema.
   "role": "user"
 }
 ```
-#### Risposta
+##### Risposta
 ```json
 {
   "tokens": 1000,
@@ -196,7 +194,5 @@ Registra un nuovo utente o un amministratore nel sistema.
   "createdAt": "2024-07-10T11:59:00Z"
 }
 ```
-
-### Esempi di Utilizzo
 
 Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
