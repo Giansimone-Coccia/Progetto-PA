@@ -153,4 +153,91 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
    docker-compose up OPPURE docker-compose up --build
 7. Eseguire le chiamate su Postman
 
-## Rotte
+## Rotte API
+
+### Descrizione
+
+Questo progetto espone le seguenti rotte per gestire le operazioni CRUD su [entità specifiche / risorse].
+
+### Rotte Disponibili
+
+- **POST http://localhost:3000/auth/register**
+  - Descrizione: Registrazione dell'utente o Admin
+  - Parametri Request:
+    - `email`: deve rispettare il formato email.
+    - `password`: must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character.
+    - `role`: può essere user o admin.
+  - Parametri Response:
+    - `tokens`: i gettoni disponibili er l'utente che di default sono impostati a 1000.
+    - `id`: l'identificativo dell'utente generato dal DB.
+    - `email`: l'email dell'utente.
+    - `password`: la password criptata.
+    - `role`: ruolo.
+    - `updatedAt`: l'ultima data di aggiornamento dell'user.
+    - `createdAt`: data di creazione dell'utente.
+
+    
+
+
+
+- **GET /api/risorsa**
+  - Descrizione: Recupera tutte le risorse disponibili.
+  - Parametri Query:
+    - `parametro1`: Descrizione del parametro 1.
+    - `parametro2`: Descrizione del parametro 2.
+  - Esempio:
+    ```bash
+    curl -X GET http://localhost:3000/api/risorsa
+    ```
+
+- **GET /api/risorsa/:id**
+  - Descrizione: Recupera una singola risorsa tramite ID.
+  - Parametri URL:
+    - `id`: ID univoco della risorsa.
+  - Esempio:
+    ```bash
+    curl -X GET http://localhost:3000/api/risorsa/1
+    ```
+
+- **POST /api/risorsa**
+  - Descrizione: Crea una nuova risorsa.
+  - Body della richiesta:
+    ```json
+    {
+      "campo1": "valore1",
+      "campo2": "valore2"
+    }
+    ```
+  - Esempio:
+    ```bash
+    curl -X POST http://localhost:3000/api/risorsa -H "Content-Type: application/json" -d '{"campo1":"valore1","campo2":"valore2"}'
+    ```
+
+- **PUT /api/risorsa/:id**
+  - Descrizione: Aggiorna una risorsa esistente tramite ID.
+  - Parametri URL:
+    - `id`: ID univoco della risorsa da aggiornare.
+  - Body della richiesta:
+    ```json
+    {
+      "campo1": "nuovoValore1",
+      "campo2": "nuovoValore2"
+    }
+    ```
+  - Esempio:
+    ```bash
+    curl -X PUT http://localhost:3000/api/risorsa/1 -H "Content-Type: application/json" -d '{"campo1":"nuovoValore1","campo2":"nuovoValore2"}'
+    ```
+
+- **DELETE /api/risorsa/:id**
+  - Descrizione: Cancella una risorsa esistente tramite ID.
+  - Parametri URL:
+    - `id`: ID univoco della risorsa da cancellare.
+  - Esempio:
+    ```bash
+    curl -X DELETE http://localhost:3000/api/risorsa/1
+    ```
+
+### Esempi di Utilizzo
+
+Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
