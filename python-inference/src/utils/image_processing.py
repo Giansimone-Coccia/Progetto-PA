@@ -4,11 +4,9 @@ Module: image_processing.py
 This module provides functions for image preprocessing and prediction using a pre-trained model.
 """
 
-import logging
 from torchvision import transforms
 import torch
 
-logging.basicConfig(level=logging.INFO)
 
 def predict_image(input_image, model, class_names):
     """
