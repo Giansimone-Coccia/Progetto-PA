@@ -1,7 +1,9 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserService } from '../services/userService';
+import ErrorFactory from '../error/errorFactory';
+import { StatusCodes } from 'http-status-codes';
 
 /**
  * Controller class for handling authentication operations.
@@ -38,12 +40,12 @@ class AuthController {
    * @param res - The Express response object.
    * @returns A JSON response with the newly created user or an error message.
    */
-  public register = async (req: Request, res: Response) => {
+  public register = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, role } = req.body;  // Extract data from the request
 
     // Check if the required data is present
     if (!email || !password || !role) {
-      return res.status(400).json({ error: 'Email, password, and role are required' });
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Email, password, and role are required'));
     }
 
     // Hash the password using bcrypt
@@ -52,9 +54,9 @@ class AuthController {
     try {
       // Create a new user through the UserService
       const newUser = await this.userService.createUser({ email, password: hashedPassword, role });
-      res.status(201).json(newUser);  // Respond with the newly created user
+      res.status(StatusCodes.CREATED).json(newUser);  // Respond with the newly created user
     } catch (error) {
-      res.status(500).json({ error: 'User already exists' });  // Error handling
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'User already exists'));
     }
   };
 
@@ -64,37 +66,41 @@ class AuthController {
    * @param res - The Express response object.
    * @returns A JSON response with a JWT token upon successful login or an error message.
    */
-  public login = async (req: Request, res: Response) => {
+  public login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;  // Extract data from the request
 
     // Check if the required data is present
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Email and password are required'));
     }
 
-    // Find the user through the UserService
-    const user = await this.userService.findUserByEmail(email);
+    try {
+      // Find the user through the UserService
+      const user = await this.userService.findUserByEmail(email);
 
-    // Check if the user exists
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      // Check if the user exists
+      if (!user) {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+      }
+
+      // Verify the entered password with the stored password using bcrypt
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      // Check if the password is valid
+      if (!isPasswordValid) {
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Invalid password'));
+      }
+
+      // Create a JWT token with the user's data
+      const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, this.secret, {
+        expiresIn: '1h',  // Token expiration time
+      });
+
+      // Respond with the generated token
+      res.json({ token });
+    } catch (error) {
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error occurred during login'));
     }
-
-    // Verify the entered password with the stored password using bcrypt
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    // Check if the password is valid
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Invalid password' });
-    }
-
-    // Create a JWT token with the user's data
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, this.secret, {
-      expiresIn: '1h',  // Token expiration time
-    });
-
-    // Respond with the generated token
-    res.json({ token });
   };
 }
 
