@@ -224,11 +224,183 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 }
 ```
 
+### Get user token
+**POST** http://localhost:3000/api/users/token
+
+### Descrizione
+Restituisce i token dell'utente.
+
+#### Authorization
+Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
+
+#### Parametri della Risposta
+- `tokens`: token JWT
+
+#### Esempio
+
+##### Risposta
+```json
+{
+    "tokens": 9018.85
+}
+```
+
+### Credt recharge
+**POST** http://localhost:3000/api/users/recharge
+
+### Descrizione
+Consente all'admin di ricaricare i roken per uno specifico utente.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `emailUser`: Email dell'utente scelto.
+- `tokenUser`: Password da aggiungere.
+
+#### Parametri della Risposta
+- `message`: messaggio di avvenuta modifica
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+    "emailUser": "user1@example.com",
+    "tokenUser": "150"
+}
+```
+##### Risposta
+```json
+{
+    "message": "Tokens updated successfully. New token value: 9168.85"
+}
+```
+
+### Inferenza
+**POST** http://localhost:3000/api/inferences
+
+### Descrizione
+Consente all'utente di eseguire un'inferenza su un dataset specificato.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `datasetId`: Id del dataset su cui effettuare l'inferenza.
+- `modelId`: Id del modello da utilizzare, che può essere scelto tra tre tipologie:
+  1. Se si vuole scegliere di effettuare l'inferenza con il modello a 12 classi
+  2. Se si vuole scegliere di effettuare l'inferenza con il modello a 4 classi
+  3. Se si vuole eseguire il clustering
+
+#### Parametri della Risposta
+- `inference_job_id`: Id del job.
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+  "datasetId": "1",
+  "modelId": "2"
+}
+```
+##### Risposta
+```json
+{
+    "inference_job_id": "14"
+}
+```
+
+### Get status
+**GET** http://localhost:3000/api/inferences/status/:jobId
+
+### Descrizione
+Consente all'utente di ottenere, mediante l'id dell'inferenza, lo stato del processo.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso tramite JWT.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
+
+#### Parametri della Richiesta
+- `jobId`: Id del job restituito dalla chiamata precedente.
+
+#### Parametri della Risposta
+- `jobId`: Id del job.
+- `state`: Stato del processamento.
+- `message`: Messaggio.
+- `result`: Risultato ottenuto dal processamento.
+
+##### Rotta
+**GET** http://localhost:3000/api/inferences/status/13
+
+##### Risposta
+```json
+{
+    "jobId": "13",
+    "state": "completed",
+    "message": "Job completed",
+    "result": {
+        "id": 20,
+        "datasetId": "1",
+        "cost": 176,
+        "result": {
+            "1 second faces.mp4": {
+                "frame_0": [
+                    {
+                        "class_name": "autunno",
+                        "probability": 0.274
+                    },
+                    {
+                        "class_name": "estate",
+                        "probability": 0.173
+                    },
+                    {
+                        "class_name": "inverno",
+                        "probability": 0.462
+                    },
+                    {
+                        "class_name": "primavera",
+                        "probability": 0.091
+                    }
+                ]
+            },
+            "image 1.jpg": [
+                {
+                    "class_name": "autunno",
+                    "probability": 0.397
+                },
+                {
+                    "class_name": "estate",
+                    "probability": 0.136
+                },
+                {
+                    "class_name": "inverno",
+                    "probability": 0.215
+                },
+                {
+                    "class_name": "primavera",
+                    "probability": 0.251
+                }
+            ]
+        },
+        "model": "2",
+        "updatedAt": "2024-07-10T10:53:18.772Z",
+        "createdAt": "2024-07-10T10:53:18.772Z"
+    }
+}
+```
+
 ### Get Inferenza tramite Id
 **GET** http://localhost:3000/auth/inferences/:id
 
 ### Descrizione
-Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
+Restituisce il risultato dell'inferenza dato l'Id.
 
 #### Authorization
 Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
@@ -246,7 +418,7 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 
 #### Esempio
 ##### Rotta
-**POST** http://localhost:3000/auth/inferences/123
+**GET** http://localhost:3000/auth/inferences/123
 
 ##### Risposta per il modello 2
 ```json
@@ -317,93 +489,5 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 }
 ```
 
-### Get user token
-**POST** http://localhost:3000/api/users/token
-
-### Descrizione
-Restituisce i token dell'utente.
-
-#### Authorization
-Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
-`Auth Type`: Bearer Token.
-`Token`: token JWT.
-
-#### Parametri della Risposta
-- `token`: token JWT
-
-#### Esempio
-
-##### Risposta
-```json
-{
-    "tokens": 9018.85
-}
-```
-
-### Credt recharge
-**POST** http://localhost:3000/api/users/recharge
-
-### Descrizione
-Consente all'admin di ricaricare i roken per uno specifico utente.
-
-#### Authorization
-Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
-`Auth Type`: Bearer Token.
-`Token`: token JWT.
-
-#### Parametri della Richiesta nel Body
-- `emailUser`: Email dell'utente scelto.
-- `tokenUser`: Password da aggiungere.
-
-#### Parametri della Risposta
-- `message`: messaggio di avvenuta modifica
-
-#### Esempio
-##### Body della Richiesta
-```json
-{
-    "emailUser": "user1@example.com",
-    "tokenUser": "150"
-}
-```
-##### Risposta
-```json
-{
-    "message": "Tokens updated successfully. New token value: 9168.85"
-}
-```
-
-### Credt recharge
-**POST** http://localhost:3000/api/users/recharge
-
-### Descrizione
-Consente all'admin di ricaricare i roken per uno specifico utente.
-
-#### Authorization
-Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
-`Auth Type`: Bearer Token.
-`Token`: token JWT.
-
-#### Parametri della Richiesta nel Body
-- `emailUser`: Email dell'utente scelto.
-- `tokenUser`: Password da aggiungere.
-
-#### Parametri della Risposta
-- `message`: messaggio di avvenuta modifica
-
-#### Esempio
-##### Body della Richiesta
-```json
-{
-    "emailUser": "user1@example.com",
-    "tokenUser": "150"
-}
-```
-##### Risposta
-```json
-{
-    "message": "Tokens updated successfully. New token value: 9168.85"
-}
-```
 
 Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
