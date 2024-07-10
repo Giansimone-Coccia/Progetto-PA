@@ -4,6 +4,8 @@ import { CustomRequest } from '../middleware/authMiddleware';
 import inferenceQueue from '../queue/inferenceQueue';
 import { StatusCodes } from 'http-status-codes';
 import ErrorFactory from '../error/errorFactory';
+import { DatasetService } from '../services/datasetService';
+import { ContentService } from '../services/contentService';
 
 /**
  * Controller class for managing inference operations.
@@ -12,6 +14,8 @@ import ErrorFactory from '../error/errorFactory';
 class InferenceController {
   private static instance: InferenceController;  // Singleton instance of the class
   private inferenceService: InferenceService;    // Service for managing inferences
+  private datasetService: DatasetService;
+  private contentService: any;
 
   /**
    * Private constructor to implement the Singleton pattern.
@@ -19,6 +23,8 @@ class InferenceController {
    */
   private constructor() {
     this.inferenceService = InferenceService.getInstance();  // Get the singleton instance of InferenceService
+    this.datasetService = DatasetService.getInstance();  // Get the singleton instance of DatasetService
+    this.contentService = ContentService.getInstance();  // Get the singleton instance of ContentService
   }
 
   /**
@@ -153,8 +159,72 @@ class InferenceController {
     const userId = req.user?.id;
 
     try {
+
+      // Authorization check: Ensure userId is provided
+      if (!userId) {
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+      }
+
+      // Validation checks: Ensure datasetId and modelId are provided
+      if (!datasetId || !modelId) {
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'datasetId and modelId are required'));
+      }
+
+      // Validation checks: Ensure modelId is correct
+      if (modelId !== '1' && modelId !== '2' && modelId !== '3') {
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'modelId has to be 1, 2 or 3'));
+      }
+
+      // Fetch dataset by datasetId
+      const dataset = await this.datasetService.getDatasetById(datasetId);
+
+      // Dataset existence check
+      if (!dataset) {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+      }
+
+      // Authorization check: Ensure userId has access to the dataset
+      if (dataset.userId !== userId) {
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized access to dataset'));
+      }
+
+      // Fetch contents associated with the dataset
+      const contents = await this.contentService.getContentByDatasetId(datasetId);
+
+      // Contents validation: Ensure contents are not null or undefined
+      if (!contents) {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Contents not found'));
+      }
+
+      // Calculate the cost of inference based on contents
+      const cost = await this.contentService.calculateInferenceCost(contents);
+
+      /*// Fetch user by userId
+      const user = await userService.getUserById(userId);
+
+      // User existence check
+      if (!user) {
+        jobStatus.state = 'failed';
+        jobStatus.error_code = 401;
+        jobStatus.message = 'Error 401: Unauthorized';
+        job.progress(jobStatus);
+        return;
+      }*/
+
+      console.log("user tokes: " + req.user?.tokens)
+
+      // Token check: Ensure user has sufficient tokens to perform the inference
+      if (cost > (req.user?.tokens || 0)) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          state: "aborted",
+          message: "Not enough tokens"
+        });
+      }
+
+      const user = req.user
+
       // Add the inference job to the queue
-      const job = await inferenceQueue.add({ datasetId, modelId, userId });
+      const job = await inferenceQueue.add({ modelId, userId, cost, contents, user });
       const jobId = job.id;
 
       return res.json({ "inference_job_id": jobId });
@@ -193,7 +263,7 @@ class InferenceController {
             result
           });
         } else {
-          return res.status(StatusCodes.OK).json({
+          return res.status(parseInt(progress["error_code"])).json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"]
