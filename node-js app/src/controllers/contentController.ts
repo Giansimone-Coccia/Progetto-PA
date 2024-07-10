@@ -207,7 +207,7 @@ class ContentController {
       const success = await this.contentService.deleteContent(id);
 
       if (success) {
-        res.status(StatusCodes.CREATED).end();  // Successfully deleted, no content to return
+        res.status(StatusCodes.OK).end();  // Successfully deleted, no content to return
       } else {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Content not found'));
       }
