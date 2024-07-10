@@ -154,6 +154,7 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 7. Eseguire le chiamate su Postman
 
 ## Rotte Disponibili
+E' possibile utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API seguenti.
 
 ### Registrazione Utente/Admin
 **POST** http://localhost:3000/auth/register
@@ -688,5 +689,3 @@ Per questa rotta è necessario impostare *form-data* per il caricamento dei dati
     "message": "Content created successfully"
 }
 ```
-
-Puoi utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API sopra descritte.
