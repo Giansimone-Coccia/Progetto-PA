@@ -164,7 +164,6 @@ Questo progetto espone le seguenti rotte per gestire le operazioni CRUD su [enti
 ## Registrazione Utente/Admin
 
 ### Endpoint
-
 **POST http://localhost:3000/auth/register**
 
 ### Descrizione
@@ -184,15 +183,16 @@ Registra un nuovo utente o un amministratore nel sistema.
 - `createdAt`: Data di creazione dell'utente.
 
 ### Esempio
+## Richiesta
 ```json
-// Richiesta
 {
   "email": "esempio@email.com",
   "password": "Password123!",
   "role": "user"
 }
-
-// Risposta
+```
+## Risposta
+```json
 {
   "tokens": 1000,
   "id": "1234567890",
@@ -201,68 +201,7 @@ Registra un nuovo utente o un amministratore nel sistema.
   "updatedAt": "2024-07-10T12:00:00Z",
   "createdAt": "2024-07-10T11:59:00Z"
 }
-
-    
-
-
-
-- **GET /api/risorsa**
-  - Descrizione: Recupera tutte le risorse disponibili.
-  - Parametri Query:
-    - `parametro1`: Descrizione del parametro 1.
-    - `parametro2`: Descrizione del parametro 2.
-  - Esempio:
-    ```bash
-    curl -X GET http://localhost:3000/api/risorsa
-    ```
-
-- **GET /api/risorsa/:id**
-  - Descrizione: Recupera una singola risorsa tramite ID.
-  - Parametri URL:
-    - `id`: ID univoco della risorsa.
-  - Esempio:
-    ```bash
-    curl -X GET http://localhost:3000/api/risorsa/1
-    ```
-
-- **POST /api/risorsa**
-  - Descrizione: Crea una nuova risorsa.
-  - Body della richiesta:
-    ```json
-    {
-      "campo1": "valore1",
-      "campo2": "valore2"
-    }
-    ```
-  - Esempio:
-    ```bash
-    curl -X POST http://localhost:3000/api/risorsa -H "Content-Type: application/json" -d '{"campo1":"valore1","campo2":"valore2"}'
-    ```
-
-- **PUT /api/risorsa/:id**
-  - Descrizione: Aggiorna una risorsa esistente tramite ID.
-  - Parametri URL:
-    - `id`: ID univoco della risorsa da aggiornare.
-  - Body della richiesta:
-    ```json
-    {
-      "campo1": "nuovoValore1",
-      "campo2": "nuovoValore2"
-    }
-    ```
-  - Esempio:
-    ```bash
-    curl -X PUT http://localhost:3000/api/risorsa/1 -H "Content-Type: application/json" -d '{"campo1":"nuovoValore1","campo2":"nuovoValore2"}'
-    ```
-
-- **DELETE /api/risorsa/:id**
-  - Descrizione: Cancella una risorsa esistente tramite ID.
-  - Parametri URL:
-    - `id`: ID univoco della risorsa da cancellare.
-  - Esempio:
-    ```bash
-    curl -X DELETE http://localhost:3000/api/risorsa/1
-    ```
+```
 
 ### Esempi di Utilizzo
 
