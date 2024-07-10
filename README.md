@@ -263,32 +263,88 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 **POST** http://localhost:3000/api/users/token
 
 ### Descrizione
-Questa rotta ritorna i token dell'utente.
+Restituisce i token dell'utente.
 
 #### Authorization
 Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
-- `Auth Type`: Bearer Token.
-- `Token`: token JWT.
-
-#### Parametri della Richiesta
-- `email`: Email dell'utente/admin.
-- `password`: Password dell'utente/admin.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
 
 #### Parametri della Risposta
 - `token`: token JWT
 
 #### Esempio
-##### Richiesta
+
+##### Risposta
 ```json
 {
-  "email": "esempio@email.com",
-  "password": "Password123!",
+    "tokens": 9018.85
+}
+```
+
+### Credt recharge
+**POST** http://localhost:3000/api/users/recharge
+
+### Descrizione
+Consente all'admin di ricaricare i roken per uno specifico utente.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `emailUser`: Email dell'utente scelto.
+- `tokenUser`: Password da aggiungere.
+
+#### Parametri della Risposta
+- `message`: messaggio di avvenuta modifica
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+    "emailUser": "user1@example.com",
+    "tokenUser": "150"
 }
 ```
 ##### Risposta
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzIwNjAwMzEyLCJleHAiOjE3MjA2MDM5MTJ9.TVDOUzpwdoYi08yKUZ_Q4Xf5PHwBme21PPUBMUuZ6tM"
+    "message": "Tokens updated successfully. New token value: 9168.85"
+}
+```
+
+### Credt recharge
+**POST** http://localhost:3000/api/users/recharge
+
+### Descrizione
+Consente all'admin di ricaricare i roken per uno specifico utente.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
+`Auth Type`: Bearer Token.
+`Token`: token JWT.
+
+#### Parametri della Richiesta nel Body
+- `emailUser`: Email dell'utente scelto.
+- `tokenUser`: Password da aggiungere.
+
+#### Parametri della Risposta
+- `message`: messaggio di avvenuta modifica
+
+#### Esempio
+##### Body della Richiesta
+```json
+{
+    "emailUser": "user1@example.com",
+    "tokenUser": "150"
+}
+```
+##### Risposta
+```json
+{
+    "message": "Tokens updated successfully. New token value: 9168.85"
 }
 ```
 
