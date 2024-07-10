@@ -27,7 +27,7 @@ router.post('/register', authController.register); // Route for user registratio
 router.post('/login', authController.login); // Route for user login
 
 // User routes (protected)
-router.post('/users/token', authenticateJWT, userController.getToken); // Route to get user token
+router.get('/users/token', authenticateJWT, userController.getToken); // Route to get user token
 router.post('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge); // Route to recharge user tokens (admin only)
 
 // Inference routes (protected)
