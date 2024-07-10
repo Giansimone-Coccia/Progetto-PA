@@ -161,12 +161,12 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 ### Descrizione
 Registra un nuovo utente o un amministratore nel sistema.
 
-#### Parametri della Richiesta
+#### Parametri della Richiesta nel Body
 - `email`: Deve rispettare il formato email.
 - `password`: Deve essere lunga almeno 8 caratteri e includere almeno una cifra, una lettera minuscola, una lettera maiuscola e un carattere speciale.
 - `role`: Può essere `user` o `admin`.
 
-#### Parametri della Richiesta nel Body
+#### Parametri della Risposta
 - `tokens`: I gettoni disponibili per l'utente, di default impostati a 1000.
 - `id`: L'identificativo dell'utente generato dal database.
 - `email`: L'email dell'utente.
@@ -225,7 +225,7 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 ```
 
 ### Get Inferenza tramite Id
-**POST** http://localhost:3000/auth/inferences/:id
+**GET** http://localhost:3000/auth/inferences/:id
 
 ### Descrizione
 Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
@@ -233,7 +233,7 @@ Genera il tokendi accesso JWT dell'utente o dell'amministratore di sistema.
 #### Authorization
 Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 -`Auth Type`: Bearer Token.
--`Token`: token JWT.
+-`Token`: Token JWT.
 
 #### Parametri della Richiesta
 - `id`: Id dell'inferenza.
@@ -241,21 +241,79 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 #### Parametri della Risposta
 - `id`: Id dell'inferenza.
 - `datasetId`: Id del database di cui si è fatta l'infernza.
-- `model`: L'email dell'utente.
-- `result`: Ruolo dell'utente.
+- `model`: Modello di cui si è effettuata l'inferenza.
+- `result`: Risultato dell'inferenza, questo varia tra i modelli.
 
 #### Esempio
-##### Body della Richiesta
+##### Rotta
+**POST** http://localhost:3000/auth/inferences/123
+
+##### Risposta per il modello 2
 ```json
 {
-  "email": "esempio@email.com",
-  "password": "Password123!",
-}
-```
-##### Risposta
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzIwNjAwMzEyLCJleHAiOjE3MjA2MDM5MTJ9.TVDOUzpwdoYi08yKUZ_Q4Xf5PHwBme21PPUBMUuZ6tM"
+   "id":123,
+   "datasetId":123,
+   "model":"2",
+   "result":{
+      "image":[
+         {
+            "class_name":"autunno",
+            "probability":0.396
+         },
+         {
+            "class_name":"estate",
+            "probability":0.136
+         },
+         {
+            "class_name":"inverno",
+            "probability":0.216
+         },
+         {
+            "class_name":"primavera",
+            "probability":0.252
+         }
+      ],
+      "Zip":{
+         "image":[
+            {
+               "class_name":"autunno",
+               "probability":0.166
+            },
+            {
+               "class_name":"estate",
+               "probability":0.547
+            },
+            {
+               "class_name":"inverno",
+               "probability":0.103
+            },
+            {
+               "class_name":"primavera",
+               "probability":0.185
+            }
+         ]
+      },
+      "Video":{
+         "frame_0":[
+            {
+               "class_name":"autunno",
+               "probability":0.166
+            },
+            {
+               "class_name":"estate",
+               "probability":0.547
+            },
+            {
+               "class_name":"inverno",
+               "probability":0.103
+            },
+            {
+               "class_name":"primavera",
+               "probability":0.185
+            }
+         ]
+      }
+   }
 }
 ```
 
