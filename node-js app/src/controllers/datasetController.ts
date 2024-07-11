@@ -176,7 +176,9 @@ class DatasetController {
 
       if (!dataset) {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
-      } else if (dataset.userId !== userId) {
+      } 
+      
+      if (dataset.userId !== userId) {
         return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
       }
 
