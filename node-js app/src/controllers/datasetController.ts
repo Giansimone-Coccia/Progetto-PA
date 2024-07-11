@@ -4,6 +4,7 @@ import { DatasetService } from '../services/datasetService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { ContentService } from '../services/contentService';
 import ErrorFactory from '../error/errorFactory';
+import { checkDatasetOverlap } from '../utils/checkDatasetOverlap';
 
 /**
  * Controller class for managing dataset operations.
@@ -133,6 +134,14 @@ class DatasetController {
 
     const datasetData = { ...req.body, userId };
 
+     let yolo =await checkDatasetOverlap( name, userId, this.datasetService, this.contentService)
+
+     console.log(yolo)
+
+    if (yolo) {
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Duplicate content detected in datasets with the same name for the user'));
+    }
+
     try {
       const dataset = await this.datasetService.createDataset(datasetData);
       res.status(StatusCodes.CREATED).json(dataset);
@@ -166,7 +175,7 @@ class DatasetController {
 
     try {
       // Check for duplicate content if name or userId has been changed
-      if (name || userId) {
+      /*if (name || userId) {
         const datasetsWithSameName = await this.datasetService.getDatasetWithSameName(name, userId);
 
         for (const dataset of datasetsWithSameName) {
@@ -184,6 +193,10 @@ class DatasetController {
             return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Duplicate content detected in datasets with the same name for the user'));
           }
         }
+      }*/
+
+      if (await checkDatasetOverlap( name, userId, this.datasetService, this.contentService, id)) {
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Duplicate content detected in datasets with the same name for the user'));
       }
 
       const datasetUpdated = await this.datasetService.updateDataset(id, datasetData);

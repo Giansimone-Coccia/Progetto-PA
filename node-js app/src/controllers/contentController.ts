@@ -5,6 +5,8 @@ import { DatasetService } from '../services/datasetService';
 import { UserService } from '../services/userService';
 import ErrorFactory from '../error/errorFactory';
 import { StatusCodes } from 'http-status-codes';
+import { checkDatasetOverlap } from '../utils/checkDatasetOverlap';
+import { ContentAttributes } from '../models/content';
 
 /**
  * Controller class for managing content operations.
@@ -136,6 +138,12 @@ class ContentController {
       // Calculate the cost of the content
       const cost = await this.contentService.calculateCost(type, data);
 
+      const contentData = { ...req.body, cost, data, name };
+
+      if (await checkDatasetOverlap(dataset.name, userId, this.datasetService, this.contentService, dataset.id, [contentData as ContentAttributes])) {
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Duplicate content detected in datasets with the same name for the user'));
+      }
+
       // Check if the file type is valid
       if (cost === null) {
         return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid file type'));
@@ -159,7 +167,6 @@ class ContentController {
         name = req.file.filename;
       }
 
-      const contentData = { ...req.body, cost, data, name };
       await this.contentService.createContent(contentData);
       return next(ErrorFactory.createError(StatusCodes.CREATED, 'Content created successfully'));
     } catch (error) {
