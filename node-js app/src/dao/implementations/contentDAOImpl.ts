@@ -62,7 +62,7 @@ class ContentDAO implements IContentDAO {
    */
   async findContentByDatasetId(datasetId: number): Promise<ContentAttributes[] | null> {
     const contents = await Content.findAll({ where: { datasetId } }); // Find contents by dataset ID
-    return contents ? contents.map(item => item.toJSON() as ContentAttributes) : null; // Map and return the contents as JSON or null if not found
+    return contents.length > 0 ? contents.map(item => item.toJSON() as ContentAttributes) : null; // Map and return the contents as JSON or null if not found
   }
 
   /**
