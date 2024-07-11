@@ -92,7 +92,7 @@ class ContentController {
 
     // Check if required fields are present
     if (!datasetId || !type || !name) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'datasetId, type and name are required'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'data, datasetId, type and name are required'));
     }
 
     // Check if the user is authenticated

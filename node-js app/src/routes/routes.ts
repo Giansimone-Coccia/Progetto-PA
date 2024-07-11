@@ -28,7 +28,7 @@ router.post('/login', authController.login); // Route for user login
 
 // User routes (protected)
 router.get('/users/token', authenticateJWT, userController.getToken); // Route to get user token
-router.post('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge); // Route to recharge user tokens (admin only)
+router.put('/users/recharge', authenticateJWT, authorizeAdmin, userController.creditRecharge); // Route to recharge user tokens (admin only)
 
 // Inference routes (protected)
 router.get('/inferences/:id', authenticateJWT, inferenceController.getInferenceById); // Route to get inference by ID
