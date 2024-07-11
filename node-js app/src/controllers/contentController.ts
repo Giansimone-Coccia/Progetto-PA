@@ -141,6 +141,11 @@ class ContentController {
         return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid file type'));
       }
 
+      // Check if the file zip is valid
+      if (cost === 0) {
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid zip file'));
+      }
+
       // Check if the user has enough tokens
       if (cost > user.tokens) {
         return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));

@@ -87,7 +87,7 @@ export class ContentService {
    * Mapping of MIME types to allowed types for validation.
    */
   static mimeTypesMapping: Record<string, string[]> = {
-    image: ['image/jpeg', 'image/png', 'image/webp'],
+    image: ['image/jpeg', 'image/png'],
     video: ['video/mp4'],
     zip: ['application/zip']
   };
@@ -171,9 +171,8 @@ export class ContentService {
     }
   }
 
-
   /**
-   * Counts the number of images and video frames in a zip file.
+   * Counts the number of images and video frames in a zip file, including nested zip files.
    * @param data - The Buffer containing zip file data.
    * @returns An array containing the number of images and video frames found in the zip file, or null if an error occurs.
    */
@@ -185,7 +184,7 @@ export class ContentService {
       let imageCount = [0, 0]; // Initialize array to store counts of images and video frames
 
       for (const entry of zipEntries) {
-        if (entry.name.match(/\.(jpg|jpeg|png|webp)$/i)) {
+        if (entry.name.match(/\.(jpg|jpeg|png)$/i)) {
           // Check if entry is an image file
           imageCount[0]++;
         } else if (entry.name.match(/\.(mp4)$/i)) {
@@ -193,9 +192,16 @@ export class ContentService {
           const videoData = entry.getData(); // Extract video data from the entry
           const frameCount = await this.countFramesInVideo(videoData); // Count frames in the extracted video
           imageCount[1] += frameCount; // Accumulate frame count
+        } else if (entry.name.match(/\.zip$/i)) {
+          // Check if entry is a zip file
+          const nestedZipData = entry.getData(); // Extract nested zip data from the entry
+          const nestedCounts = await this.countMediaInZip(nestedZipData); // Recursively count media in the nested zip
+          if (nestedCounts) {
+            imageCount[0] += nestedCounts[0]; // Accumulate image count from nested zip
+            imageCount[1] += nestedCounts[1]; // Accumulate video frame count from nested zip
+          }
         }
       }
-
       return imageCount; // Return array with counts of images and video frames
     } catch (error) {
       console.error('Error counting images and video frames in zip file:', error);
