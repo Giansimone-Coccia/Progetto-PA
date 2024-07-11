@@ -139,10 +139,10 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 1. Clonare il repository nella propria directory o scaricare direttamente il file .zip:
    ```bash
    git clone https://github.com/Giansimone-Coccia/Progetto-PA.git
-2. Esegire le migrations (opzionale):
+2. Esegire le migrations (opzionale, il DB contiene già dati basilari):
    ```bash
    npx sequelize-cli db:migrate
-4. Eseguire i seeders (opzionale):
+4. Eseguire i seeders (opzionale, il DB contiene già dati basilari):
    ```bash
    npx sequelize-cli db:seed:all
 5. Eseguire la build del progetto:
