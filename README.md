@@ -497,7 +497,7 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 }
 ```
 
-### Get all datasets
+### Get all datasets by user id
 **GET** http://localhost:3000/api/datasets
 
 ### Descrizione
@@ -547,6 +547,74 @@ Può essere un JSONArray contenente informazioni su tutti datasets.
         "isDeleted": false,
         "createdAt": "2024-07-08T13:37:24.000Z",
         "updatedAt": "2024-07-09T16:03:28.000Z"
+    }
+]
+```
+
+### Get all datasets
+**GET** http://localhost:3000/api/datasets/admin
+
+### Descrizione
+Consente all'admin di ottenere tutti i datasets presenti all'interno del database.
+
+#### Authorization
+Per eseguire questa rotta è necessario che l'admin abbia effettuato l'accesso tramite JWT.
+- `Auth Type`: Bearer Token.
+- `Token`: token JWT.
+
+#### Parametri della Risposta
+Può essere un JSONArray contenente informazioni su tutti datasets.
+- `id`: Id assegnato al dataset
+- `userId`: Id dell'admin
+- `name`: Nome del dataset
+- `tags`: Tags del dataset
+- `isDeleted`: Può restituire *true* o *false* in relazione al fatto se il dataset sia stato eliminato o meno
+- `createdAt`: Quando è stato creato
+- `updatedAt`: Quando è stato aggiornato
+
+#### Esempio
+##### Rotta
+**GET** http://localhost:3000/api/datasets/admin
+
+##### Risposta
+```json
+[
+    {
+        "id": 1,
+        "userId": 1,
+        "name": "Dataset 1",
+        "tags": [
+            "tag1",
+            "tag2"
+        ],
+        "isDeleted": false,
+        "createdAt": "2024-07-11T08:54:15.000Z",
+        "updatedAt": "2024-07-11T08:54:15.000Z"
+    },
+    {
+        "id": 2,
+        "userId": 2,
+        "name": "Dataset 2",
+        "tags": [
+            "tag3",
+            "tag4"
+        ],
+        "isDeleted": false,
+        "createdAt": "2024-07-11T08:54:15.000Z",
+        "updatedAt": "2024-07-11T08:54:15.000Z"
+    },
+    {
+        "id": 3,
+        "userId": 1,
+        "name": "Dataset Example 12",
+        "tags": [
+            "data science",
+            "AI",
+            "deep learning"
+        ],
+        "isDeleted": false,
+        "createdAt": "2024-07-11T11:21:27.000Z",
+        "updatedAt": "2024-07-11T11:21:27.000Z"
     }
 ]
 ```
