@@ -1,9 +1,10 @@
 'use strict';
+
 const bcrypt = require('bcryptjs');  // Import bcryptjs for password hashing
 
 module.exports = {
   // This function is executed when applying the migration
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     // Hash passwords using bcrypt with a salt rounds of 10
     const hashedPassword1 = await bcrypt.hash('password1', 10);
     const hashedPassword2 = await bcrypt.hash('adminpassword', 10);
@@ -30,7 +31,7 @@ module.exports = {
   },
 
   // This function is executed when reverting the migration (rolling back)
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     // Bulk delete all records from the 'Users' table
     return queryInterface.bulkDelete('Users', null, {});
   }
