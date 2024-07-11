@@ -1,4 +1,4 @@
-import User, { UserAttributes, UserCreationAttributes } from '../models/user'; // Importing User model
+import { UserAttributes, UserCreationAttributes } from '../models/user'; // Importing User model
 import UserRepository from '../repositories/implementations/userRepositoryImpl'; // Importing User repository implementation
 import IUserRepository from '../repositories/interfaces/iUserRepository'; // Importing User repository interface
 

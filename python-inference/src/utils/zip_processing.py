@@ -19,7 +19,8 @@ def process_zip(zip_data, model, class_names):
         class_names (dict): A dictionary mapping class indices to class names.
 
     Returns:
-        dict or list: A dictionary containing predictions for each image or video extracted from the ZIP file 
+        dict or list: A dictionary containing predictions for 
+        each image or video extracted from the ZIP file 
                       if model is not 'clustering', otherwise a list of image data for clustering.
     """
     results = [] if model == 'clustering' else {}
@@ -33,17 +34,19 @@ def process_zip(zip_data, model, class_names):
                 # Determine file type based on extension
                 mime_type, _ = mimetypes.guess_type(filename_zip)
 
+                file_zip_splitted = filename_zip.split('/', 1)[-1]
+
                 if mime_type and mime_type.startswith('video'):
                     # Use BytesIO to create a stream-like object
                     file_stream = bytes(file_data)
                     if model == 'clustering':
                         video_results = process_video(file_stream, model, class_names)
-                        results.extend([[f"{filename_zip.split('/', 1)[-1]}/{name}", img] for name,
+                        results.extend([[f"{file_zip_splitted}/{name}", img] for name,
                                         img in video_results])
                     else:
-                        results[filename_zip.split('/', 1)[-1]] = process_video(file_stream,
-                                                                                model, class_names)
-                        
+                        results[file_zip_splitted] = process_video(file_stream,
+                                                                   model, class_names)
+
                 elif mime_type and mime_type.startswith('image'):
                     # Check if the image type is JPEG or PNG
                     if mime_type == 'image/jpeg' or mime_type == 'image/png':
@@ -52,9 +55,10 @@ def process_zip(zip_data, model, class_names):
                         try:
                             input_image = Image.open(file_stream)
                             if model == 'clustering':
-                                results.append([filename_zip.split('/', 1)[-1], input_image])
+                                results.append([file_zip_splitted, input_image])
                             else:
-                                results[filename_zip.split('/', 1)[-1]] = predict_image(input_image, model, class_names)
+                                results[file_zip_splitted] = predict_image(input_image,
+                                                                           model, class_names)
                         except UnidentifiedImageError:
                             logging.error(f"Unable to identify the image: {filename_zip}")
 
@@ -62,9 +66,9 @@ def process_zip(zip_data, model, class_names):
                     # Process nested zip files
                     nested_results = process_zip(file_data, model, class_names)
                     if model == 'clustering':
-                        results.extend([f"{filename_zip.split('/', 1)[-1]}/{name}", img] for name,
+                        results.extend([f"{file_zip_splitted}/{name}", img] for name,
                                         img in nested_results)
                     else:
-                        results[filename_zip.split('/', 1)[-1]] = nested_results
+                        results[file_zip_splitted] = nested_results
 
     return results

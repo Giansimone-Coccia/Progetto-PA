@@ -103,7 +103,7 @@ def predict():
 
                 else:
                     raise CustomError(f"Unsupported type: {file_type}", HTTPStatus.BAD_REQUEST)
-            
+
             if model == 'clustering':
                 clustering_instance = Clustering()
                 result = clustering_instance.execute(all_images)
