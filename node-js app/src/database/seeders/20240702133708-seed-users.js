@@ -6,8 +6,8 @@ module.exports = {
   // This function is executed when applying the migration
   async up(queryInterface) {
     // Hash passwords using bcrypt with a salt rounds of 10
-    const hashedPassword1 = await bcrypt.hash('password1', 10);
-    const hashedPassword2 = await bcrypt.hash('adminpassword', 10);
+    const hashedPassword1 = await bcrypt.hash('Password1#', 10);
+    const hashedPassword2 = await bcrypt.hash('AdminPassword!0', 10);
 
     // Bulk insert initial user data into the 'Users' table
     return queryInterface.bulkInsert('Users', [
