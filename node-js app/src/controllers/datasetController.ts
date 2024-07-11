@@ -135,11 +135,7 @@ class DatasetController {
 
     const datasetData = { ...req.body, userId };
 
-     let yolo =await checkDatasetOverlap( name, userId, this.datasetService, this.contentService)
-
-     console.log(yolo)
-
-    if (yolo) {
+    if (await checkDatasetOverlap( name, userId, this.datasetService, this.contentService)) {
       return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
     }
 
