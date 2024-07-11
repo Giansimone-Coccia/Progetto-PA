@@ -3,6 +3,7 @@ import { CustomRequest } from '../middleware/authMiddleware';
 import { UserService } from '../services/userService';
 import { StatusCodes } from 'http-status-codes';
 import ErrorFactory from '../error/errorFactory';
+import { ErrorMessages } from '../error/errorMessages';
 
 /**
  * Controller class for managing user operations.
@@ -42,7 +43,7 @@ class UserController {
       const users = await this.userService.getAllUsers();
       res.json(users);
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to retrieve users'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_RETRIEVE_USERS));
     }
   };
 
@@ -59,10 +60,10 @@ class UserController {
       if (user) {
         res.json(user);
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.USER_NOT_FOUND));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to fetch user'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_FETCH_USER));
     }
   };
 
@@ -77,7 +78,7 @@ class UserController {
       const user = await this.userService.createUser(req.body);
       res.status(StatusCodes.CREATED).json(user);
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to create user'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_CREATE_USER));
     }
   };
 
@@ -94,10 +95,10 @@ class UserController {
       if (user) {
         res.json(user);
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.USER_NOT_FOUND));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to update user'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_UPDATE_USER));
     }
   };
 
@@ -114,10 +115,10 @@ class UserController {
       if (success) {
         res.status(StatusCodes.NO_CONTENT).end(); // Successfully deleted, no content to return
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.USER_NOT_FOUND));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to delete user'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_DELETE_USER));
     }
   };
 
@@ -131,7 +132,7 @@ class UserController {
     const userId = req.user?.id;
 
     if (!userId) {
-      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED));
     }
 
     try {
@@ -141,10 +142,10 @@ class UserController {
       if (tokens !== undefined) {
         res.status(StatusCodes.OK).json({ tokens });
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.USER_NOT_FOUND));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to fetch user tokens'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_FETCH_USER_TOKEN));
     }
   };
 
@@ -160,12 +161,12 @@ class UserController {
 
     // Check if the email is provided
     if (!emailUser) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Email is required'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.EMAIL_REQUIRED));
     }
 
     // Check if the token value is provided
-    if (tokenUser === null || tokenUser === undefined) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Token value is required'));
+    if (tokenUser === null || tokenUser === undefined || tokenUser == "") {
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.TOKEN_VALUE_REQUIRED));
     }
 
     try {
@@ -173,13 +174,13 @@ class UserController {
       const user = await this.userService.getUserByEmail(emailUser);
 
       if (!user) {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.USER_NOT_FOUND));
       }
 
       const userId = user.id;
 
       if (!Number.isInteger(userId)) {
-        return next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Invalid user ID'));
+        return next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.INVALID_USER_ID));
       }
 
       // Calculate the new token value
@@ -191,10 +192,10 @@ class UserController {
       if (updateSuccessful) {
         res.status(StatusCodes.OK).json({ message: `Tokens updated successfully. New token value: ${newTokensValue}` });
       } else {
-        return next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to update user tokens'));
+        return next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_UPDATE_USER_TOKEN));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Error updating user tokens'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.ERROR_UPDATING_TOKENS));
     }
   };
 }

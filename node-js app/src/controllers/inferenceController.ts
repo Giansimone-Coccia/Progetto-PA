@@ -7,6 +7,7 @@ import ErrorFactory from '../error/errorFactory';
 import { DatasetService } from '../services/datasetService';
 import { ContentService } from '../services/contentService';
 import { UserService } from '../services/userService';
+import { ErrorMessages } from '../error/errorMessages';
 
 /**
  * Controller class for managing inference operations.
@@ -52,7 +53,7 @@ class InferenceController {
       const inferences = await this.inferenceService.getAllInferences();
       res.json(inferences);
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to retrieve inferences'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.FAILED_RETRIVE_INFERENCES));
     }
   };
 
@@ -67,7 +68,7 @@ class InferenceController {
     try {
       // Check if the ID is valid
       if (!id) {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID));
       }
 
       // Get the inference from the service
@@ -75,12 +76,12 @@ class InferenceController {
 
       // Check if the inference exists
       if (!inference) {
-        return res.status(StatusCodes.NOT_FOUND).json({ message: 'Inference not found or not completed' });
+        return res.status(StatusCodes.NOT_FOUND).json({ message: ErrorMessages.INFERENCES_NOT_FOUND });
       }
 
       res.json(inference);
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to fetch inference'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.INFERENCES_FETCH_FAILED));
     }
   };
 
@@ -95,7 +96,7 @@ class InferenceController {
       const inference = await this.inferenceService.createInference(req.body);
       res.status(StatusCodes.CREATED).json(inference);
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to create inference'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.INFERENCES_CREATION_FAILED));
     }
   };
 
@@ -110,7 +111,7 @@ class InferenceController {
 
     // Check if the ID is valid
     if (isNaN(id)) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID));
     }
 
     try {
@@ -118,10 +119,10 @@ class InferenceController {
       if (inference) {
         res.json(inference);
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Inference not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.INFERENCES_NOT_FOUND));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to update inference'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.INFERENCES_UPDATE_FAILED));
     }
   };
 
@@ -136,7 +137,7 @@ class InferenceController {
 
     // Check if the ID is valid
     if (isNaN(id)) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID));
     }
 
     try {
@@ -144,10 +145,10 @@ class InferenceController {
       if (success) {
         res.status(StatusCodes.NO_CONTENT).end();  // Successfully deleted, no content to return
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Inference not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.INFERENCES_NOT_FOUND));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to delete inference'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.INFERENCES_DELETE_FAILED));
     }
   };
 
@@ -165,17 +166,17 @@ class InferenceController {
 
       // Authorization check: Ensure userId is provided
       if (!userId) {
-        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.INVALID_ID));
       }
 
       // Validation checks: Ensure datasetId and modelId are provided
       if (!datasetId || !modelId) {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'datasetId and modelId are required'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.DID_MID_REQUIRED));
       }
 
       // Validation checks: Ensure modelId is correct
       if (modelId !== '1' && modelId !== '2' && modelId !== '3') {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'modelId has to be 1, 2 or 3'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.MODEL_ID_1_2_3));
       }
 
       // Fetch dataset by datasetId
@@ -183,12 +184,12 @@ class InferenceController {
 
       // Dataset existence check
       if (!dataset) {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
       }
 
       // Authorization check: Ensure userId has access to the dataset
       if (dataset.userId !== userId) {
-        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized access to dataset'));
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED_ACCESS_DATASET));
       }
 
       // Fetch contents associated with the dataset
@@ -196,7 +197,7 @@ class InferenceController {
 
       // Contents validation: Ensure contents are not null or undefined
       if (!contents) {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Contents not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.CONTENT_NOT_FOUND));
       }
 
       // Calculate the cost of inference based on contents
@@ -207,7 +208,7 @@ class InferenceController {
 
       // User existence check
       if (!user) {
-        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED));
       }
 
       // Token check: Ensure user has sufficient tokens to perform the inference
@@ -224,7 +225,7 @@ class InferenceController {
 
       return res.json({ "inference_job_id": jobId });
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Error during inference execution'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.ERROR_INFERENCE));
     }
   };
 
@@ -265,10 +266,10 @@ class InferenceController {
           });
         }
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Job not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.JOB_NOT_FOUND));
       }
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Error retrieving job status'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.ERROR_JOB_STATUS));
     }
   };
 }

@@ -1,4 +1,5 @@
 import { getReasonPhrase } from 'http-status-codes';
+import { ErrorMessages } from '../error/errorMessages';
 
 interface CustomError extends Error {
   statusCode: number;
