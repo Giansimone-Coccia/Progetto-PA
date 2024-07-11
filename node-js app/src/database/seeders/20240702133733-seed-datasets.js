@@ -2,7 +2,7 @@
 
 module.exports = {
   // This function is executed when applying the migration
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     // Bulk insert initial dataset data into the 'Datasets' table
     return queryInterface.bulkInsert('Datasets', [
       {
@@ -25,7 +25,7 @@ module.exports = {
   },
 
   // This function is executed when reverting the migration (rolling back)
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     // Bulk delete all records from the 'Datasets' table
     return queryInterface.bulkDelete('Datasets', null, {});
   }

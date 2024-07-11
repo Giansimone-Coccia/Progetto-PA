@@ -4,7 +4,7 @@ const path = require('path'); // Import the 'path' module to handle file paths
 
 module.exports = {
   // This function is executed when applying the migration
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     try {
       // Bulk insert initial content data into the 'Contents' table
       return queryInterface.bulkInsert('Contents', [
@@ -12,7 +12,7 @@ module.exports = {
           dataset_id: 1, // Dataset ID associated with the content
           type: 'image', // Type of content (e.g., image)
           name: 'image 1.jpg', // Name of the content file
-          data: fs.readFileSync(path.join(__dirname, 'seeders images', 'image 1.jpg')), // Binary data of the content read from file system
+          data: fs.readFileSync(path.join(__dirname, 'seeders files', 'image 1.jpg')), // Binary data of the content read from file system
           cost: 0.65, // Cost associated with processing or storing the content
           created_at: new Date(), // Timestamp for creation date
           updated_at: new Date() // Timestamp for last update date
@@ -21,8 +21,17 @@ module.exports = {
           dataset_id: 1, // Dataset ID associated with the content
           type: 'image', // Type of content (e.g., image)
           name: 'image 2.jpg', // Name of the content file
-          data: fs.readFileSync(path.join(__dirname, 'seeders images', 'image 2.jpg')), // Binary data of the content read from file system
+          data: fs.readFileSync(path.join(__dirname, 'seeders files', 'image 2.jpg')), // Binary data of the content read from file system
           cost: 0.65, // Cost associated with processing or storing the content
+          created_at: new Date(), // Timestamp for creation date
+          updated_at: new Date() // Timestamp for last update date
+        },
+        {
+          dataset_id: 1, // Dataset ID associated with the content
+          type: 'video', // Type of content (e.g., image)
+          name: 'video.mp4', // Name of the content file
+          data: fs.readFileSync(path.join(__dirname, 'seeders files', 'video.mp4')), // Binary data of the content read from file system
+          cost: 15.3, // Cost associated with processing or storing the content
           created_at: new Date(), // Timestamp for creation date
           updated_at: new Date() // Timestamp for last update date
         },
@@ -30,7 +39,7 @@ module.exports = {
           dataset_id: 2, // Dataset ID associated with the content
           type: 'image', // Type of content (e.g., image)
           name: 'image 3.jpg', // Name of the content file
-          data: fs.readFileSync(path.join(__dirname, 'seeders images', 'image 3.jpg')), // Binary data of the content read from file system
+          data: fs.readFileSync(path.join(__dirname, 'seeders files', 'image 3.jpg')), // Binary data of the content read from file system
           cost: 0.65, // Cost associated with processing or storing the content
           created_at: new Date(), // Timestamp for creation date
           updated_at: new Date() // Timestamp for last update date
@@ -39,8 +48,8 @@ module.exports = {
           dataset_id: 2, // Dataset ID associated with the content
           type: 'zip', // Type of content (e.g., image)
           name: 'zip file.zip', // Name of the content file
-          data: fs.readFileSync(path.join(__dirname, 'seeders images', 'zip file.zip')), // Binary data of the content read from file system
-          cost: 19.1, // Cost associated with processing or storing the content
+          data: fs.readFileSync(path.join(__dirname, 'seeders files', 'zip file.zip')), // Binary data of the content read from file system
+          cost: 17.25, // Cost associated with processing or storing the content
           created_at: new Date(), // Timestamp for creation date
           updated_at: new Date() // Timestamp for last update date
         }
@@ -52,7 +61,7 @@ module.exports = {
   },
 
   // This function is executed when reverting the migration (rolling back)
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     // Bulk delete all records from the 'Contents' table
     return queryInterface.bulkDelete('Contents', null, {});
   }

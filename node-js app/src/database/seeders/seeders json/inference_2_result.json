@@ -1,0 +1,703 @@
+{
+    "jobId": "2",
+    "state": "completed",
+    "message": "Job completed",
+    "result": {
+        "id": 6,
+        "datasetId": "2",
+        "cost": 104.5,
+        "result": {
+            "image 3.jpg": [
+                {
+                    "class_name": "autunno",
+                    "probability": 0.12
+                },
+                {
+                    "class_name": "estate",
+                    "probability": 0.523
+                },
+                {
+                    "class_name": "inverno",
+                    "probability": 0.199
+                },
+                {
+                    "class_name": "primavera",
+                    "probability": 0.158
+                }
+            ],
+            "zip file.zip": {
+                "1 second face.mp4": {
+                    "frame_0": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.274
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.173
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.462
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.091
+                        }
+                    ],
+                    "frame_1": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.101
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.42
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.314
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.166
+                        }
+                    ],
+                    "frame_10": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.178
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.398
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.266
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.158
+                        }
+                    ],
+                    "frame_11": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.139
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.482
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.211
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.167
+                        }
+                    ],
+                    "frame_12": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.108
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.595
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.137
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.161
+                        }
+                    ],
+                    "frame_13": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.13
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.507
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.171
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.191
+                        }
+                    ],
+                    "frame_14": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.214
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.304
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.229
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.253
+                        }
+                    ],
+                    "frame_15": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.201
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.365
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.218
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.216
+                        }
+                    ],
+                    "frame_16": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.225
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.336
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.221
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.219
+                        }
+                    ],
+                    "frame_17": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.245
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.314
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.226
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.215
+                        }
+                    ],
+                    "frame_18": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.196
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.445
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.179
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.181
+                        }
+                    ],
+                    "frame_19": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.163
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.52
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.155
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.162
+                        }
+                    ],
+                    "frame_2": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.11
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.391
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.338
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.162
+                        }
+                    ],
+                    "frame_20": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.235
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.385
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.187
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.193
+                        }
+                    ],
+                    "frame_21": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.194
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.426
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.159
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.221
+                        }
+                    ],
+                    "frame_22": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.258
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.354
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.172
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.216
+                        }
+                    ],
+                    "frame_23": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.234
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.427
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.141
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.198
+                        }
+                    ],
+                    "frame_24": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.185
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.484
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.142
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.189
+                        }
+                    ],
+                    "frame_25": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.157
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.549
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.131
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.163
+                        }
+                    ],
+                    "frame_26": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.136
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.54
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.166
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.158
+                        }
+                    ],
+                    "frame_27": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.076
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.618
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.135
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.171
+                        }
+                    ],
+                    "frame_28": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.093
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.537
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.194
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.176
+                        }
+                    ],
+                    "frame_29": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.059
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.633
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.139
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.169
+                        }
+                    ],
+                    "frame_3": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.144
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.298
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.344
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.214
+                        }
+                    ],
+                    "frame_30": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.121
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.437
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.237
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.204
+                        }
+                    ],
+                    "frame_31": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.24
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.304
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.286
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.17
+                        }
+                    ],
+                    "frame_32": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.312
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.02
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.472
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.197
+                        }
+                    ],
+                    "frame_33": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.341
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.052
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.414
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.193
+                        }
+                    ],
+                    "frame_4": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.081
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.524
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.227
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.168
+                        }
+                    ],
+                    "frame_5": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.107
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.465
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.265
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.164
+                        }
+                    ],
+                    "frame_6": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.121
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.477
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.258
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.144
+                        }
+                    ],
+                    "frame_7": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.145
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.478
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.245
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.131
+                        }
+                    ],
+                    "frame_8": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.099
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.585
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.18
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.136
+                        }
+                    ],
+                    "frame_9": [
+                        {
+                            "class_name": "autunno",
+                            "probability": 0.14
+                        },
+                        {
+                            "class_name": "estate",
+                            "probability": 0.477
+                        },
+                        {
+                            "class_name": "inverno",
+                            "probability": 0.242
+                        },
+                        {
+                            "class_name": "primavera",
+                            "probability": 0.141
+                        }
+                    ]
+                },
+                "other images/face.jpg": [
+                    {
+                        "class_name": "autunno",
+                        "probability": 0.241
+                    },
+                    {
+                        "class_name": "estate",
+                        "probability": 0
+                    },
+                    {
+                        "class_name": "inverno",
+                        "probability": 0.735
+                    },
+                    {
+                        "class_name": "primavera",
+                        "probability": 0.023
+                    }
+                ],
+                "other images/martina tinarelli.jpeg": [
+                    {
+                        "class_name": "autunno",
+                        "probability": 0.178
+                    },
+                    {
+                        "class_name": "estate",
+                        "probability": 0
+                    },
+                    {
+                        "class_name": "inverno",
+                        "probability": 0.407
+                    },
+                    {
+                        "class_name": "primavera",
+                        "probability": 0.415
+                    }
+                ],
+                "the beatles.jpg": [
+                    {
+                        "class_name": "autunno",
+                        "probability": 0.006
+                    },
+                    {
+                        "class_name": "estate",
+                        "probability": 0
+                    },
+                    {
+                        "class_name": "inverno",
+                        "probability": 0.994
+                    },
+                    {
+                        "class_name": "primavera",
+                        "probability": 0
+                    }
+                ]
+            }
+        },
+        "model": "2",
+        "updatedAt": "2024-07-11T10:18:17.755Z",
+        "createdAt": "2024-07-11T10:18:17.755Z"
+    }
+}
