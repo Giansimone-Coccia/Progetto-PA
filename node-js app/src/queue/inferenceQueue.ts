@@ -12,7 +12,7 @@ dotenv.config();  // Carica le variabili dal file .env
 const inferenceQueue = new Queue('inference', process.env.REDIS_URI);
 
 // Process jobs from the inference queue
-inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userId: any; cost: any; contents: any; user: any; }; id: any; progress: (arg0: { state: string; message: string; }) => void; }) => {
+inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userId: any; cost: any; contents: any; user: any; }; id: any; progress: (arg0: { state: string; error_code: number; message: string; }) => void; }) => {
   const { modelId, userId, cost, contents, user } = job.data;
 
   // Initialize service instances using Singleton pattern
@@ -46,7 +46,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
     if (response.data && response.data.hasOwnProperty('error') && response.data.hasOwnProperty('error_code')) {
       jobStatus.state = 'failed';
       jobStatus.error_code = response.data.error_code;
-      jobStatus.message = `Error ${response.data.error_code}: ${response.data.error}`;
+      jobStatus.message = `${response.data.error}`;
       job.progress(jobStatus);
       return;
     }

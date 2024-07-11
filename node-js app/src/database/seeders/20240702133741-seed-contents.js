@@ -34,6 +34,15 @@ module.exports = {
           cost: 0.65, // Cost associated with processing or storing the content
           created_at: new Date(), // Timestamp for creation date
           updated_at: new Date() // Timestamp for last update date
+        },
+        {
+          dataset_id: 2, // Dataset ID associated with the content
+          type: 'zip', // Type of content (e.g., image)
+          name: 'zip file.zip', // Name of the content file
+          data: fs.readFileSync(path.join(__dirname, 'seeders images', 'zip file.zip')), // Binary data of the content read from file system
+          cost: 19.1, // Cost associated with processing or storing the content
+          created_at: new Date(), // Timestamp for creation date
+          updated_at: new Date() // Timestamp for last update date
         }
       ], {});
     } catch (error) {
