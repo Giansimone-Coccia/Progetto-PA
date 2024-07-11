@@ -160,6 +160,7 @@ class ContentController {
       }
 
       const contentData = { ...req.body, cost, data, name };
+      await this.contentService.createContent(contentData);
       return next(ErrorFactory.createError(StatusCodes.CREATED, 'Content created successfully'));
     } catch (error) {
       next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'Internal server error'));

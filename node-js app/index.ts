@@ -26,16 +26,6 @@ app.use('/auth', routes);
 app.use('/api', routes);
 
 /**
- * @description Root route to check server status
- * @route GET /
- * @returns {object} JSON message confirming the server is running
- */
-app.get('/', (req, res) => {
-    console.log('Received request on /');
-    res.json({ message: 'Docker is easy 👍' });
-});
-
-/**
  * @description Middleware to handle errors
  */
 app.use(errorHandler);
