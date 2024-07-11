@@ -4,6 +4,7 @@ import { DatasetService } from '../services/datasetService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { ContentService } from '../services/contentService';
 import ErrorFactory from '../error/errorFactory';
+import { ErrorMessages } from '../error/errorMessages';
 
 /**
  * Controller class for managing dataset operations.
@@ -46,7 +47,7 @@ class DatasetController {
       const userId = req.user?.id;
 
       if (userId === undefined) {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID));
       }
 
       const datasets = await this.datasetService.getDatasetByUserId(userId);
@@ -68,7 +69,7 @@ class DatasetController {
       const datasets = await this.datasetService.getAllDatasets();
 
       if (!datasets) {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
       }
 
       res.json(datasets);
@@ -89,18 +90,18 @@ class DatasetController {
 
     // Check if the ID is valid
     if (isNaN(id)) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID));
     }
 
     try {
       const dataset = await this.datasetService.getDatasetById(id);
 
       if (!dataset) {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
       }
 
       if (dataset.userId !== userId) {
-        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED));
       }
 
       res.json(dataset);
@@ -120,15 +121,15 @@ class DatasetController {
     const { name, tags } = req.body;
 
     if (!userId) {
-      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED));
     }
 
     if (!name) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "The 'name' field is required." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: ErrorMessages.NAME_REQUIRED });
     }
 
     if (!Array.isArray(tags) || !tags.every(tag => typeof tag === 'string')) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "The 'tags' field must be an array of strings." });
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: ErrorMessages.TAGS_REQUIRED });
     }
 
     const datasetData = { ...req.body, userId };
@@ -157,11 +158,11 @@ class DatasetController {
     // Find the existing dataset
     const existingDataset = await this.datasetService.getDatasetById(id);
     if (!existingDataset) {
-      return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+      return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
     }
 
     if (existingDataset.userId !== userId) {
-      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED));
     }
 
     try {
@@ -181,7 +182,7 @@ class DatasetController {
           const intersection = [...existingContentHashes].filter(hash => currentContentHashes.has(hash));
 
           if (intersection.length > 0) {
-            return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Duplicate content detected in datasets with the same name for the user'));
+            return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
           }
         }
       }
@@ -189,9 +190,9 @@ class DatasetController {
       const datasetUpdated = await this.datasetService.updateDataset(id, datasetData);
 
       if (datasetUpdated) {
-        res.status(StatusCodes.OK).json({ message: "Dataset updated" });
+        res.status(StatusCodes.OK).json({ message: ErrorMessages.DATASET_UPDATED });
       } else {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Failed to update dataset'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.FAILED_UPDATE_DATASET));
       }
     } catch (error) {
       next(error);
@@ -211,17 +212,17 @@ class DatasetController {
     try {
       // Check if the ID is valid
       if (isNaN(id)) {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID));
       }
 
       const dataset = await this.datasetService.getDatasetById(id);
 
       if (!dataset) {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
       }
 
       if (dataset.userId !== userId) {
-        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED));
       }
 
       if (dataset.isDeleted === true) {
@@ -231,9 +232,9 @@ class DatasetController {
       const success = await this.datasetService.deleteDataset(id);
 
       if (success) {
-        res.status(StatusCodes.OK).send({ message: "Dataset eliminated correctly" });
+        res.status(StatusCodes.OK).send({ message: ErrorMessages.DATASET_UPDATED });
       } else {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
       }
     } catch (error) {
       next(error);

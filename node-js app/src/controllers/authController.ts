@@ -122,7 +122,7 @@ class AuthController {
       // Respond with the generated token
       res.json({ token });
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'An error occurred during login'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.ERROR_OCCURED_LOGIN));
     }
   };
 }
