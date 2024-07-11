@@ -4,6 +4,7 @@ import { DatasetService } from '../services/datasetService';
 import { CustomRequest } from '../middleware/authMiddleware';
 import { ContentService } from '../services/contentService';
 import ErrorFactory from '../error/errorFactory';
+import { checkDatasetOverlap } from '../utils/checkDatasetOverlap';
 import { ErrorMessages } from '../error/errorMessages';
 
 /**
@@ -134,6 +135,14 @@ class DatasetController {
 
     const datasetData = { ...req.body, userId };
 
+     let yolo =await checkDatasetOverlap( name, userId, this.datasetService, this.contentService)
+
+     console.log(yolo)
+
+    if (yolo) {
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
+    }
+
     try {
       const dataset = await this.datasetService.createDataset(datasetData);
       res.status(StatusCodes.CREATED).json(dataset);
@@ -167,24 +176,8 @@ class DatasetController {
 
     try {
       // Check for duplicate content if name or userId has been changed
-      if (name || userId) {
-        const datasetsWithSameName = await this.datasetService.getDatasetWithSameName(name, userId);
-
-        for (const dataset of datasetsWithSameName) {
-          if (dataset.id === id) continue;
-
-          const existingContents = (await this.contentService.getContentByDatasetId(dataset.id)) || [];
-          const currentContents = (await this.contentService.getContentByDatasetId(id)) || [];
-
-          const existingContentHashes = new Set(existingContents.map(content => this.datasetService.createContentHash(content)));
-          const currentContentHashes = new Set(currentContents.map(content => this.datasetService.createContentHash(content)));
-
-          const intersection = [...existingContentHashes].filter(hash => currentContentHashes.has(hash));
-
-          if (intersection.length > 0) {
-            return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
-          }
-        }
+      if (await checkDatasetOverlap( name, userId, this.datasetService, this.contentService, id)) {
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
       }
 
       const datasetUpdated = await this.datasetService.updateDataset(id, datasetData);
