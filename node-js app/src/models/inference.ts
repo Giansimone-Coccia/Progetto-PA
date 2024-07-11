@@ -4,7 +4,9 @@ import SequelizeSingleton from '../utils/sequelizeSingleton';
 // Get the singleton instance of Sequelize
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
-// Define interface for InferenceAttributes
+/**
+ * Interface for defining the attributes of the Inference model.
+ */
 interface InferenceAttributes {
   id: number;
   datasetId: number;
@@ -15,10 +17,15 @@ interface InferenceAttributes {
   updatedAt: Date;
 }
 
-// Define interface for InferenceCreationAttributes, allowing optional attributes
+/**
+ * Interface for defining optional attributes when creating a new Inference instance.
+ */
 interface InferenceCreationAttributes extends Optional<InferenceAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
 
-// Define the Inference model class, implementing InferenceAttributes
+/**
+ * Model class for the Inference entity, representing the inferences table in the database.
+ * Implements InferenceAttributes and InferenceCreationAttributes interfaces.
+ */
 class Inference extends Model<InferenceAttributes, InferenceCreationAttributes> implements InferenceAttributes {
   // Define public properties based on InferenceAttributes
   public id!: number;

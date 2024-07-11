@@ -1,4 +1,7 @@
 export const ErrorMessages = {
+    /**
+     * User authentication and registration errors.
+     */
     E_P_R_REQUIRED: "Email, password, and role are required",
     INVALID_EMAIL_FORMAT: "Invalid email format",
     INVALID_PASSWORD_FORMAT: "Password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character.",
@@ -10,6 +13,9 @@ export const ErrorMessages = {
     INVALID_PASSWORD: "Invalid password",
     ERROR_OCCURED_LOGIN: "An error occurred during login",
 
+    /**
+     * Content management errors.
+     */
     CONTENT_NOT_FOUND: "Content not found",
     INVALID_ID: "Invalid ID. ID must be a number",
     FAILED_RETRIEVE_CONTENT: "Failed to retrieve contents",
@@ -26,12 +32,18 @@ export const ErrorMessages = {
     FAILED_DELETE_CONTENT: "Failed to delete content",
     DATA_TYPE_REQUIRED: "data, datasetId, type and name are required",
 
+    /**
+     * Specific field validation errors.
+     */
     NAME_REQUIRED: "The 'name' field is required.",
     TAGS_REQUIRED: "The 'tags' field must be an array of strings.",
     DUPLICATED_CONTENT: "Duplicate content detected in datasets with the same name for the user",
     DATASET_UPDATED: "Dataset updated",
     FAILED_UPDATE_DATASET: "Failed to update dataset",
 
+    /**
+     * Inference-related errors.
+     */
     FAILED_RETRIVE_INFERENCES: "Failed to retrieve inferences",
     INFERENCES_NOT_FOUND: "Inference not found or not completed",
     INFERENCES_FETCH_FAILED: "Failed to fetch inference",
@@ -44,6 +56,9 @@ export const ErrorMessages = {
     JOB_NOT_FOUND: "Job not found",
     ERROR_JOB_STATUS: "Error retrieving job status",
 
+    /**
+     * User management errors.
+     */
     FAILED_RETRIEVE_USERS: "Failed to retrieve users",
     FAILED_FETCH_USER: "Failed to fetch user",
     FAILED_CREATE_USER: "Failed to create user",

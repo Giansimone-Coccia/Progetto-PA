@@ -4,7 +4,9 @@ import SequelizeSingleton from '../utils/sequelizeSingleton';
 // Get the singleton instance of Sequelize
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
-// Define interface for UserAttributes
+/**
+ * Interface for defining the attributes of the User model.
+ */
 interface UserAttributes {
   id: number;
   email: string;
@@ -15,10 +17,15 @@ interface UserAttributes {
   updatedAt: Date;
 }
 
-// Define interface for UserCreationAttributes, allowing optional attributes
+/**
+ * Interface for defining optional attributes when creating a new User instance.
+ */
 interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'tokens' | 'createdAt' | 'updatedAt'> { }
 
-// Define the User model class, implementing UserAttributes
+/**
+ * Model class for the User entity, representing the users table in the database.
+ * Implements UserAttributes and UserCreationAttributes interfaces.
+ */
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   // Define public properties based on UserAttributes
   public id!: number;
