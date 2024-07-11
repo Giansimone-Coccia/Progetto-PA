@@ -3,6 +3,8 @@ import axios from 'axios';
 import { ContentService } from '../services/contentService';
 import { UserService } from '../services/userService';
 import dotenv from 'dotenv';
+import { UserAttributes } from '../models/user';
+import { ContentAttributes } from '../models/content';
 
 const Queue = require('bull');
 
@@ -12,7 +14,7 @@ dotenv.config();  // Carica le variabili dal file .env
 const inferenceQueue = new Queue('inference', process.env.REDIS_URI);
 
 // Process jobs from the inference queue
-inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userId: any; cost: any; contents: any; user: any; }; id: any; progress: (arg0: { state: string; error_code: number; message: string; }) => void; }) => {
+inferenceQueue.process(async (job: { data: { datasetId: number; modelId: string; userId: number; cost: number; contents: ContentAttributes[]; user: UserAttributes; }; id: any; progress: (arg0: { state: string; error_code: number; message: string; }) => void; }) => {
   const { modelId, userId, cost, contents, user } = job.data;
 
   // Initialize service instances using Singleton pattern
