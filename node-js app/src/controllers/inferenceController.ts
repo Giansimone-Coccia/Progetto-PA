@@ -258,7 +258,7 @@ class InferenceController {
             result
           });
         } else {
-          return res.status(parseInt(progress["error_code"])).json({
+          return res.status(progress["error_code"]).json({
             jobId: job.id,
             state: progress["state"],
             message: progress["message"]
