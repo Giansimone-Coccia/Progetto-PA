@@ -91,4 +91,13 @@ export class DatasetService {
   createContentHash(content: ContentAttributes): string {
     return `${content.type}-${content.data}-${content.cost}`;
   }
+
+  /**
+   * Retrieves all datasets for a specific user by their user ID.
+   * @param userId - The ID of the user whose datasets are to be retrieved.
+   * @returns A promise that resolves to an array of dataset attributes.
+   */
+  async getDatasetByUserId(userId: number): Promise<DatasetAttributes[]> {
+    return this.datasetRepository.getDatasetsByUserId(userId);
+  }
 }

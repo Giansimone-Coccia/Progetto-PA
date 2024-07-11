@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { UserService } from '../services/userService';
 import ErrorFactory from '../error/errorFactory';
 import { StatusCodes } from 'http-status-codes';
+import { ErrorMessages } from '../error/errorMessages';
 
 /**
  * Controller class for handling authentication operations.
@@ -45,24 +46,24 @@ class AuthController {
 
     // Check if the required data is present
     if (!email || !password || !role) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Email, password, and role are required'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.E_P_R_REQUIRED));
     }
 
     // Validate email format using regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid email format'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_EMAIL_FORMAT));
     }
 
     // Validate password format using regex
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
     if (!passwordRegex.test(password)) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Password must be at least 8 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character.'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_PASSWORD_FORMAT));
     }
 
     // Check if role is either "user" or "admin"
     if (role !== "user" && role !== "admin") {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Role must be either user or admin'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ROLE));
     }
 
     // Hash the password using bcrypt
@@ -71,14 +72,14 @@ class AuthController {
     try {
       // Check if an admin already exists when registering as admin
       if (await this.userService.getAdmin() && role === "admin") {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Admin already exists'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.ADMIN_EXISTS));
       }
 
       // Create a new user through the UserService
       const newUser = await this.userService.createUser({ email, password: hashedPassword, role });
       res.status(StatusCodes.CREATED).json(newUser);  // Respond with the newly created user
     } catch (error) {
-      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, 'User already exists'));
+      next(ErrorFactory.createError(StatusCodes.INTERNAL_SERVER_ERROR, ErrorMessages.USER_EXISTS));
     }
   };
 
@@ -93,7 +94,7 @@ class AuthController {
 
     // Check if the required data is present
     if (!email || !password) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Email and password are required'));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.E_P_Require));
     }
 
     try {
@@ -102,7 +103,7 @@ class AuthController {
 
       // Check if the user exists
       if (!user) {
-        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'User not found'));
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.USER_NOT_FOUND));
       }
 
       // Verify the entered password with the stored password using bcrypt
@@ -110,7 +111,7 @@ class AuthController {
 
       // Check if the password is valid
       if (!isPasswordValid) {
-        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Invalid password'));
+        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.INVALID_PASSWORD));
       }
 
       // Create a JWT token with the user's data

@@ -36,7 +36,8 @@ router.post('/inferences', authenticateJWT, inferenceController.startInference);
 router.get('/inferences/status/:jobId', authenticateJWT, inferenceController.getStatus); // Route to get inference job status
 
 // Dataset routes (protected)
-router.get('/datasets', authenticateJWT, datasetController.getAllDatasets); // Route to get all datasets
+router.get('/datasets', authenticateJWT, datasetController.getAllDatasetsByUserId); // Route to get all datasets by user id
+router.get('/datasets/admin', authenticateJWT, authorizeAdmin, datasetController.getAllDatasets); // Route to get all datasets
 router.post('/datasets', authenticateJWT, datasetController.createDataset); // Route to create a new dataset
 router.put('/datasets/:id', authenticateJWT, datasetController.updateDataset); // Route to update a dataset
 router.delete('/datasets/:id', authenticateJWT, datasetController.deleteDataset); // Route to delete a dataset

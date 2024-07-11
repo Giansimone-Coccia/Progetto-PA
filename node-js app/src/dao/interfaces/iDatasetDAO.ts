@@ -47,6 +47,13 @@ interface IDatasetDAO {
    * @returns A promise that resolves with an array of dataset attributes matching the name and user ID.
    */
   datasetWithSameName(name: string, userId: number): Promise<DatasetAttributes[]>;
+
+  /**
+   * Retrieves all datasets for a specific user by their user_id.
+   * @param userId - The ID of the user whose datasets are to be retrieved.
+   * @returns A promise that resolves to an array of datasets.
+   */
+  getDatasetsByUserId(userId: number): Promise<DatasetAttributes[]>
 }
 
 export default IDatasetDAO; // Export the IDatasetDAO interface

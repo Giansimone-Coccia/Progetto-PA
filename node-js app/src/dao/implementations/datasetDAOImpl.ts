@@ -6,7 +6,7 @@ import IDatasetDAO from '../interfaces/iDatasetDAO';
  * Implements methods to create, read, update, soft-delete, and find datasets.
  */
 class DatasetDAO implements IDatasetDAO {
-  
+
   private static instance: DatasetDAO; // Singleton instance of DatasetDAO
 
   /**
@@ -89,6 +89,21 @@ class DatasetDAO implements IDatasetDAO {
       { where: { id } } // Find the dataset by ID
     );
     return updatedRows > 0; // Return true if rows were updated, false otherwise
+  }
+
+  /**
+   * Retrieves all datasets for a specific user by their user_id.
+   * @param userId - The ID of the user whose datasets are to be retrieved.
+   * @returns A promise that resolves to an array of datasets.
+   */
+  async getDatasetsByUserId(userId: number): Promise<DatasetAttributes[]> {
+    const datasets = await Dataset.findAll({
+      where: {
+        userId: userId
+      },
+      order: [['createdAt', 'DESC']] // Ordina per data di creazione in ordine decrescente (opzionale)
+    });
+    return datasets;
   }
 }
 

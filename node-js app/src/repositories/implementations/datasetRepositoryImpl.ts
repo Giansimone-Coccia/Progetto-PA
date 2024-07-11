@@ -78,6 +78,15 @@ class DatasetRepository implements IDatasetRepository {
   async datasetWithSameName(name: string, userId: number): Promise<DatasetAttributes[]> {
     return this.datasetDAO.datasetWithSameName(name, userId); // Call DAO method to find datasets with same name and user ID
   }
+
+  /**
+   * Retrieves all datasets for a specific user by their user ID.
+   * @param userId - The ID of the user whose datasets are to be retrieved.
+   * @returns A promise that resolves to an array of dataset attributes.
+   */
+  async getDatasetsByUserId(userId: number): Promise<DatasetAttributes[]> {
+    return this.datasetDAO.getDatasetsByUserId(userId); // Call DAO method to find datasets
+  }
 }
 
 // Export DatasetRepository class as default export

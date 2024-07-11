@@ -44,6 +44,13 @@ interface IDatasetRepository {
    * @returns Promise resolved with an array of DatasetAttributes that match the criteria.
    */
   datasetWithSameName(name: string, userId: number): Promise<DatasetAttributes[]>;
+
+  /**
+   * Retrieves all datasets for a specific user by their user ID.
+   * @param userId - The ID of the user whose datasets are to be retrieved.
+   * @returns A promise that resolves to an array of dataset attributes.
+   */
+  getDatasetsByUserId(userId: number): Promise<DatasetAttributes[]>
 }
 
 // Export the IDatasetRepository interface as the default export

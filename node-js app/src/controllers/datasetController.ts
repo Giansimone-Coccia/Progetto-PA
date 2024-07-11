@@ -35,14 +35,42 @@ class DatasetController {
   }
 
   /**
-   * Controller method to get all datasets.
+   * Controller method to get all datasets by user ID.
+   * @param req - The Express request object containing user information.
+   * @param res - The Express response object.
+   * @param next - The Express next function for error handling.
+   * @returns A JSON response with all datasets retrieved from the database.
+   */
+  public getAllDatasetsByUserId = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.id;
+
+      if (userId === undefined) {
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Invalid ID. ID must be a number'));
+      }
+
+      const datasets = await this.datasetService.getDatasetByUserId(userId);
+      res.json(datasets);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Controller method to retrieve all datasets.
    * @param req - The Express request object.
    * @param res - The Express response object.
+   * @param next - The Express next function for error handling.
    * @returns A JSON response with all datasets retrieved from the database.
    */
   public getAllDatasets = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const datasets = await this.datasetService.getAllDatasets();
+
+      if (!datasets) {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
+      }
+
       res.json(datasets);
     } catch (error) {
       next(error);
@@ -176,8 +204,14 @@ class DatasetController {
 
       if (!dataset) {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
-      } else if (dataset.userId !== userId) {
+      }
+      
+      if (dataset.userId !== userId) {
         return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+      }
+
+      if (dataset.isDeleted === true) {
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Dataset already deleted'));
       }
 
       const success = await this.datasetService.deleteDataset(id);
