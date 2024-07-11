@@ -625,7 +625,7 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 
 #### Parametri della Richiesta nel Body
 Per questa rotta è necessario impostare *form-data* per il caricamento dei dati.
-- `data`: Di tipo *File* consente di caricare un file a scelta tra *zip, jpg, png, mp4, webp*.
+- `data`: Di tipo *File* consente di caricare un file a scelta tra *zip, jpg, png, mp4*.
 - `datasetId`: Id del dataset in cui inserire il contenuto.
 - `type`: Tipologia di file a scleta tra *zip, video, image*.
 - `name`: Nome del nuovo contenuto.

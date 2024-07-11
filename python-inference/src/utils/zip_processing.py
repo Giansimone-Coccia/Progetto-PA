@@ -45,16 +45,18 @@ def process_zip(zip_data, model, class_names):
                                                                                 model, class_names)
                         
                 elif mime_type and mime_type.startswith('image'):
-                    # Use BytesIO to create a stream-like object
-                    file_stream = BytesIO(file_data)
-                    try:
-                        input_image = Image.open(file_stream)
-                        if model == 'clustering':
-                            results.append([filename_zip.split('/', 1)[-1], input_image])
-                        else:
-                            results[filename_zip.split('/', 1)[-1]] = predict_image(input_image, model, class_names)
-                    except UnidentifiedImageError:
-                        logging.error(f"Unable to identify the image: {filename_zip}")
+                    # Check if the image type is JPEG or PNG
+                    if mime_type == 'image/jpeg' or mime_type == 'image/png':
+                        # Use BytesIO to create a stream-like object
+                        file_stream = BytesIO(file_data)
+                        try:
+                            input_image = Image.open(file_stream)
+                            if model == 'clustering':
+                                results.append([filename_zip.split('/', 1)[-1], input_image])
+                            else:
+                                results[filename_zip.split('/', 1)[-1]] = predict_image(input_image, model, class_names)
+                        except UnidentifiedImageError:
+                            logging.error(f"Unable to identify the image: {filename_zip}")
 
                 elif mime_type and mime_type == 'application/zip':
                     # Process nested zip files
