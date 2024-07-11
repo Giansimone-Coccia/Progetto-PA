@@ -82,13 +82,27 @@ class DatasetController {
   };
 
   /**
-   * Controller method to create a new dataset.
-   * @param req - The Express request object containing dataset data.
-   * @param res - The Express response object.
-   * @returns A JSON response with the newly created dataset or an error message if creation fails.
-   */
+     * Controller method to create a new dataset.
+     * @param req - The Express request object containing dataset data.
+     * @param res - The Express response object.
+     * @returns A JSON response with the newly created dataset or an error message if creation fails.
+     */
   public createDataset = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const userId = req.user?.id;
+    const { name, tags } = req.body;
+
+    if (!userId) {
+      return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
+    }
+
+    if (!name) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "The 'name' field is required." });
+    }
+
+    if (!Array.isArray(tags) || !tags.every(tag => typeof tag === 'string')) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "The 'tags' field must be an array of strings." });
+    }
+
     const datasetData = { ...req.body, userId };
 
     try {
@@ -176,8 +190,8 @@ class DatasetController {
 
       if (!dataset) {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, 'Dataset not found'));
-      } 
-      
+      }
+
       if (dataset.userId !== userId) {
         return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, 'Unauthorized'));
       }
