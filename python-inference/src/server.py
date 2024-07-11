@@ -101,7 +101,8 @@ def predict():
                         all_results[filename] = video_data
 
                 else:
-                    raise CustomError(f"{ErrorMessages.UNSUPPORTED_TYPE}: {file_type}", HTTPStatus.BAD_REQUEST)
+                    raise CustomError(f"{ErrorMessages.UNSUPPORTED_TYPE}: {file_type}",
+                                      HTTPStatus.BAD_REQUEST)
 
             if model == 'clustering':
                 clustering_instance = Clustering()
