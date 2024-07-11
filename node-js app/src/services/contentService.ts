@@ -181,7 +181,7 @@ export class ContentService {
       const zip = new AdmZip(data); // Initialize AdmZip with provided data
       const zipEntries = zip.getEntries(); // Retrieve entries from the zip file
 
-      let imageCount = [0, 0]; // Initialize array to store counts of images and video frames
+      const imageCount = [0, 0]; // Initialize array to store counts of images and video frames
 
       for (const entry of zipEntries) {
         if (entry.name.match(/\.(jpg|jpeg|png)$/i)) {

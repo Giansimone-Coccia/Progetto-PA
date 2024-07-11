@@ -52,7 +52,7 @@ inferenceQueue.process(async (job: { data: { datasetId: any; modelId: any; userI
     }
 
     // Update user tokens after deducting the inference cost
-    let tokens = user.tokens - cost;
+    const tokens = user.tokens - cost;
     await userService.updateUser(userId, { tokens });
 
     // Create an inference record using the Inference service
