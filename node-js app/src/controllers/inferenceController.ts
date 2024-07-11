@@ -65,10 +65,15 @@ class InferenceController {
    */
   public getInferenceById = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
+    const userId = req.user?.id;
     try {
       // Check if the ID is valid
       if (!id) {
         return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.INVALID_ID));
+      }
+
+      if (!userId) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: ErrorMessages.INVALID_USER_ID });
       }
 
       // Get the inference from the service
@@ -77,6 +82,12 @@ class InferenceController {
       // Check if the inference exists
       if (!inference) {
         return res.status(StatusCodes.NOT_FOUND).json({ message: ErrorMessages.INFERENCES_NOT_FOUND });
+      }
+
+      const dataset = await this.datasetService.getDatasetById(inference.datasetId);
+
+      if (dataset?.userId !== userId) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: ErrorMessages.UNAUTHORIZED_ACCESS_DATASET });
       }
 
       res.json(inference);
