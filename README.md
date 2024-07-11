@@ -8,7 +8,9 @@
 Il progetto consiste nella realizzazione di un sistema backend per la gestione delle inferenze su immagini, video e file zip, utilizzando modelli di Deep Learning pre-addestrati per l'armocromia. Il sistema permette agli utenti di creare dataset, caricare contenuti, eseguire inferenze e gestire crediti attraverso un sistema di autenticazione JWT. I modelli messi a disposizioni restituiscono, data un'immagine in input, la propabilità che quest'ultima appartenga ad una data classe come ad esempio primavera, autunno, inverno... per il modello a 4 classi, summer light, autunno deep... per il modello a 12 classi (in cui vengono individuate 3 sottocategorie per ciascuna stagione).
 
 ## Progettazione DB
-Di seguito riportiamo il diagramma E-R (Entity-relationship) utilizzato per la progettazione del database. Quest'ultimo è basato su MySQL ed è stato impostato su un server esterno. Il diagramma mostra quattro entità: *Users*, *Contents*, *Datasets* e *Inferences*, ciscuno dei quali con i propri attributi.
+Di seguito riportiamo il diagramma E-R (Entity-relationship) utilizzato per la progettazione del database. Quest'ultimo è basato su MySQL ed è stato impostato su un server esterno. Per accedere al DB è possibile collegarsi al segeunte link ed effettuare l'accesso: https://www.db4free.net/phpMyAdmin/ 
+
+Il diagramma mostra quattro entità: *Users*, *Contents*, *Datasets* e *Inferences*, ciscuno dei quali con i propri attributi.
 
 <p align="center">
   <img src="./docs/diagramma_pa.png" alt="Diagramma E-R">
@@ -139,10 +141,10 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 1. Clonare il repository nella propria directory o scaricare direttamente il file .zip:
    ```bash
    git clone https://github.com/Giansimone-Coccia/Progetto-PA.git
-2. Esegire le migrations (opzionale):
+2. Esegire le migrations (opzionale, il DB contiene già dati basilari):
    ```bash
    npx sequelize-cli db:migrate
-4. Eseguire i seeders (opzionale):
+4. Eseguire i seeders (opzionale, il DB contiene già dati basilari):
    ```bash
    npx sequelize-cli db:seed:all
 5. Eseguire la build del progetto:
