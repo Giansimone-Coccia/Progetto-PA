@@ -9,7 +9,7 @@ import ContentRepository from '../repositories/implementations/contentRepository
  */
 export class ContentService {
   private static instance: ContentService;
-  private contentRepository: IContentRepository;
+  private readonly contentRepository: IContentRepository;
 
   /**
    * Private constructor to initialize ContentRepository instance.

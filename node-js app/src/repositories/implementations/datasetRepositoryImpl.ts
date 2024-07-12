@@ -6,7 +6,7 @@ import IDatasetRepository from '../interfaces/iDatasetRepository'; // Import int
 // Repository class implementing IDatasetRepository interface
 class DatasetRepository implements IDatasetRepository {
   private static instance: DatasetRepository; // Static instance of DatasetRepository
-  private datasetDAO: IDatasetDAO; // Instance of dataset DAO interface
+  private readonly datasetDAO: IDatasetDAO; // Instance of dataset DAO interface
 
   // Private constructor to initialize dataset DAO instance
   private constructor() {

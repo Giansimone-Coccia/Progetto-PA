@@ -6,7 +6,7 @@ import IContentRepository from '../interfaces/iContentRepository'; // Importing 
 // Repository class implementing IContentRepository interface
 class ContentRepository implements IContentRepository {
   private static instance: ContentRepository;
-  private contentDAO: IContentDAO;
+  private readonly contentDAO: IContentDAO;
 
   // Private constructor initializes ContentDAO instance
   private constructor() {

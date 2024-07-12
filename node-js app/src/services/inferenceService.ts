@@ -7,7 +7,7 @@ import IInferenceRepository from '../repositories/interfaces/iInferenceRepositor
  */
 export class InferenceService {
   private static instance: InferenceService;
-  private inferenceRepository: IInferenceRepository;
+  private readonly inferenceRepository: IInferenceRepository;
 
   /**
    * Private constructor initializes InferenceRepository instance.

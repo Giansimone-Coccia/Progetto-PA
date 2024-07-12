@@ -15,10 +15,10 @@ import { ErrorMessages } from '../error/errorMessages';
  */
 class InferenceController {
   private static instance: InferenceController;  // Singleton instance of the class
-  private inferenceService: InferenceService;    // Service for managing inferences
-  private datasetService: DatasetService;
-  private contentService: ContentService;
-  private userService: UserService;
+  private readonly inferenceService: InferenceService;    // Service for managing inferences
+  private readonly datasetService: DatasetService;
+  private readonly contentService: ContentService;
+  private readonly userService: UserService;
 
   /**
    * Private constructor to implement the Singleton pattern.

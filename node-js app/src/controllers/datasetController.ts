@@ -13,8 +13,8 @@ import { ErrorMessages } from '../error/errorMessages';
  */
 class DatasetController {
   private static instance: DatasetController;  // Singleton instance of the class
-  private datasetService: DatasetService;      // Service for managing datasets
-  private contentService: ContentService;      // Service for managing content
+  private readonly datasetService: DatasetService;      // Service for managing datasets
+  private readonly contentService: ContentService;      // Service for managing content
 
   /**
    * Private constructor to implement the Singleton pattern.

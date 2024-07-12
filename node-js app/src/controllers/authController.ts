@@ -12,8 +12,8 @@ import { ErrorMessages } from '../error/errorMessages';
  */
 class AuthController {
   private static instance: AuthController;  // Singleton instance of the class
-  private userService: UserService;         // Service for managing users
-  private secret: string;                   // Secret for signing JWT tokens
+  private readonly userService: UserService;         // Service for managing users
+  private readonly secret: string;                   // Secret for signing JWT tokens
 
   /**
    * Private constructor to implement the Singleton pattern.

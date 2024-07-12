@@ -6,7 +6,7 @@ import IUserRepository from '../interfaces/iUserRepository'; // Import interface
 // Repository class implementing IUserRepository interface
 class UserRepository implements IUserRepository {
   private static instance: UserRepository; // Static instance of UserRepository
-  private userDAO: IUserDAO; // Instance of user DAO interface
+  private readonly userDAO: IUserDAO; // Instance of user DAO interface
 
   // Private constructor to initialize user DAO instance
   private constructor() {

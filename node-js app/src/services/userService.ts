@@ -7,7 +7,7 @@ import IUserRepository from '../repositories/interfaces/iUserRepository'; // Imp
  */
 export class UserService {
   private static instance: UserService;
-  private userRepository: IUserRepository;
+  private readonly userRepository: IUserRepository;
 
   /**
    * Private constructor initializes UserRepository instance.
