@@ -174,14 +174,14 @@ export class ContentService {
   /**
    * Counts the number of images and video frames in a zip file, including nested zip files.
    * @param data - The Buffer containing zip file data.
-   * @returns An array containing the number of images and video frames found in the zip file, or null if an error occurs.
+   * @returns A tuple containing the number of images and video frames found in the zip file, or null if an error occurs.
    */
-  private async countMediaInZip(data: Buffer): Promise<number[] | null> {
+  private async countMediaInZip(data: Buffer): Promise<[number, number] | null> {
     try {
       const zip = new AdmZip(data); // Initialize AdmZip with provided data
       const zipEntries = zip.getEntries(); // Retrieve entries from the zip file
 
-      const imageCount = [0, 0]; // Initialize array to store counts of images and video frames
+      const imageCount: [number, number] = [0, 0]; // Initialize tuple to store counts of images and video frames
 
       for (const entry of zipEntries) {
         if (entry.name.match(/\.(jpg|jpeg|png)$/i)) {
