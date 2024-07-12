@@ -94,7 +94,7 @@ class AuthController {
 
     // Check if the required data is present
     if (!email || !password) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.E_P_Require));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.E_P_REQUIRE));
     }
 
     try {

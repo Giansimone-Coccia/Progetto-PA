@@ -8,7 +8,7 @@ export const ErrorMessages = {
     INVALID_ROLE: "Role must be either user or admin",
     ADMIN_EXISTS: "Admin already exists",
     USER_EXISTS: "User already exists",
-    E_P_Require: "Email and password are required",
+    E_P_REQUIRE: "Email and password are required",
     USER_NOT_FOUND: "User not found",
     INVALID_PASSWORD: "Invalid password",
     ERROR_OCCURED_LOGIN: "An error occurred during login",
