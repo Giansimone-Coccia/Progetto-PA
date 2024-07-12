@@ -20,9 +20,9 @@ export async function checkDatasetOverlap(
     datasetId: number | null = null,
     newContent: ContentAttributes[] = []
 ): Promise<boolean> {
-    // Check for duplicate content if name or userId has been changed
+    // Return true if neither datasetName nor userId has been provided
     if (!datasetName && !userId) {
-        return true; // No need to check if neither name nor userId has changed
+        return true;
     }
 
     // Fetch datasets with the same name and user ID
@@ -34,24 +34,16 @@ export async function checkDatasetOverlap(
             continue; // Skip the dataset being edited
         }
 
-        let currentContents: ContentAttributes[] = [];
-        let currentContentHashes: Set<string> = new Set<string>();
+        // Fetch current contents and include new content if datasetId is provided
+        const currentContents = datasetId !== null 
+            ? [...(await contentService.getContentByDatasetId(datasetId) || []), ...newContent] 
+            : [];
 
-        // If datasetId is provided, fetch current contents and include new content
-        if (datasetId !== null) {
-            currentContents = await contentService.getContentByDatasetId(datasetId) || [];
-            currentContents = currentContents.concat(newContent);
-            currentContentHashes = new Set(currentContents.map(content => datasetService.createContentHash(content)));
-        }
+        const currentContentHashes = new Set(currentContents.map(content => datasetService.createContentHash(content)));
 
         // Fetch existing contents of the current dataset
         const existingContents = await contentService.getContentByDatasetId(dataset.id) || [];
-        let existingContentHashes: Set<string> = new Set<string>();
-
-        // If existing contents exist, create content hashes
-        if (existingContents.length !== 0) {
-            existingContentHashes = new Set(existingContents.map(content => datasetService.createContentHash(content)));
-        }
+        const existingContentHashes = new Set(existingContents.map(content => datasetService.createContentHash(content)));
 
         // If both datasets have no contents, they overlap
         if (existingContents.length === 0 && currentContents.length === 0) {
@@ -59,9 +51,7 @@ export async function checkDatasetOverlap(
         }
 
         // Check for intersection of content hashes
-        const intersection = [...existingContentHashes].filter(hash => currentContentHashes.has(hash));
-
-        if (intersection.length > 0) {
+        if ([...existingContentHashes].some(hash => currentContentHashes.has(hash))) {
             return true; // Found overlapping content
         }
     }
