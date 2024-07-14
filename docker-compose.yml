@@ -1,35 +1,36 @@
-version: '3.8'
+version: '3.8' # Specifies the version of the Docker Compose file
+
 services:
-  app:
-    build: ./node-js app
+  app: # Defines the main application service
+    build: ./node-js app # Builds the Docker image from the Node.js application
     env_file:
-      - .env
+      - .env # Uses environment variables from the .env file
     ports:
-      - "${APP_INTERNAL_PORT}:${APP_EXTERNAL_PORT}"
+      - "${APP_INTERNAL_PORT}:${APP_EXTERNAL_PORT}" # Maps internal and external ports for the app
     depends_on:
-      - redis
-      - inference
+      - redis # Ensures the redis service is started before the app
+      - inference # Ensures the inference service is started before the app
     networks:
-      - my_network
+      - my_network # Connects the app service to the custom network
 
-  redis:
-    image: redis:alpine
+  redis: # Defines the Redis service
+    image: redis:alpine # Uses the Redis image based on Alpine Linux
     env_file:
-      - .env
+      - .env # Uses environment variables from the .env file
     ports:
-      - "${REDIS_INTERNAL_PORT}:${REDIS_EXTERNAL_PORT}"
+      - "${REDIS_INTERNAL_PORT}:${REDIS_EXTERNAL_PORT}" # Maps internal and external ports for Redis
     networks:
-      - my_network
+      - my_network # Connects the Redis service to the custom network
 
-  inference:
-    build: ./python-inference
+  inference: # Defines the inference service
+    build: ./python-inference # Builds the Docker image from the Python inference application
     env_file:
-      - .env
+      - .env # Uses environment variables from the .env file
     ports:
-      - "${PYTHON_INTERNAL_PORT}:${PYTHON_EXTERNAL_PORT}"
+      - "${PYTHON_INTERNAL_PORT}:${PYTHON_EXTERNAL_PORT}" # Maps internal and external ports for the inference service
     networks:
-      - my_network
+      - my_network # Connects the inference service to the custom network
 
 networks:
   my_network:
-    driver: bridge
+    driver: bridge # Specifies the network driver as bridge

@@ -8,12 +8,15 @@ import { ContentAttributes } from '../models/content';
 
 const Queue = require('bull');
 
-dotenv.config();  // Carica le variabili dal file .env
+dotenv.config();  // Load environment variables from .env file
 
 // Create a new Bull queue named 'inference' using the provided Redis URI
 const inferenceQueue = new Queue('inference', process.env.REDIS_URI);
 
-// Process jobs from the inference queue
+/**
+ * Process jobs from the inference queue asynchronously.
+ * This function handles the inference process, interacting with services and updating job status.
+ */
 inferenceQueue.process(async (job: { data: { datasetId: number; modelId: string; userId: number; cost: number; contents: ContentAttributes[]; user: UserAttributes; }; id: any; progress: (arg0: { state: string; error_code: number; message: string; }) => void; }) => {
   const { modelId, userId, cost, contents, user } = job.data;
 
@@ -36,9 +39,11 @@ inferenceQueue.process(async (job: { data: { datasetId: number; modelId: string;
   const jsonContents = contentService.reduceContents(contents);
 
   try {
+    // Evaluate max content length from environment variable or default to 100MB
     const maxContentLengthStr = process.env.MAX_CONTENT_LENGTH || "100 * 1024 * 1024";
     const maxContentLength = eval(maxContentLengthStr);
 
+    // Make POST request to inference service endpoint
     const response = await axios.post(`${process.env.INFERENCE_URL}/predict`, { jsonContents, modelId }, {
       maxContentLength: maxContentLength, // Max content length allowed in the request
       maxBodyLength: maxContentLength // Max body length allowed in the request

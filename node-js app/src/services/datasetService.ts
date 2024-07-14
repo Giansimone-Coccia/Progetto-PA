@@ -8,7 +8,7 @@ import IDatasetRepository from '../repositories/interfaces/iDatasetRepository';
  */
 export class DatasetService {
   private static instance: DatasetService;
-  private datasetRepository: IDatasetRepository;
+  private readonly datasetRepository: IDatasetRepository;
 
   /**
    * Private constructor initializes DatasetRepository instance.

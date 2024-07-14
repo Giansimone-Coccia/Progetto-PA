@@ -12,8 +12,8 @@ import { ErrorMessages } from '../error/errorMessages';
  */
 class AuthController {
   private static instance: AuthController;  // Singleton instance of the class
-  private userService: UserService;         // Service for managing users
-  private secret: string;                   // Secret for signing JWT tokens
+  private readonly userService: UserService;         // Service for managing users
+  private readonly secret: string;                   // Secret for signing JWT tokens
 
   /**
    * Private constructor to implement the Singleton pattern.
@@ -94,7 +94,7 @@ class AuthController {
 
     // Check if the required data is present
     if (!email || !password) {
-      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.E_P_Require));
+      return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.E_P_REQUIRE));
     }
 
     try {

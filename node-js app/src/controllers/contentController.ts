@@ -15,9 +15,9 @@ import { ErrorMessages } from '../error/errorMessages';
  */
 class ContentController {
   private static instance: ContentController;  // Singleton instance of the class
-  private contentService: ContentService;      // Service for managing content
-  private datasetService: DatasetService;      // Service for managing datasets
-  private userService: UserService;            // Service for managing users
+  private readonly contentService: ContentService;      // Service for managing content
+  private readonly datasetService: DatasetService;      // Service for managing datasets
+  private readonly userService: UserService;            // Service for managing users
 
   /**
    * Private constructor to implement the Singleton pattern.

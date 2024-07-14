@@ -6,7 +6,7 @@ import IInferenceRepository from '../interfaces/iInferenceRepository'; // Import
 // Repository class implementing IInferenceRepository interface
 class InferenceRepository implements IInferenceRepository {
   private static instance: InferenceRepository; // Static instance of InferenceRepository
-  private inferenceDAO: IInferenceDAO; // Instance of inference DAO interface
+  private readonly inferenceDAO: IInferenceDAO; // Instance of inference DAO interface
 
   // Private constructor to initialize inference DAO instance
   private constructor() {

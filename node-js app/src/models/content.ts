@@ -4,22 +4,29 @@ import SequelizeSingleton from '../utils/sequelizeSingleton';
 // Get the singleton instance of Sequelize
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
-// Define interface for ContentAttributes
+/**
+ * Interface for defining the attributes of the Content model.
+ */
 interface ContentAttributes {
   id: number;
   datasetId: number;
   type: string;
-  data: Buffer; // Assuming data is stored as a Buffer (blob)
+  data: Buffer; 
   cost: number;
-  name: string; // New attribute 'name' added here
+  name: string; 
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Define interface for ContentCreationAttributes, allowing optional attributes
+/**
+ * Interface for defining optional attributes when creating a new Content instance.
+ */
 interface ContentCreationAttributes extends Optional<ContentAttributes, 'id' | 'createdAt' | 'updatedAt'> { }
 
-// Define the Content model class, implementing ContentAttributes
+/**
+ * Model class for the Content entity, representing the contents table in the database.
+ * Implements ContentAttributes and ContentCreationAttributes interfaces.
+ */
 class Content extends Model<ContentAttributes, ContentCreationAttributes> implements ContentAttributes {
   // Define public properties based on ContentAttributes
   public id!: number;

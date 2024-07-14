@@ -4,7 +4,9 @@ import SequelizeSingleton from '../utils/sequelizeSingleton';
 // Get the singleton instance of Sequelize
 const sequelizeInstance = SequelizeSingleton.getInstance().getSequelizeInstance();
 
-// Define interface for DatasetAttributes
+/**
+ * Interface for defining the attributes of the Dataset model.
+ */
 interface DatasetAttributes {
   id: number;
   userId: number;
@@ -15,10 +17,15 @@ interface DatasetAttributes {
   updatedAt: Date;
 }
 
-// Define interface for DatasetCreationAttributes, allowing optional attributes
+/**
+ * Interface for defining optional attributes when creating a new Dataset instance.
+ */
 interface DatasetCreationAttributes extends Optional<DatasetAttributes, 'id' | 'isDeleted' | 'createdAt' | 'updatedAt'> { }
 
-// Define the Dataset model class, implementing DatasetAttributes
+/**
+ * Model class for the Dataset entity, representing the datasets table in the database.
+ * Implements DatasetAttributes and DatasetCreationAttributes interfaces.
+ */
 class Dataset extends Model<DatasetAttributes, DatasetCreationAttributes> implements DatasetAttributes {
   // Define public properties based on DatasetAttributes
   public id!: number;

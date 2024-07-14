@@ -10,8 +10,8 @@ import { ErrorMessages } from '../error/errorMessages';
  * Provides methods for CRUD operations on users and user-specific actions.
  */
 class UserController {
-  private userService: UserService; // Service for managing user-related operations
   private static instance: UserController; // Singleton instance of the class
+  private readonly userService: UserService; // Service for managing user-related operations
 
   /**
    * Private constructor to implement the Singleton pattern.
