@@ -52,7 +52,12 @@ class DatasetController {
       }
 
       const datasets = await this.datasetService.getDatasetByUserId(userId);
-      res.json(datasets);
+      if (datasets.length > 0) {
+        res.json(datasets);
+      }
+      else {
+        return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.NO_DATASET_FOUND));
+      }
     } catch (error) {
       next(error);
     }
@@ -135,7 +140,7 @@ class DatasetController {
 
     const datasetData = { ...req.body, userId };
 
-    if (await checkDatasetOverlap( name, userId, this.datasetService, this.contentService)) {
+    if (await checkDatasetOverlap(name, userId, this.datasetService, this.contentService)) {
       return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
     }
 
@@ -160,9 +165,14 @@ class DatasetController {
     const datasetData = { ...req.body, userId, updatedAt };
     const { name } = datasetData;
 
+    if (name === "") {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: ErrorMessages.NAME_REQUIRED });
+    }
+
     // Find the existing dataset
     const existingDataset = await this.datasetService.getDatasetById(id);
-    if (!existingDataset) {
+
+    if (!existingDataset || existingDataset.isDeleted === true) {
       return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
     }
 
@@ -171,9 +181,12 @@ class DatasetController {
     }
 
     try {
-      // Check for duplicate content if name or userId has been changed
-      if (await checkDatasetOverlap( name, userId, this.datasetService, this.contentService, id)) {
-        return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
+      // Check for duplicate content if name has been changed
+      if (name) {
+        const isDuplicate = await checkDatasetOverlap(name, userId, this.datasetService, this.contentService, id);
+        if (isDuplicate) {
+          return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.DUPLICATED_CONTENT));
+        }
       }
 
       const datasetUpdated = await this.datasetService.updateDataset(id, datasetData);
@@ -215,7 +228,7 @@ class DatasetController {
       }
 
       if (dataset.isDeleted === true) {
-        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, 'Dataset already deleted'));
+        return next(ErrorFactory.createError(StatusCodes.BAD_REQUEST, ErrorMessages.DATASET_ALREADY_DELETED));
       }
 
       const success = await this.datasetService.deleteDataset(id);

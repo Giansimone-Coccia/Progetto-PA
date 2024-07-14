@@ -114,7 +114,7 @@ class ContentController {
       const dataset = await this.datasetService.getDatasetById(datasetId);
 
       // Check if the dataset exists
-      if (!dataset) {
+      if (!dataset || dataset.isDeleted === true) {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
       }
 

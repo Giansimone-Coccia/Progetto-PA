@@ -194,7 +194,7 @@ class InferenceController {
       const dataset = await this.datasetService.getDatasetById(datasetId);
 
       // Dataset existence check
-      if (!dataset) {
+      if (!dataset || dataset.isDeleted === true) {
         return next(ErrorFactory.createError(StatusCodes.NOT_FOUND, ErrorMessages.DATASET_NOT_FOUND));
       }
 

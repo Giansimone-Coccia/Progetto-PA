@@ -20,6 +20,8 @@ export enum ErrorMessages {
     INVALID_ID = "Invalid ID. ID must be a number",
     FAILED_RETRIEVE_CONTENT = "Failed to retrieve contents",
     DATASET_NOT_FOUND = "Dataset not found",
+    NO_DATASET_FOUND = "No dataset found for this user",
+    DATASET_ALREADY_DELETED = "Dataset already deleted",
     UNAUTHORIZED_ACCESS_DATASET = "Unauthorized access to dataset",
     NO_FILE_UPLOADED = "No file uploaded",
     INVALID_FILE_TYPE = "Invalid file type",
@@ -39,6 +41,7 @@ export enum ErrorMessages {
     TAGS_REQUIRED = "The 'tags' field must be an array of strings.",
     DUPLICATED_CONTENT = "Duplicate content detected in datasets with the same name for the user",
     DATASET_UPDATED = "Dataset updated",
+    DATASET_DELETED = "Dataset deleted correctly",
     FAILED_UPDATE_DATASET = "Failed to update dataset",
 
     /**
