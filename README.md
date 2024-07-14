@@ -382,7 +382,7 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 ##### Risposta per il modello 1
 ```json
 {
-   "id":1234,
+   "id":123,
    "datasetId":123,
    "model":"1",
    "result":{
