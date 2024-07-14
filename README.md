@@ -620,22 +620,21 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
    "model":"2",
    "result":{
     "cluster_0": {
-        "centroid": [0.746, 0.646, 0.558, ...],
-        "images": ["video.mp4/frame_11", ...]
+        "centroid": [0.746, 0.646, 0.558], //...
+        "images": ["video.mp4/frame_11"] //...
     },
     "cluster_1": {
-        "centroid": [0.644, 0.563, 0.49, ...],
-        "images": ["video.mp4/frame_12", ...]
+        "centroid": [0.644, 0.563, 0.49], //...
+        "images": ["video.mp4/frame_12"] //...
     },
-    ...
+    //...
     "cluster_12": {
-            "centroid": [0.902, 0.675, 0.518, ...],
-            "images": ["video.mp4/frame_12", ...]
+            "centroid": [0.902, 0.675, 0.518], //...
+            "images": ["video.mp4/frame_12"] //...
         }
     }
 }
 ```
-
 
 ### Creazione dataset
 **POST** http://localhost:3000/api/datasets
