@@ -476,7 +476,7 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 ##### Body della Richiesta
 ```json
 {
-  "name": "Dataset Example 12",
+  "name": "Dataset",
   "tags": ["data science", "AI", "deep learning"]
 }
 ```
@@ -485,7 +485,7 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 {
     "isDeleted": false,
     "id": 3,
-    "name": "Dataset Example 12",
+    "name": "Dataset",
     "tags": [
         "data science",
         "AI",
@@ -528,7 +528,7 @@ Può essere un JSONArray contenente informazioni su tutti datasets.
     {
         "id": 1,
         "userId": 1,
-        "name": "Dataset figo",
+        "name": "Dataset 1",
         "tags": [
             "ML"
         ],
@@ -539,7 +539,7 @@ Può essere un JSONArray contenente informazioni su tutti datasets.
     {
         "id": 2,
         "userId": 1,
-        "name": "Dataset nuovo",
+        "name": "Dataset 2",
         "tags": [
             "ML",
             "Prova"
@@ -606,7 +606,7 @@ Può essere un JSONArray contenente informazioni su tutti datasets.
     {
         "id": 3,
         "userId": 1,
-        "name": "Dataset Example 12",
+        "name": "Dataset 3",
         "tags": [
             "data science",
             "AI",
@@ -643,8 +643,8 @@ Per eseguire questa rotta è necessario che l'utente abbia effettuato l'accesso 
 ##### Body della Richiesta
 ```json
 {
-  "name": "Dataset nuovo",
-  "tags": ["ML", "Prova"]
+  "name": "Dataset aggiornato",
+  "tags": ["ML", "IA"]
 }
 ```
 ##### Risposta
