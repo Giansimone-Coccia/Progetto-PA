@@ -141,19 +141,19 @@ Di seguito riportiamo i requisiti e le istruzioni necessarie per avviare corrett
 1. Clonare il repository nella propria directory o scaricare direttamente il file .zip:
    ```bash
    git clone https://github.com/Giansimone-Coccia/Progetto-PA.git
-2. Esegire le migrations (opzionale, il DB contiene già dati basilari):
+2. Esegire le migrations dentro la directory [database](https://github.com/Giansimone-Coccia/Progetto-PA/tree/main/node-js%20app/src/database) (opzionale, il DB contiene già dati basilari):
    ```bash
    npx sequelize-cli db:migrate
-4. Eseguire i seeders (opzionale, il DB contiene già dati basilari):
+3. Eseguire i seeders dentro la directory [database](https://github.com/Giansimone-Coccia/Progetto-PA/tree/main/node-js%20app/src/database) (opzionale, il DB contiene già dati basilari):
    ```bash
    npx sequelize-cli db:seed:all
-5. Eseguire la build del progetto:
+4. Eseguire la build del progetto:
    ```bash
    docker-compose build
-6. Eseguire il run del progetto:
+5. Eseguire il run del progetto:
    ```bash
    docker-compose up OPPURE docker-compose up --build
-7. Eseguire le chiamate su Postman
+6. Eseguire le chiamate su Postman
 
 ## Rotte Disponibili
 E' possibile utilizzare strumenti come Postman per eseguire facilmente le chiamate alle rotte API seguenti.
