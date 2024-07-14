@@ -3,6 +3,9 @@
   <img src="./docs/Armocromia.png" alt="Armocromia">
 </p>
 
+## Link Collection rotte Postman
+[Link](https://gianswaltico.postman.co/workspace/gians_waltico-Workspace~4a40b144-79ef-41da-8d0e-207fd3d24b70/collection/36717994-39b5ff57-9e62-4ff3-9699-b5923b857ba3?action=share&creator=36717994)
+
 ## Obiettivo del Progetto
 
 Il progetto consiste nella realizzazione di un sistema backend per la gestione delle inferenze su immagini, video e file zip, utilizzando modelli di Deep Learning pre-addestrati per l'armocromia. Il sistema permette agli utenti di creare dataset, caricare contenuti, eseguire inferenze e gestire crediti attraverso un sistema di autenticazione JWT. I modelli messi a disposizioni restituiscono, data un'immagine in input, la propabilità che quest'ultima appartenga ad una data classe come ad esempio primavera, autunno, inverno... per il modello a 4 classi, summer light, autunno deep... per il modello a 12 classi (in cui vengono individuate 3 sottocategorie per ciascuna stagione).
