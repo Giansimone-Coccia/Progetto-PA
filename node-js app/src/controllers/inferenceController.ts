@@ -248,12 +248,19 @@ class InferenceController {
    */
   public getStatus = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const jobId = req.params.jobId;
+    const userId = req.user?.id;
 
     try {
       const job = await inferenceQueue.getJob(jobId);
       if (job) {
         const progress = job.progress();
         const result = job.returnvalue;
+
+        const dataset = await this.datasetService.getDatasetById(progress["datasetId"])
+
+        if(dataset?.userId !== userId){
+          return next(ErrorFactory.createError(StatusCodes.UNAUTHORIZED, ErrorMessages.UNAUTHORIZED));
+        }
 
         // Check the state of the job
         if (!progress["state"]) {
