@@ -379,6 +379,171 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
 ##### Rotta
 **GET** http://localhost:3000/auth/inferences/123
 
+##### Risposta per il modello 1
+```json
+{
+   "id":1234,
+   "datasetId":123,
+   "model":"1",
+   "result":{
+      "image":[
+         {
+            "class_name":"autunno deep",
+            "probability":0.437
+         },
+         {
+            "class_name":"autunno soft",
+            "probability":0.063
+         },
+         {
+            "class_name":"autunno warm",
+            "probability":0.146
+         },
+         {
+            "class_name":"inverno bright",
+            "probability":0.009
+         },
+         {
+            "class_name":"inverno cool",
+            "probability":0.071
+         },
+         {
+            "class_name":"inverno deep",
+            "probability":0.145
+         },
+         {
+            "class_name":"primavera bright",
+            "probability":0.052
+         },
+         {
+            "class_name":"primavera light",
+            "probability":0.009
+         },
+         {
+            "class_name":"primavera warm",
+            "probability":0.015
+         },
+         {
+            "class_name":"summer cool",
+            "probability":0.017
+         },
+         {
+            "class_name":"summer light",
+            "probability":0.005
+         },
+         {
+            "class_name":"summer soft",
+            "probability":0.03
+         }
+      ],
+      "Zip":{
+         "image":[
+            {
+               "class_name":"autunno deep",
+               "probability":0.077
+            },
+            {
+               "class_name":"autunno soft",
+               "probability":0.13
+            },
+            {
+               "class_name":"autunno warm",
+               "probability":0.079
+            },
+            {
+               "class_name":"inverno bright",
+               "probability":0.036
+            },
+            {
+               "class_name":"inverno cool",
+               "probability":0.15
+            },
+            {
+               "class_name":"inverno deep",
+               "probability":0.045
+            },
+            {
+               "class_name":"primavera bright",
+               "probability":0.142
+            },
+            {
+               "class_name":"primavera light",
+               "probability":0.033
+            },
+            {
+               "class_name":"primavera warm",
+               "probability":0.071
+            },
+            {
+               "class_name":"summer cool",
+               "probability":0.141
+            },
+            {
+               "class_name":"summer light",
+               "probability":0.022
+            },
+            {
+               "class_name":"summer soft",
+               "probability":0.074
+            }
+         ]
+      },
+      "Video":{
+         "frame_0":[
+            {
+               "class_name":"autunno deep",
+               "probability":0.016
+            },
+            {
+               "class_name":"autunno soft",
+               "probability":0.03
+            },
+            {
+               "class_name":"autunno warm",
+               "probability":0.014
+            },
+            {
+               "class_name":"inverno bright",
+               "probability":0.464
+            },
+            {
+               "class_name":"inverno cool",
+               "probability":0.115
+            },
+            {
+               "class_name":"inverno deep",
+               "probability":0.06
+            },
+            {
+               "class_name":"primavera bright",
+               "probability":0.053
+            },
+            {
+               "class_name":"primavera light",
+               "probability":0.009
+            },
+            {
+               "class_name":"primavera warm",
+               "probability":0.02
+            },
+            {
+               "class_name":"summer cool",
+               "probability":0.061
+            },
+            {
+               "class_name":"summer light",
+               "probability":0.151
+            },
+            {
+               "class_name":"summer soft",
+               "probability":0.007
+            }
+         ]
+      }
+   }
+}
+```
+
 ##### Risposta per il modello 2
 ```json
 {
@@ -447,6 +612,30 @@ Per eseguire questa rotta è necessario aver effettuato l'accesso tramite JWT.
    }
 }
 ```
+##### Risposta per il modello 3
+```json
+{
+   "id":123,
+   "datasetId":123,
+   "model":"2",
+   "result":{
+    "cluster_0": {
+        "centroid": [0.746, 0.646, 0.558, ...],
+        "images": ["video.mp4/frame_11", ...]
+    },
+    "cluster_1": {
+        "centroid": [0.644, 0.563, 0.49, ...],
+        "images": ["video.mp4/frame_12", ...]
+    },
+    ...
+    "cluster_12": {
+            "centroid": [0.902, 0.675, 0.518, ...],
+            "images": ["video.mp4/frame_12", ...]
+        }
+    }
+}
+```
+
 
 ### Creazione dataset
 **POST** http://localhost:3000/api/datasets
