@@ -1,5 +1,4 @@
 import { getReasonPhrase } from 'http-status-codes';
-import { ErrorMessages } from '../error/errorMessages';
 
 /**
  * Interface extending the Error object to include statusCode and message attributes.
